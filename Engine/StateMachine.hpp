@@ -14,4 +14,8 @@ public:
 		GameOver = 3,
 	};
 
+	StateMachine();
+	~StateMachine();
+
+	void enumState();
 };

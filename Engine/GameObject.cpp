@@ -61,7 +61,7 @@ void GameObject::Transform::SetPosition(int x, int y, int z) {
 	mPos._44 = 1;
 }
 
-void GameObject::Transform::TransformObject() {
+void GameObject::Transform::UpdateMatrix() {
 	XMMATRIX matrix = XMLoadFloat4x4(&mPos);
 	matrix *= XMLoadFloat4x4(&mSca);
 	matrix *= XMLoadFloat4x4(&mRot);

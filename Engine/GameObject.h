@@ -30,7 +30,7 @@ class GameObject
 		XMFLOAT4X4 mMatrix;
 
 		void Identity();
-		void FromMatrix(XMFLOAT3X3* pMat);
+		void FromMatrix(XMFLOAT4X4* pMat);
 		void UpdateRotationFromVectors();
 		void UpdateRotationFromQuaternion();
 		void UpdateRotationFromMatrix();
@@ -45,6 +45,5 @@ class GameObject
 		void RotateWorldZ(float angle);
 		void Scale(float x, float y, float z);
 		void SetPosition(int x, int y, int z);
-		void TransformObject();
 	};
 };

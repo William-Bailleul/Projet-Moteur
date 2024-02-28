@@ -1,6 +1,7 @@
 #include "GameObject.h"
 
 void GameObject::Transform::Rotate(float yaw, float pitch, float roll) {
+	// use GetDegreeToRadian(float fAngleDegree) to convert the angle
 	XMVECTOR  quat;
 	XMVECTOR dir = XMVector3Normalize(XMLoadFloat3(&vDir));
 	XMVECTOR right = XMVector3Normalize(XMLoadFloat3(&vRight));
@@ -11,7 +12,7 @@ void GameObject::Transform::Rotate(float yaw, float pitch, float roll) {
 	quat = XMQuaternionRotationAxis(right, pitch);
 	quat *= XMLoadFloat4(&qRot);
 	XMStoreFloat4(&qRot, quat);
-	quat = XMQuaternionRotationAxis(up, roll);
+	quat = XMQuaternionRotationAxis(up, yaw);
 	quat *= XMLoadFloat4(&qRot);
 	XMStoreFloat4(&qRot, quat);
 
@@ -61,9 +62,9 @@ void GameObject::Transform::SetPosition(int x, int y, int z) {
 }
 
 void GameObject::Transform::UpdateMatrix() {
-	XMMATRIX matrix = XMLoadFloat4x4(&mPos);
-	matrix *= XMLoadFloat4x4(&mSca);
+	XMMATRIX matrix = XMLoadFloat4x4(&mSca);
 	matrix *= XMLoadFloat4x4(&mRot);
+	matrix *= XMLoadFloat4x4(&mPos);
 	XMStoreFloat4x4(&mMatrix, matrix);
 }
 
@@ -78,6 +79,51 @@ void GameObject::Transform::UpdateRotationFromMatrix() {
 	XMMATRIX rotation = XMLoadFloat4x4(&mRot);
 	XMMATRIX matrix = XMLoadFloat4x4(&mMatrix);
 	matrix *= rotation;
+	XMStoreFloat4x4(&mMatrix, matrix);
+}
+
+void GameObject::Transform::RotateYaw(float angle) {
+	//dir right
+	vRight.x = cos(angle);
+	vRight.y = sin(angle);
+	vRight.z = 0;
+	vDir.x = -sin(angle);
+	vDir.y = cos(angle);
+	vDir.z = 0;
+}
+
+void GameObject::Transform::RotatePitch(float angle) {
+	//dir right
+	vUp.x = 0;
+	vUp.y = cos(angle);
+	vUp.z = sin(angle);
+	vDir.x = 0;
+	vDir.y = -sin(angle);
+	vDir.z = cos(angle);
+}
+void GameObject::Transform::RotateRoll(float angle) {
+	//dir right
+	vRight.x = cos(angle);
+	vRight.y = 0;
+	vRight.z = -sin(angle);
+	vUp.x = sin(angle);
+	vUp.y = 0;
+ 	vUp.z = cos(angle);
+}
+
+void GameObject::Transform::UpdateRotationFromVectors() {
+	XMFLOAT4X4 rotation;
+	rotation._11 = vRight.x;
+	rotation._12 = vRight.y;
+	rotation._13 = vRight.z;
+	rotation._21 = vUp.x;
+	rotation._22 = vUp.y;
+	rotation._23 = vUp.z;
+	rotation._31 = vDir.x;
+	rotation._32 = vDir.y;
+	rotation._33 = vDir.z;
+	XMMATRIX matrix = XMLoadFloat4x4(&mMatrix);
+	matrix *= XMLoadFloat4x4(&rotation);
 	XMStoreFloat4x4(&mMatrix, matrix);
 }
 

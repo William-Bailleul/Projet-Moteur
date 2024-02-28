@@ -3,8 +3,7 @@
 
 #include "framework.h"
 #include "Engine.h"
-#include "InputController.hpp"
-#include "StateMachine.hpp"
+#include "InputController.h"
 
 #define MAX_LOADSTRING 100
 

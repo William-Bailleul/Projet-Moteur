@@ -118,15 +118,75 @@ void GameObject::Transform::RotateWorld(XMFLOAT3X3* pMatrix) {
 }
 
 void GameObject::Transform::RotateWorldX(float angle) {
-
+	XMFLOAT4X4 mRotation;
+	mRotation._11 = 1;
+	mRotation._12 = 0;
+	mRotation._13 = 0;
+	mRotation._14 = 1;
+	mRotation._21 = 0;
+	mRotation._22 = cos(angle);
+	mRotation._23 = sin(angle);
+	mRotation._24 = 1;
+	mRotation._31 = 0;
+	mRotation._32 = -sin(angle);
+	mRotation._33 = cos(angle);
+	mRotation._34 = 1;
+	mRotation._41 = 1;
+	mRotation._42 = 1;
+	mRotation._43 = 1;
+	mRotation._44 = 1;
+	XMMATRIX rotation = XMLoadFloat4x4(&mRotation);
+	XMMATRIX matrix = XMLoadFloat4x4(&mMatrix);
+	matrix *= rotation;
+	XMStoreFloat4x4(&mMatrix, matrix);
 }
 
 void GameObject::Transform::RotateWorldY(float angle) {
-
+	XMFLOAT4X4 mRotation; 
+	mRotation._11 = cos(angle);
+	mRotation._12 = 0; 
+	mRotation._13 = -sin(angle);
+	mRotation._14 = 1; 
+	mRotation._21 = 0; 
+	mRotation._22 = 1;
+	mRotation._23 = 0;
+	mRotation._24 = 1; 
+	mRotation._31 = sin(angle);
+	mRotation._32 = 0;
+	mRotation._33 = cos(angle); 
+	mRotation._34 = 1; 
+	mRotation._41 = 1; 
+	mRotation._42 = 1; 
+	mRotation._43 = 1; 
+	mRotation._44 = 1; 
+	XMMATRIX rotation = XMLoadFloat4x4(&mRotation);
+	XMMATRIX matrix = XMLoadFloat4x4(&mMatrix); 
+	matrix *= rotation; 
+	XMStoreFloat4x4(&mMatrix, matrix); 
 }
 
 void GameObject::Transform::RotateWorldZ(float angle) {
-
+	XMFLOAT4X4 mRotation;
+	mRotation._11 = cos(angle);
+	mRotation._12 = sin(angle);
+	mRotation._13 = 0;
+	mRotation._14 = 1; 
+	mRotation._21 = -sin(angle);
+	mRotation._22 = cos(angle);
+	mRotation._23 = 0; 
+	mRotation._24 = 1; 
+	mRotation._31 = 0;
+	mRotation._32 = 0; 
+	mRotation._33 = 1;
+	mRotation._34 = 1; 
+	mRotation._41 = 1; 
+	mRotation._42 = 1; 
+	mRotation._43 = 1; 
+	mRotation._44 = 1; 
+	XMMATRIX rotation = XMLoadFloat4x4(&mRotation);
+	XMMATRIX matrix = XMLoadFloat4x4(&mMatrix); 
+	matrix *= rotation; 
+	XMStoreFloat4x4(&mMatrix, matrix);
 }
 
 void GameObject::Transform::Scale(float x, float y, float z) {
@@ -154,3 +214,6 @@ float GetDegreeToRadian(float fAngleDegree)
 {
 	return fAngleDegree * PI / 180.f;
 }
+
+GameObject::GameObject(){}
+GameObject::~GameObject(){}

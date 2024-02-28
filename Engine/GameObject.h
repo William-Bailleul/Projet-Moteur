@@ -46,4 +46,6 @@ class GameObject
 		void Scale(float x, float y, float z);
 		void SetPosition(int x, int y, int z);
 	};
+	GameObject();
+	~GameObject();
 };

@@ -127,13 +127,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ComponentCamera.h" />
+    <ClInclude Include="Component.h" />
+    <ClInclude Include="ComponentCollider.h" />
+    <ClInclude Include="ComponentScript.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="ComponentRenderMesh.h" />
+    <ClInclude Include="GameTimer.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ComponentCamera.cpp" />
+    <ClCompile Include="Component.cpp" />
+    <ClCompile Include="ComponentCollider.cpp" />
+    <ClCompile Include="ComponentScript.cpp" />
     <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="ComponentRenderMesh.cpp" />
+    <ClCompile Include="GameTimer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc" />

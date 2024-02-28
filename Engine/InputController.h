@@ -2,6 +2,7 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include <WinUser.h>
 
 using namespace std;
 

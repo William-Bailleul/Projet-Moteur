@@ -3,6 +3,8 @@
 
 #include "framework.h"
 #include "Engine.h"
+#include "InputController.hpp"
+#include "StateMachine.hpp"
 
 #define MAX_LOADSTRING 100
 
@@ -32,6 +34,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringW(hInstance, IDC_ENGINE, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
 
+
     // Effectue l'initialisation de l'application :
     if (!InitInstance (hInstance, nCmdShow))
     {
@@ -53,6 +56,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
 
     return (int) msg.wParam;
+
+    
 }
 
 

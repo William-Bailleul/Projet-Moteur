@@ -27,6 +27,7 @@
     <ClInclude Include="Engine.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="InputController.h">
     <ClInclude Include="Component.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -50,6 +51,7 @@
     <ClCompile Include="Engine.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="InputController.cpp">
     <ClCompile Include="Component.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>

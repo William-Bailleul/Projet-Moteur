@@ -2,6 +2,8 @@
 #include <DirectXMath.h>
 #include <DirectXPackedVector.h>
 
+#define PI 3.14159265358979323846264338327950288
+
 using namespace DirectX;
 using namespace DirectX::PackedVector;
 
@@ -12,18 +14,18 @@ class Transform
 	XMFLOAT3X3 mSca;
 
 	//Rotate
-	XMVECTOR vDir;
-	XMVECTOR vRight;
-	XMVECTOR vUp;
-	XMVECTOR qRot;
-	XMMATRIX mRot;
+	XMFLOAT3 vDir;
+	XMFLOAT3 vRight;
+	XMFLOAT3 vUp;
+	XMFLOAT4 qRot;
+	XMFLOAT4X4 mRot;
 	
 	//Position
 	XMFLOAT3 vPos;
 	XMFLOAT3X3 mPos;
 
 	//Matrix of the object
-	XMFLOAT3X3 mMatix;
+	XMFLOAT3X3 mMatrix;
 
 	void Identity();
 	void FromMatrix(XMFLOAT3X3* pMat);

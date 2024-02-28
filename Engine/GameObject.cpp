@@ -1,6 +1,5 @@
 #include "GameObject.h"
 
-
 void GameObject::Transform::Rotate(float yaw, float pitch, float roll) {
 	XMVECTOR  quat;
 	XMVECTOR dir = XMVector3Normalize(XMLoadFloat3(&vDir));
@@ -65,6 +64,20 @@ void GameObject::Transform::UpdateMatrix() {
 	XMMATRIX matrix = XMLoadFloat4x4(&mPos);
 	matrix *= XMLoadFloat4x4(&mSca);
 	matrix *= XMLoadFloat4x4(&mRot);
+	XMStoreFloat4x4(&mMatrix, matrix);
+}
+
+void GameObject::Transform::UpdateRotationFromQuaternion() {
+	XMMATRIX rotation = XMMatrixRotationQuaternion(XMLoadFloat4(&qRot));
+	XMMATRIX matrix = XMLoadFloat4x4(&mMatrix);
+	matrix *= rotation;
+	XMStoreFloat4x4(&mMatrix, matrix);
+}
+
+void GameObject::Transform::UpdateRotationFromMatrix() {
+	XMMATRIX rotation = XMLoadFloat4x4(&mRot);
+	XMMATRIX matrix = XMLoadFloat4x4(&mMatrix);
+	matrix *= rotation;
 	XMStoreFloat4x4(&mMatrix, matrix);
 }
 

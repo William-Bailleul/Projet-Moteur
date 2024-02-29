@@ -83,6 +83,7 @@ void GameObject::Transform::Rotate(float yaw, float pitch, float roll) {
 }
 
 
+
 void GameObject::Transform::RotateYaw(float angle) {
 	//dir right
 	vRight.x = cos(angle);

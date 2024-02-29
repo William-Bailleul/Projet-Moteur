@@ -89,11 +89,12 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Engine.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Engine.ico" />
-    <Image Include="small.ico" />
+    <Image Include="Engine.ico">
+      <Filter>Fichiers de ressources</Filter>
+    </Image>
+    <Image Include="small.ico">
+      <Filter>Fichiers de ressources</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Fichers d%27en-tête">
@@ -102,5 +103,13 @@
     <Filter Include="Fichiers sources">
       <UniqueIdentifier>{8c2bf76a-3218-49e6-9f11-0b7f4e1edd02}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers de ressources">
+      <UniqueIdentifier>{3d3e12a6-0579-4602-8588-7d3e48dc70ba}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Engine.rc">
+      <Filter>Fichiers de ressources</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

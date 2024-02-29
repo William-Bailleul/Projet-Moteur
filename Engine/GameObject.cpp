@@ -201,12 +201,12 @@ void GameObject::Transform::Scale(float x, float y, float z) {
 }
 
 void GameObject::Transform::SetPosition(int x, int y, int z) {
-	vPos.x = x;
-	vPos.y = y;
-	vPos.z = z;
-	mPos._11 = x;
-	mPos._22 = y;
-	mPos._33 = z;
+	vPos.x = (float) x;
+	vPos.y = (float)y;
+	vPos.z = (float)z;
+	mPos._11 = (float)x;
+	mPos._22 = (float)y;
+	mPos._33 = (float)z;
 	mPos._44 = 1;
 }
 

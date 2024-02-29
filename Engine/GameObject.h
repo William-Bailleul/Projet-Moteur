@@ -1,11 +1,15 @@
 #pragma once
 #include <DirectXMath.h>
 #include <DirectXPackedVector.h>
+#include <iostream>
+#include<vector>
 
 #define PI 3.14159265358979323846264338327950288
 
 using namespace DirectX;
 using namespace DirectX::PackedVector;
+
+class Component;
 
 class GameObject
 {
@@ -46,6 +50,10 @@ class GameObject
 		void Scale(float x, float y, float z);
 		void SetPosition(int x, int y, int z);
 	};
+public:
+	std::vector<Component*> componentList;
+
 	GameObject();
 	~GameObject();
+	void addComponent(Component* component);
 };

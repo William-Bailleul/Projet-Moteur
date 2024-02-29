@@ -1,5 +1,4 @@
 #include "InputController.h"
-#include <WinUser.h>
 
 InputManager::InputManager()
 {

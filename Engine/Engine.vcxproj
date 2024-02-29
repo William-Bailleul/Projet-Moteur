@@ -131,23 +131,30 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentCollider.h" />
     <ClInclude Include="ComponentScript.h" />
+    <ClInclude Include="d3dx12.h" />
+    <ClInclude Include="DDSTextureLoader.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="InputController.h" />
     <ClInclude Include="ComponentRenderMesh.h" />
     <ClInclude Include="GameTimer.h" />
+    <ClInclude Include="MathHelper.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Utile.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ComponentCamera.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ComponentCollider.cpp" />
     <ClCompile Include="ComponentScript.cpp" />
+    <ClCompile Include="DDSTextureLoader.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="InputController.cpp" />
     <ClCompile Include="ComponentRenderMesh.cpp" />
     <ClCompile Include="GameTimer.cpp" />
+    <ClCompile Include="InitApp.cpp" />
+    <ClCompile Include="Utile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc" />

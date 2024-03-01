@@ -141,6 +141,7 @@
     <ClInclude Include="GameTimer.h" />
     <ClInclude Include="MathHelper.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="Shader.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Utile.h" />
   </ItemGroup>
@@ -155,6 +156,7 @@
     <ClCompile Include="ComponentRenderMesh.cpp" />
     <ClCompile Include="GameTimer.cpp" />
     <ClCompile Include="InitApp.cpp" />
+    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Utile.cpp" />
     <ClCompile Include="GameObject.cpp" />
   </ItemGroup>

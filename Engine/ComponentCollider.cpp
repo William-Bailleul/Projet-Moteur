@@ -20,3 +20,7 @@ void ComponentCollider::Init(BoundaryStyle boundaryStyle) {
 		break;
 	}
 }
+
+ComponentCollider::~ComponentCollider() {
+	//use frees and deletes to remove all the contents of the lists etc
+};

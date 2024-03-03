@@ -55,5 +55,6 @@ public:
 
 	GameObject();
 	~GameObject();
+
 	void addComponent(Component* component);
 };

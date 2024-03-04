@@ -3,8 +3,7 @@
 #include <DirectXPackedVector.h>
 #include <iostream>
 #include<vector>
-
-#define PI 3.14159265358979323846264338327950288
+#include "Transform.h"
 
 using namespace DirectX;
 using namespace DirectX::PackedVector;
@@ -25,4 +24,6 @@ public:
 
 	void Init(int posX, int posY, int posZ);
 	void addComponent(Component* component);
+
+	Transform m_transform;
 };

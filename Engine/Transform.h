@@ -10,14 +10,13 @@ using namespace DirectX::PackedVector;
 struct Transform
 {
 	//Scale
-	XMFLOAT4 vSca;
+	XMFLOAT3 vSca;
 	XMFLOAT4X4 mSca;
 
 	//Rotate
 	XMFLOAT3 vDir;
 	XMFLOAT3 vRight;
 	XMFLOAT3 vUp;
-	XMFLOAT3 vRoll;
 	XMFLOAT4 qRot;
 	XMFLOAT4X4 mRot;
 
@@ -28,7 +27,8 @@ struct Transform
 	//Matrix of the object
 	XMFLOAT4X4 mMatrix;
 
-	void Identity(float angle, float ScaX, float ScaY, float ScaZ, float PosX, float PosY, float PosZ);
+	Transform();
+	void Identity();
 	void UpdateMatrix();
 	void Rotate(float yaw, float pitch, float roll);
 };

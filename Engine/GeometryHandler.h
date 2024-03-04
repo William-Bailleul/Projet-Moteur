@@ -13,6 +13,7 @@ public:
 
 	struct Vertex
 	{
+		Vertex(){}
 		Vertex(
 			const DirectX::XMFLOAT3& p,
 			const DirectX::XMFLOAT3& n,
@@ -60,5 +61,37 @@ public:
 	};
 
 	//MESH-BUILDING FUNCTIONS HERE, MAKE THEM RETURN A Mesh OR A Mesh REFERENCE
+
+	//BuildBox - Creee une boite en prennant une largeur width, une hauteur height, une profondeur depth 
+	//et a sub coupures verticales et horizontales sur chaques faces
+	Mesh BuildBox(float width, float height, float depth, uint32 subs);
+
+	//BuildCone - Creee une cone a 4 faces en prennant une largeur lenght, une hauteur height, 
+	//une profondeur depth et a sub*4 triangles sur chaques faces
+	Mesh BuildPyramid(float width, float height, float depth, uint32 subs);
+
+	//BuildSphere - Creee une sphere en prennant une rayon radius, un nombre de tranches verticales sliceCount 
+	//et horizontale stackCount (ces deux parametres controllent la tesselation)
+	Mesh BuildSphere(float radius, uint32 sliceCount, uint32 stackCount);
+
+	//BuildGeosphere - Creee une sphere a partir d'un icosahedron (polyhedron a 20 faces identiques), prends un rayon radius 
+	//et un niveau de tesselation sub (plus sub est eleve plus la sphere sera arrondie)
+	//(utile pour faire des formes plus completes)
+	Mesh BuildGeosphere(float radius, uint32 subs);
+
+	//BuildCylinder - Creee un cylindre en prennant un rayon de bases bottomRadius et topRadius, une hauteur height, 
+	//un nombre de tranches sliceCount et couches stackCount (ces deux parametres controllent la tesselation)
+	Mesh BuildCylinder(float bottomRadius, float topRadius, float height, uint32 sliceCount, uint32 stackCount);
+
+private:
+	//Decoupe une face en 4 parties egales en utilisant les centres des vertices
+	void Subdivide(Mesh& mesh);
+
+	//Determine les centres des vertices entre deux points
+	Vertex MidPoint(const Vertex& v0, const Vertex& v1);
+
+	//Construit les bases d'un Cylindre
+	void BuildCylinderTopCap(float bottomRadius, float topRadius, float height, uint32 sliceCount, uint32 stackCount, Mesh& mesh);
+	void BuildCylinderBottomCap(float bottomRadius, float topRadius, float height, uint32 sliceCount, uint32 stackCount, Mesh& mesh);
 };
 

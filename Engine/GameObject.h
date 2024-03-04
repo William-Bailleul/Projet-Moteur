@@ -25,5 +25,8 @@ public:
 	void Init(int posX, int posY, int posZ);
 	void addComponent(Component* component);
 
+
+	//create template function to return component instance of a type
+	template <typename T> T* getComponent();
 	Transform m_transform;
 };

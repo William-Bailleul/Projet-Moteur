@@ -23,7 +23,7 @@ class GameObject
 		XMFLOAT3 vDir;
 		XMFLOAT3 vRight;
 		XMFLOAT3 vUp;
-		XMFLOAT4 qRot;
+		XMFLOAT4 qRot; 
 		XMFLOAT4X4 mRot;
 
 		//Position

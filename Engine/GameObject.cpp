@@ -221,3 +221,4 @@ GameObject::~GameObject(){}
 void GameObject::addComponent(Component* component) {
 	componentList.push_back(component);
 }
+ 

@@ -2,11 +2,19 @@
 
 #include "Component.h"
 
+#include <string>
+#include <vector>
+
+using namespace std;
+
 class ComponentScript: public Component
 {
 public:
-	ComponentScript(GameObject* gameObjectPointer);
+	string scriptName;
+	vector<string> scriptQueue;
+
+	ComponentScript(GameObject* gameObjectPointer, string name);
 
 private:
-	void Init();
+	void Init(string name);
 };

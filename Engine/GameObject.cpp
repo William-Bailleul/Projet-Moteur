@@ -219,7 +219,9 @@ float GetDegreeToRadian(float fAngleDegree)
 GameObject::GameObject(){}
 GameObject::~GameObject(){
 	if (componentList.size() > 0) {
-
+		for (int i = 0; i < componentList.size(); i++) {
+			delete(componentList[0]);
+		}
 	}
 }
 

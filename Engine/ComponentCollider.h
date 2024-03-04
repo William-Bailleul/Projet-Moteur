@@ -7,30 +7,34 @@
 
 using namespace DirectX;
 
+class GameManager;
+class ComponentScript;
+
 class ComponentCollider : public Component
 {
 public:
-	enum BoundaryStyle
-	{
-		RECT,
-		BOX,
-		SPHERE
-	};
 
-	// just set those to nullptr if there's none ?
-	// maybe make vectors instead so it can remain empty without issue, and contain every part of the model ? 
-	std::vector<BoundingSphere*> hitSpheres;
+	//linking to the object's script, necessary if we want to implement reactions to 
+	ComponentScript* objectScript;
+
+	//saving the GameManager's address to check its objectList
+	GameManager* gameManager;
+
+	// vectors can remain empty without issue
 	std::vector<BoundingBox*> hitBoxes;
+	std::vector<BoundingSphere*> hitSpheres;
+	std::vector<BoundingFrustum*> hitFrustums;
 
-	ComponentCollider(GameObject* gameObjectPointer, BoundaryStyle boundaryStyle);
+	ComponentCollider(GameObject* gameObjectPointer, GameManager* manager);
 	~ComponentCollider();
 
-	bool TotalCollisionCheck();
+	void FullCollisionCheck();
 
 	void NewHitBox();
 	void NewHitSphere();
+	void NewHitFrustum();
 
 private:
-	void Init(BoundaryStyle boundaryStyle);
+	void Init(GameManager* manager);
 };
 

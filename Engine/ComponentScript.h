@@ -15,6 +15,9 @@ public:
 
 	ComponentScript(GameObject* gameObjectPointer, string name);
 
+	void AddToQueue(string newInput); 
+	string GetName();
+
 private:
 	void Init(string name);
 };

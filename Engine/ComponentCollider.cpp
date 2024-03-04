@@ -1,59 +1,64 @@
 #include "ComponentCollider.h"
 #include "GameManager.h"
 #include "GameObject.h"
+#include "ComponentScript.h"
 
 #include <vector>
 
-ComponentCollider::ComponentCollider(GameObject* gameObjectPointer, GameManager* manager) :Component::Component(gameObjectPointer) {
-	Init(manager);
+ComponentCollider::ComponentCollider(GameObject* gameObjectPointer, GameManager* manager, ComponentScript* script) :Component::Component(gameObjectPointer) {
+	Init(manager, script);
 };
 
-void ComponentCollider::Init(GameManager* manager) {
+void ComponentCollider::Init(GameManager* manager, ComponentScript* script) {
 	gameManager = manager;
+	objectScript = script;
 }
 
 //checks for collisions
 void ComponentCollider::FullCollisionCheck() {
 
-	// sloppy mess code, gotta optimize this somehow
 	// remember to parse the game's generated "field" in a grid to avoid checking the entire scene for collisions everytime 
-
 	if (hitBoxes.size() > 0) {
-		for (int i = 0; i < hitBoxes.size(); i++) {
 
-			std::vector<GameObject*> currentObjectList = gameManager->objectList;
-			for (int j = 0; j < currentObjectList.size(); j++) {
+		std::vector<GameObject*> currentObjectList = gameManager->objectList;
+		for (int i = 0; i < currentObjectList.size(); i++) {
 
-				GameObject* currentObject = currentObjectList[j];
-				for (int k = 0; k < currentObject->componentList.size(); k++) {
+			GameObject* currentObject = currentObjectList[i];
+			ComponentCollider* currentCollider = *currentObject->getComponent<ComponentCollider*>();
+			ComponentScript* currentScript = *currentObject->getComponent<ComponentScript*>();
 
-					// if the current component is a collider
-					// does the OG component list even accept non-"components" that inherit components 
-					if (typeid(currentObject->componentList[k]) == typeid(ComponentCollider*)) {
-
-						// now make it check all of its hitBoxes/Spheres/Frustums
-						// with the Contains() and Intersects() functions
-
-						//currentObject->componentList[k]->;
-						
-					}
-				}
+			if (ListCollisionCheck(hitBoxes, currentCollider->hitBoxes)
+				|| ListCollisionCheck(hitBoxes, currentCollider->hitSpheres)
+				|| ListCollisionCheck(hitBoxes, currentCollider->hitFrustums)
+				|| ListCollisionCheck(hitSpheres, currentCollider->hitBoxes)
+				|| ListCollisionCheck(hitSpheres, currentCollider->hitSpheres)
+				|| ListCollisionCheck(hitSpheres, currentCollider->hitFrustums)
+				|| ListCollisionCheck(hitFrustums, currentCollider->hitBoxes)
+				|| ListCollisionCheck(hitFrustums, currentCollider->hitSpheres)
+				|| ListCollisionCheck(hitFrustums, currentCollider->hitFrustums)) {
+				objectScript->AddToQueue(currentScript->GetName());
 			}
 		}
 	}
-
-	if (hitSpheres.size() > 0) {
-		for (int i = 0; i < hitSpheres.size(); i++) {
-
-		}
-	}
-
-	if (hitFrustums.size() > 0) {
-		for (int i = 0; i < hitFrustums.size(); i++) {
-
-		}
-	}
 }
+
+template <typename U, typename V> bool ComponentCollider::ListCollisionCheck(std::vector<U*> listOne, std::vector<V*> listTwo) {
+	for (int i = 0; i < listOne.size(); i++) {
+		for (int j = 0; j < listTwo.size(); j++) {
+			if (OneCollisionCheck(listOne[i], listTwo[j]) != 0) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+template <typename U, typename V> int ComponentCollider::OneCollisionCheck(U* boundingOne, V* boundingTwo) {
+	int collisionType;
+	collisionType = boundingOne->Contains(boundingTwo);
+	return collisionType;
+}
+
 
 
 //add a new BoundingBox to the hitBoxes list

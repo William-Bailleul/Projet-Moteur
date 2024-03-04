@@ -7,3 +7,11 @@ ComponentScript::ComponentScript(GameObject* gameObjectPointer, string name) :Co
 void ComponentScript::Init(string name) {
 	scriptName = name;
 }
+
+void ComponentScript::AddToQueue(string newInput) {
+	scriptQueue.push_back(newInput);
+}
+
+string ComponentScript::GetName() {
+	return scriptName;
+}

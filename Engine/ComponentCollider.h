@@ -25,16 +25,20 @@ public:
 	std::vector<BoundingSphere*> hitSpheres;
 	std::vector<BoundingFrustum*> hitFrustums;
 
-	ComponentCollider(GameObject* gameObjectPointer, GameManager* manager);
+	ComponentCollider(GameObject* gameObjectPointer, GameManager* manager, ComponentScript* script);
 	~ComponentCollider();
 
-	void FullCollisionCheck();
+	//check functions
+	void FullCollisionCheck(); 
+	template <typename U, typename V> bool ListCollisionCheck(std::vector<U*> listOne, std::vector<V*> listTwo);
+	template <typename U, typename V> int OneCollisionCheck(U* Bounding, V* BoundingDos);
 
+	//create functions
 	void NewHitBox();
 	void NewHitSphere();
 	void NewHitFrustum();
 
 private:
-	void Init(GameManager* manager);
+	void Init(GameManager* manager, ComponentScript* script);
 };
 

@@ -1,46 +1,42 @@
 #include "Transform.h"
 
-void Transform::Identity(float angle, float ScaX, float ScaY, float ScaZ, float PosX, float PosY, float PosZ) {
+Transform::Transform()
+{
+	Identity();
+}
+
+void Transform::Identity() {
+	// ca c'est faux
 	// initialise scale
-	vSca.x = ScaX;
-	vSca.y = ScaY;
-	vSca.z = ScaZ;
-	vSca.w = 1;
-	XMVECTOR vScale = XMLoadFloat4(&vSca);
-	XMMATRIX scale = XMMatrixScalingFromVector(vScale);
-	XMStoreFloat4x4(&mSca, scale);
+	vSca.x = 1.0f;
+	vSca.y = 1.0f;
+	vSca.z = 1.0f;
+	XMStoreFloat4x4(&mSca, XMMatrixIdentity());
 
 	// initialise rotation
-	vRight.x = cos(angle);
-	vRight.y = sin(angle);
-	vRight.z = 0;
-	vUp.x = 0;
-	vUp.y = cos(angle);
-	vUp.z = sin(angle);
-	vRoll.x = cos(angle);
-	vRoll.y = 0;
-	vRoll.z = -sin(angle);
+	vRight.x = 1.0f;
+	vRight.y = 0.0f;
+	vRight.z = 0.0f;
+	vUp.x = 0.0f;
+	vUp.y = 1.0f;
+	vUp.z = 0.0f;
+	vDir.x = 0.0f;
+	vDir.y = 0.0f;
+	vDir.z = 1.0f;
+	qRot.x = 0.0f;
+	qRot.y = 0.0f;
+	qRot.z = 0.0f;
+	qRot.w = 1.0f;
+	mRot = mSca;
 
 	// initialise position
-	vPos.x = PosX;
-	vPos.y = PosY;
-	vPos.z = PosZ;
-	mPos._11 = PosX;
-	mPos._22 = PosY;
-	mPos._33 = PosZ;
-	mPos._44 = 1;
+	vPos.x = 0.0f;
+	vPos.y = 0.0f;
+	vPos.z = 0.0f;
+	mPos = mSca;
 
-	//initialise matrix of the object
-	mMatrix._11 = 1;
-	mMatrix._12 = 0;
-	mMatrix._13 = 0;
-	mMatrix._21 = 0;
-	mMatrix._22 = 1;
-	mMatrix._23 = 0;
-	mMatrix._31 = 0;
-	mMatrix._32 = 0;
-	mMatrix._33 = 1;
-
+	// ca c'est bon
+	mMatrix = mSca;
 }
 
 void Transform::UpdateMatrix() {
@@ -51,28 +47,31 @@ void Transform::UpdateMatrix() {
 }
 
 void Transform::Rotate(float yaw, float pitch, float roll) {
+
 	// use GetDegreeToRadian(float fAngleDegree) to convert the angle
-	XMVECTOR dir = XMVector3Normalize(XMLoadFloat3(&vDir));
-	XMVECTOR right = XMVector3Normalize(XMLoadFloat3(&vRight));
-	XMVECTOR up = XMVector3Normalize(XMLoadFloat3(&vUp));
+	XMVECTOR dir = XMLoadFloat3(&vDir);
+	XMVECTOR right = XMLoadFloat3(&vRight);
+	XMVECTOR up = XMLoadFloat3(&vUp);
 
 	XMVECTOR  quat;
 	XMVECTOR  quattemp;
 
 	quattemp = XMQuaternionRotationAxis(dir, roll);
-	quat = XMQuaternionMultiply(XMLoadFloat4(&qRot) ,quattemp);
-	XMStoreFloat4(&qRot, quat);
+	quat = quattemp;
 
 	quattemp = XMQuaternionRotationAxis(right, pitch);
-	quat = XMQuaternionMultiply(XMLoadFloat4(&qRot), quattemp);
-	XMStoreFloat4(&qRot, quat);
+	quat = XMQuaternionMultiply(quat, quattemp);
 
 	quattemp = XMQuaternionRotationAxis(up, yaw);
-	quat = XMQuaternionMultiply(XMLoadFloat4(&qRot), quattemp);
+	quat = XMQuaternionMultiply(quat, quattemp);
+
+	quat = XMQuaternionMultiply(XMLoadFloat4(&qRot), quat);
 	XMStoreFloat4(&qRot, quat);
 
-	XMStoreFloat4x4(&mRot, XMMatrixRotationQuaternion(XMLoadFloat4(&qRot)));
+	// Matrix
+	XMStoreFloat4x4(&mRot, XMMatrixRotationQuaternion(quat));
 
+	// Axis
 	vRight.x = mRot._11;
 	vRight.y = mRot._12;
 	vRight.z = mRot._13;

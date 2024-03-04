@@ -2,12 +2,12 @@
 
 InputManager::InputManager()
 {
-	m_input["papagnanEscape"] = false;
+	m_input["Escape"] = false;
 }
 
 void InputManager::keyList()
 {
-	(GetAsyncKeyState(VK_ESCAPE) & 0x01) ? m_input["papagnanEscape"] = true : m_input["papagnanEscape"] = false;
+	(GetAsyncKeyState(VK_ESCAPE) & 0x01) ? m_input["Escape"] = true : m_input["Escape"] = false;
 }
 
 map<string, bool> InputManager::getKeyDown()

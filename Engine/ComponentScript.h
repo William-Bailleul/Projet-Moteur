@@ -11,13 +11,14 @@ class ComponentScript: public Component
 {
 public:
 	string scriptName;
+	string state;
 	vector<string> scriptQueue;
 
-	ComponentScript(GameObject* gameObjectPointer, string name);
+	ComponentScript(GameObject* gameObjectPointer, string name, string initState);
 
 	void AddToQueue(string newInput); 
 	string GetName();
 
 private:
-	void Init(string name);
+	void Init(string name, string initState);
 };

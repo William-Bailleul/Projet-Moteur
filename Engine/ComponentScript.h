@@ -14,6 +14,7 @@ public:
 	ComponentScript(GameObject* gameObjectPointer, string name, string initState);
 
 	// Behavior Functions
+	void PlayScript();
 
 	// Queue Functions
 	void AddToQueue(string newInput); 

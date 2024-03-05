@@ -10,7 +10,9 @@ void ComponentScript::Init(string name, string initState) {
 }
 
 ////////////////////////BEHAVIOR FUNCTIONS////////////////////////
+void ComponentScript::PlayScript() {
 
+}
 
 ////////////////////////QUEUE FUNCTIONS////////////////////////
 void ComponentScript::AddToQueue(string newInput) {

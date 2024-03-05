@@ -1,228 +1,30 @@
 #include "GameObject.h"
 
-void GameObject::Transform::Identity() {
-	mMatrix._11 = 1;
-	mMatrix._12 = 0;
-	mMatrix._13 = 0;
-	mMatrix._21 = 0;
-	mMatrix._22 = 1;
-	mMatrix._23 = 0;
-	mMatrix._31 = 0;
-	mMatrix._32 = 0;
-	mMatrix._33 = 1;
-}
-
-void GameObject::Transform::FromMatrix(XMFLOAT4X4* pMat) {
-
-}
-
-void GameObject::Transform::UpdateRotationFromVectors() {
-	XMFLOAT4X4 rotation;
-	rotation._11 = vRight.x;
-	rotation._12 = vRight.y;
-	rotation._13 = vRight.z;
-	rotation._21 = vUp.x;
-	rotation._22 = vUp.y;
-	rotation._23 = vUp.z;
-	rotation._31 = vDir.x;
-	rotation._32 = vDir.y;
-	rotation._33 = vDir.z;
-	XMMATRIX matrix = XMLoadFloat4x4(&mMatrix);
-	matrix *= XMLoadFloat4x4(&rotation);
-	XMStoreFloat4x4(&mMatrix, matrix);
-}
-
-void GameObject::Transform::UpdateRotationFromQuaternion() {
-	XMMATRIX rotation = XMMatrixRotationQuaternion(XMLoadFloat4(&qRot));
-	XMMATRIX matrix = XMLoadFloat4x4(&mMatrix);
-	matrix *= rotation;
-	XMStoreFloat4x4(&mMatrix, matrix);
-} 
-
-void GameObject::Transform::UpdateRotationFromMatrix() {
-	XMMATRIX rotation = XMLoadFloat4x4(&mRot);
-	XMMATRIX matrix = XMLoadFloat4x4(&mMatrix);
-	matrix *= rotation;
-	XMStoreFloat4x4(&mMatrix, matrix);
-}
-
-void GameObject::Transform::UpdateMatrix() {
-	XMMATRIX matrix = XMLoadFloat4x4(&mSca);
-	matrix *= XMLoadFloat4x4(&mRot);
-	matrix *= XMLoadFloat4x4(&mPos);
-	XMStoreFloat4x4(&mMatrix, matrix);
-}
-
-void GameObject::Transform::Rotate(float yaw, float pitch, float roll) {
-	// use GetDegreeToRadian(float fAngleDegree) to convert the angle
-	XMVECTOR  quat;
-	XMVECTOR dir = XMVector3Normalize(XMLoadFloat3(&vDir));
-	XMVECTOR right = XMVector3Normalize(XMLoadFloat3(&vRight));
-	XMVECTOR up = XMVector3Normalize(XMLoadFloat3(&vUp));
-	quat = XMQuaternionRotationAxis(dir, roll);
-	quat *= XMLoadFloat4(&qRot);
-	XMStoreFloat4(&qRot, quat);
-	quat = XMQuaternionRotationAxis(right, pitch);
-	quat *= XMLoadFloat4(&qRot);
-	XMStoreFloat4(&qRot, quat);
-	quat = XMQuaternionRotationAxis(up, yaw);
-	quat *= XMLoadFloat4(&qRot);
-	XMStoreFloat4(&qRot, quat);
-
-	XMStoreFloat4x4(&mRot, XMMatrixRotationQuaternion(XMLoadFloat4(&qRot)));
-
-	vRight.x = mRot._11;
-	vRight.y = mRot._12;
-	vRight.z = mRot._13;
-	vUp.x = mRot._21;
-	vUp.y = mRot._22;
-	vUp.z = mRot._23;
-	vDir.x = mRot._31;
-	vDir.y = mRot._32;
-	vDir.z = mRot._33;
-}
-
-
-
-void GameObject::Transform::RotateYaw(float angle) {
-	//dir right
-	vRight.x = cos(angle);
-	vRight.y = sin(angle);
-	vRight.z = 0;
-	vDir.x = -sin(angle);
-	vDir.y = cos(angle);
-	vDir.z = 0;
-}
-
-void GameObject::Transform::RotatePitch(float angle) {
-	//dir right
-	vUp.x = 0;
-	vUp.y = cos(angle);
-	vUp.z = sin(angle);
-	vDir.x = 0;
-	vDir.y = -sin(angle);
-	vDir.z = cos(angle);
-}
-
-void GameObject::Transform::RotateRoll(float angle) {
-	//dir right
-	vRight.x = cos(angle);
-	vRight.y = 0;
-	vRight.z = -sin(angle);
-	vUp.x = sin(angle);
-	vUp.y = 0;
- 	vUp.z = cos(angle);
-}
-
-void GameObject::Transform::RotateWorld(XMFLOAT3X3* pMatrix) {
-
-}
-
-void GameObject::Transform::RotateWorldX(float angle) {
-	XMFLOAT4X4 mRotation;
-	mRotation._11 = 1;
-	mRotation._12 = 0;
-	mRotation._13 = 0;
-	mRotation._14 = 1;
-	mRotation._21 = 0;
-	mRotation._22 = cos(angle);
-	mRotation._23 = sin(angle);
-	mRotation._24 = 1;
-	mRotation._31 = 0;
-	mRotation._32 = -sin(angle);
-	mRotation._33 = cos(angle);
-	mRotation._34 = 1;
-	mRotation._41 = 1;
-	mRotation._42 = 1;
-	mRotation._43 = 1;
-	mRotation._44 = 1;
-	XMMATRIX rotation = XMLoadFloat4x4(&mRotation);
-	XMMATRIX matrix = XMLoadFloat4x4(&mMatrix);
-	matrix *= rotation;
-	XMStoreFloat4x4(&mMatrix, matrix);
-}
-
-void GameObject::Transform::RotateWorldY(float angle) {
-	XMFLOAT4X4 mRotation; 
-	mRotation._11 = cos(angle);
-	mRotation._12 = 0; 
-	mRotation._13 = -sin(angle);
-	mRotation._14 = 1; 
-	mRotation._21 = 0; 
-	mRotation._22 = 1;
-	mRotation._23 = 0;
-	mRotation._24 = 1; 
-	mRotation._31 = sin(angle);
-	mRotation._32 = 0;
-	mRotation._33 = cos(angle); 
-	mRotation._34 = 1; 
-	mRotation._41 = 1; 
-	mRotation._42 = 1; 
-	mRotation._43 = 1; 
-	mRotation._44 = 1; 
-	XMMATRIX rotation = XMLoadFloat4x4(&mRotation);
-	XMMATRIX matrix = XMLoadFloat4x4(&mMatrix); 
-	matrix *= rotation; 
-	XMStoreFloat4x4(&mMatrix, matrix); 
-}
-
-void GameObject::Transform::RotateWorldZ(float angle) {
-	XMFLOAT4X4 mRotation;
-	mRotation._11 = cos(angle);
-	mRotation._12 = sin(angle);
-	mRotation._13 = 0;
-	mRotation._14 = 1; 
-	mRotation._21 = -sin(angle);
-	mRotation._22 = cos(angle);
-	mRotation._23 = 0; 
-	mRotation._24 = 1; 
-	mRotation._31 = 0;
-	mRotation._32 = 0; 
-	mRotation._33 = 1;
-	mRotation._34 = 1; 
-	mRotation._41 = 1; 
-	mRotation._42 = 1; 
-	mRotation._43 = 1; 
-	mRotation._44 = 1; 
-	XMMATRIX rotation = XMLoadFloat4x4(&mRotation);
-	XMMATRIX matrix = XMLoadFloat4x4(&mMatrix); 
-	matrix *= rotation; 
-	XMStoreFloat4x4(&mMatrix, matrix);
-}
-
-void GameObject::Transform::Scale(float x, float y, float z) {
-	vSca.x = x;
-	vSca.y = y;
-	vSca.z = z;
-	vSca.w = 1;
-	XMVECTOR vScale = XMLoadFloat4(&vSca);
-	XMMATRIX scale = XMMatrixScalingFromVector(vScale);
-	XMStoreFloat4x4(&mSca, scale);
-}
-
-void GameObject::Transform::SetPosition(int x, int y, int z) {
-	vPos.x = (float) x;
-	vPos.y = (float)y;
-	vPos.z = (float)z;
-	mPos._11 = (float)x;
-	mPos._22 = (float)y;
-	mPos._33 = (float)z;
-	mPos._44 = 1;
-}
-
-
 float GetDegreeToRadian(float fAngleDegree)
 {
-	return fAngleDegree * PI / 180.f;
+	return fAngleDegree * XM_PI / 180.f;
 }
 
 GameObject::GameObject(){}
 GameObject::~GameObject(){
 	if (componentList.size() > 0) {
-
+		for (int i = 0; i < componentList.size(); i++) {
+			delete(componentList[0]);
+		}
 	}
 }
 
 void GameObject::addComponent(Component* component) {
 	componentList.push_back(component);
+}
+
+template <typename T> T* GameObject::getComponent() {
+	if (componentList.size() > 0) {
+		for (int i = 0; i < componentList.size(); i++) {
+			if (typeid(componentList[i]) == typeid(T)) {
+				return componentList[i];
+			}
+		}
+	}
+	return nullptr;
 }

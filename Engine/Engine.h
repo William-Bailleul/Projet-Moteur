@@ -39,7 +39,8 @@ public:
     virtual LRESULT MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 protected:
-    virtual void CreateRtvAndDsvDescriptorHeaps();
+    virtual void CreateDescriptorHeaps();
+    virtual void CreateRootSignature();
     virtual void OnResize();
     virtual void Update(const GameTimer& gt) = 0;
     virtual void Draw(const GameTimer& gt) = 0;
@@ -103,14 +104,18 @@ protected:
     Microsoft::WRL::ComPtr<ID3D12Resource> mSwapChainBuffer[SwapChainBufferCount];
     Microsoft::WRL::ComPtr<ID3D12Resource> mDepthStencilBuffer;
 
+    ComPtr<ID3D12RootSignature> mRootSignature = nullptr;
+
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mRtvHeap;
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mDsvHeap;
+    Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mCbvHeap;
 
     D3D12_VIEWPORT mScreenViewport;
     D3D12_RECT mScissorRect;
 
     UINT mRtvDescriptorSize = 0;
     UINT mDsvDescriptorSize = 0;
+    UINT mCbvDescriptorSize = 0;
     UINT mCbvSrvUavDescriptorSize = 0;
 
     // Derived class should set these in derived constructor to customize starting values.

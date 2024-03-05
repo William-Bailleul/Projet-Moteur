@@ -1,5 +1,5 @@
 #include "ComponentRenderMesh.h"
-
+/*
 ComponentRenderMesh::ComponentRenderMesh(GameObject* gameObjectPointer, GeometryHandler::Mesh meshRef, Shader* shaderRef, Texture* textureRef) :Component::Component(gameObjectPointer) {
 	Init(meshRef, shaderRef, textureRef);
 }
@@ -40,4 +40,4 @@ void ComponentRenderMesh::Init(GeometryHandler::Mesh meshRef, Shader* shaderRef,
 	meshRitem->StartIndexLocation = meshRitem->Geo->DrawArgs["mesh"].StartIndexLocation;
 	meshRitem->BaseVertexLocation = meshRitem->Geo->DrawArgs["mesh"].BaseVertexLocation;
 	mAllRitems.push_back(std::move(meshRitem));
-}
+}*/

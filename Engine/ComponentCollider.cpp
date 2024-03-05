@@ -4,7 +4,7 @@
 #include "ComponentScript.h"
 
 #include <vector>
-
+/*
 ComponentCollider::ComponentCollider(GameObject* gameObjectPointer, GameManager* manager, ComponentScript* script) :Component::Component(gameObjectPointer) {
 	Init(manager, script);
 };
@@ -76,3 +76,4 @@ void ComponentCollider::NewHitFrustum(){
 ComponentCollider::~ComponentCollider() {
 	//use frees and deletes to remove all the contents of the lists etc
 };
+*/

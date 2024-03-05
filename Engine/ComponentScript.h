@@ -12,7 +12,6 @@ class ComponentScript: public Component
 public:
 	string scriptName;
 	string state;
-	vector<string> scriptQueue;
 
 	ComponentScript(GameObject* gameObjectPointer, string name, string initState);
 
@@ -20,5 +19,6 @@ public:
 	string GetName();
 
 private:
+	vector<string> scriptQueue;
 	void Init(string name, string initState);
 };

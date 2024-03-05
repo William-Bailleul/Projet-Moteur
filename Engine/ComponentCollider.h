@@ -30,23 +30,8 @@ public:
 
 	//check functions
 	void FullCollisionCheck(); 
-
-	template <typename U, typename V> bool ListCollisionCheck(std::vector<U*> listOne, std::vector<V*> listTwo) {
-		for (int i = 0; i < listOne.size(); i++) {
-			for (int j = 0; j < listTwo.size(); j++) {
-				if (OneCollisionCheck(listOne[i], listTwo[j]) != 0) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	template <typename U, typename V> int OneCollisionCheck(U* boundingOne, V* boundingTwo) {
-		int collisionType;
-		collisionType = boundingOne->Contains(boundingTwo);
-		return collisionType;
-	}
+	template  <typename U, typename V> bool ListCollisionCheck(std::vector<U*> listOne, std::vector<V*> listTwo);
+	template <typename U, typename V> int OneCollisionCheck(U* boundingOne, V* boundingTwo);
 
 	//create functions
 	void NewHitBox(XMFLOAT3& center, XMFLOAT3& extents);
@@ -57,3 +42,20 @@ private:
 	void Init(GameManager* manager, ComponentScript* script);
 };
 
+
+template <typename U, typename V> bool ComponentCollider::ListCollisionCheck(std::vector<U*> listOne, std::vector<V*> listTwo) {
+	for (int i = 0; i < listOne.size(); i++) {
+		for (int j = 0; j < listTwo.size(); j++) {
+			if (OneCollisionCheck(listOne[i], listTwo[j]) != 0) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+template <typename U, typename V> int ComponentCollider::OneCollisionCheck(U* boundingOne, V* boundingTwo) {
+	int collisionType;
+	collisionType = boundingOne->Contains(*boundingTwo);
+	return collisionType;
+}

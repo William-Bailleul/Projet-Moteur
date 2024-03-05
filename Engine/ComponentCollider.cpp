@@ -26,8 +26,8 @@ void ComponentCollider::FullCollisionCheck() {
 			
 			if (currentObject != gameObjectPointer) {
 
-				ComponentCollider* currentCollider = *currentObject->getComponent<ComponentCollider*>();
-				ComponentScript* currentScript = *currentObject->getComponent<ComponentScript*>();
+				ComponentCollider* currentCollider = currentObject->getComponent<ComponentCollider>();
+				ComponentScript* currentScript = currentObject->getComponent<ComponentScript>();
 
 				//if there is any collision between this object and another
 				if (ListCollisionCheck(hitBoxes, currentCollider->hitBoxes)

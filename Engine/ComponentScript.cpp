@@ -8,6 +8,7 @@ void ComponentScript::Init(string name, string initState) {
 	scriptName = name;
 	scriptState = initState;
 }
+
 ////////////////////////BEHAVIOR FUNCTIONS////////////////////////
 
 

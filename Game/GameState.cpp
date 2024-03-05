@@ -22,7 +22,7 @@ void GameState::setState(PlayState& newState) {
 	// after changing statae
 
 }
-
+    
 GameState::GameState() {};
 GameState::~GameState() {};
 

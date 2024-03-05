@@ -21,5 +21,5 @@ public:
 	void nextState();
 	void setState(PlayState& newState);
 };
-
+      
  

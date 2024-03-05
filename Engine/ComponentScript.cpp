@@ -6,11 +6,19 @@ ComponentScript::ComponentScript(GameObject* gameObjectPointer, string name, str
 
 void ComponentScript::Init(string name, string initState) {
 	scriptName = name;
-	state = initState;
+	scriptState = initState;
 }
 
 void ComponentScript::AddToQueue(string newInput) {
 	scriptQueue.push_back(newInput);
+}
+
+void ComponentScript::SetState(string newState) {
+	scriptState = newState;
+}
+
+string ComponentScript::GetState() {
+	return scriptState;
 }
 
 string ComponentScript::GetName() {

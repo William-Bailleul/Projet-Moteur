@@ -17,6 +17,8 @@ public:
 
 	// Queue Functions
 	void AddToQueue(string newInput); 
+	string ReadFront();
+	void TrashFront();
 
 	// State Functions
 	void SetState(string newState);

@@ -9,11 +9,20 @@ using namespace std;
 
 class GameTimer;
 
+enum ScriptNames
+{
+	
+};
+
+enum ScriptStates {
+
+};
+
 class ComponentScript: public Component
 {
 public:
 
-	ComponentScript(GameObject* gameObjectPointer, string name, string initState, GameTimer* timer);
+	ComponentScript(GameObject* gameObjectPointer, ScriptNames name, ScriptStates initState, GameTimer* timer);
 
 	// Main Behavior Function
 	void PlayScript();
@@ -40,23 +49,23 @@ public:
 	//////////////////////////
 	
 	// Queue Funcs
-	void AddToQueue(string newInput); 
-	string ReadFront();
+	void AddToQueue(ScriptNames newInput);
+	ScriptNames ReadFront();
 	void TrashFront();
 
 	// State Funcs
-	void SetState(string newState);
-	string GetState();
+	void SetState(ScriptStates newState);
+	ScriptStates GetState();
 
 	// Name Funcs
-	string GetName();
+	ScriptNames GetName();
 
 private:
-	string scriptName;
-	string scriptState;
+	ScriptNames scriptName;
+	ScriptStates scriptState;
 
 	GameTimer* gameTimer;
 
-	vector<string> scriptQueue;
-	void Init(string name, string initState, GameTimer* timer);
+	vector<ScriptNames> scriptQueue;
+	void Init(ScriptNames name, ScriptStates initState, GameTimer* timer);
 };

@@ -2,11 +2,11 @@
 
 #include "GameTimer.h"
 
-ComponentScript::ComponentScript(GameObject* gameObjectPointer, string name, string initState, GameTimer* timer) :Component::Component(gameObjectPointer) {
+ComponentScript::ComponentScript(GameObject* gameObjectPointer, ScriptNames name, ScriptStates initState, GameTimer* timer) :Component::Component(gameObjectPointer) {
 	Init(name, initState, timer);
 };
 
-void ComponentScript::Init(string name, string initState, GameTimer* timer) {
+void ComponentScript::Init(ScriptNames name, ScriptStates initState, GameTimer* timer) {
 	scriptName = name;
 	scriptState = initState;
 	gameTimer = timer;
@@ -14,7 +14,6 @@ void ComponentScript::Init(string name, string initState, GameTimer* timer) {
 
 // Main Behavior Function
 void ComponentScript::PlayScript() {
-
 }
 
 
@@ -50,11 +49,11 @@ void ComponentScript::ObjectDestroy() {
 
 //QUEUE FUNCTIONS
 
-void ComponentScript::AddToQueue(string newInput) {
+void ComponentScript::AddToQueue(ScriptNames newInput) {
 	scriptQueue.push_back(newInput);
 }
 
-string ComponentScript::ReadFront() {
+ScriptNames ComponentScript::ReadFront() {
 	return scriptQueue[0];
 }
 
@@ -64,16 +63,16 @@ void ComponentScript::TrashFront() {
 
 //STATE FUNCTIONS
 
-void ComponentScript::SetState(string newState) {
+void ComponentScript::SetState(ScriptStates newState) {
 	scriptState = newState;
 }
 
-string ComponentScript::GetState() {
+ScriptStates ComponentScript::GetState() {
 	return scriptState;
 }
 
 //NAME FUNCTIONS
 
-string ComponentScript::GetName() {
+ScriptNames ComponentScript::GetName() {
 	return scriptName;
 }

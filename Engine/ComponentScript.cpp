@@ -57,7 +57,17 @@ void ComponentScript::ObjectDestroy() {
 
 
 // TIMER FUNCTIONS
+__int64 GetTimeStamp() {
 
+}
+
+void SetTimeStamp() {
+
+}
+
+__int64 HowLongSinceTimeStamp() {
+
+}
 
 //////////////////////////////////
 //		SCRIPT MANAGEMENT		//

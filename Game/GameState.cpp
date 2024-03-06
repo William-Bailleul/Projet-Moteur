@@ -1,24 +1,28 @@
-#pragma once
-#include <array>
+#include "GameState.h"
 
-enum PlayState
-{
-	Home = 0,
-	Targetting = 1,
-	Shoot = 2,
-	Quit = 3,
-};
+void GameState::Init() {
+	states = {
+	PlayState::Home,
+	PlayState::Targetting,
+	PlayState::Shoot,
+	PlayState::Quit,
+	};
 
+	currentState = states[0];
+}
 
-class GameState
-{
-	std::array<PlayState, 4> states;
-public:
-	PlayState currentState;
-	GameState();
-	~GameState();
-	void Init();
-	void nextState();
-	void setState(PlayState& newState);
-};
+void GameState::nextState() {
+	currentState = states[(currentState + 1) % states.size()];
+}
+
+void GameState::setState(PlayState& newState) {
+	//Before changing state 
+
+	currentState = newState;
+	// after changing statae
+
+}
+
+GameState::GameState() {};
+GameState::~GameState() {};
 

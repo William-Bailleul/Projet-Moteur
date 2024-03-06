@@ -17,7 +17,6 @@ public:
 	PlayState currentState;
 	GameState();
 	~GameState();
-	void Init();
 	void nextState();
 	void setState(PlayState& newState);
 };

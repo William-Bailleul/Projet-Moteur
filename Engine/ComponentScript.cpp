@@ -1,6 +1,7 @@
 #include "ComponentScript.h"
 
 #include "GameTimer.h"
+#include "Transform.h"
 
 ComponentScript::ComponentScript(GameObject* gameObjectPointer, ScriptNames name, ScriptStates initState, GameTimer* timer) :Component::Component(gameObjectPointer) {
 	Init(name, initState, timer);
@@ -13,7 +14,17 @@ void ComponentScript::Init(ScriptNames name, ScriptStates initState, GameTimer* 
 }
 
 // Main Behavior Function
+// Remember that this function operates ONCE EVERY FRAME, 
+// which means we have to base our functions on time or we
+// would get different game speeds based on the framerate
 void ComponentScript::PlayScript() {
+	
+
+	//check the queue ?
+
+	switch (scriptState) {
+
+	}
 }
 
 

@@ -7,3 +7,7 @@ Component::Component(GameObject* GOPointer) {
 void Component::Init(GameObject* GOPointer) {
 	gameObjectPointer = GOPointer;
 }
+
+Component::~Component() {
+
+}

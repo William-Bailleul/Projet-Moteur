@@ -1,18 +1,89 @@
 #include "ComponentScript.h"
 
-ComponentScript::ComponentScript(GameObject* gameObjectPointer, string name, string initState) :Component::Component(gameObjectPointer) {
-	Init(name, initState);
+#include "GameTimer.h"
+#include "Transform.h"
+
+ComponentScript::ComponentScript(GameObject* gameObjectPointer, ScriptNames name, ScriptStates initState, GameTimer* timer) :Component::Component(gameObjectPointer) {
+	Init(name, initState, timer);
 };
 
-void ComponentScript::Init(string name, string initState) {
+void ComponentScript::Init(ScriptNames name, ScriptStates initState, GameTimer* timer) {
 	scriptName = name;
-	state = initState;
+	scriptState = initState;
+	gameTimer = timer;
 }
 
-void ComponentScript::AddToQueue(string newInput) {
+// Main Behavior Function
+// Remember that this function operates ONCE EVERY FRAME, 
+// which means we have to base our functions on time or we
+// would get different game speeds based on the framerate
+void ComponentScript::PlayScript() {
+	
+
+	//check the queue ?
+
+	switch (scriptState) {
+
+	}
+}
+
+
+//////////////////////////////////
+//		OBJECT MANAGEMENT		//
+//////////////////////////////////
+
+//VISIBILITY FUNCTIONS
+//make the object visible
+void ComponentScript::ObjectShow() {
+
+}
+
+//make the object invisible
+void ComponentScript::ObjectHide() {
+
+}
+
+//completely end the object's existence
+void ComponentScript::ObjectDestroy() {
+
+}
+
+// OBJECT SHAPE FUNCTIONS
+
+
+// TIMER FUNCTIONS
+
+
+//////////////////////////////////
+//		SCRIPT MANAGEMENT		//
+//////////////////////////////////
+
+//QUEUE FUNCTIONS
+
+void ComponentScript::AddToQueue(ScriptNames newInput) {
 	scriptQueue.push_back(newInput);
 }
 
-string ComponentScript::GetName() {
+ScriptNames ComponentScript::ReadFront() {
+	return scriptQueue[0];
+}
+
+void ComponentScript::TrashFront() {
+	scriptQueue.erase(scriptQueue.begin());
+}
+
+//STATE FUNCTIONS
+
+void ComponentScript::SetState(ScriptStates newState) {
+	scriptState = newState;
+}
+
+ScriptStates ComponentScript::GetState() {
+	return scriptState;
+}
+
+//NAME FUNCTIONS
+
+ScriptNames ComponentScript::GetName() {
 	return scriptName;
 }

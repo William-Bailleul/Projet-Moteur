@@ -41,7 +41,9 @@ public:
 	//
 
 	// Timer Funcs (using the GameTimer.h file)
-	
+	__int64 GetTimeStamp();
+	void SetTimeStamp();
+	__int64 HowLongSinceTimeStamp();
 
 	//////////////////////////
 	//	SCRIPT MANAGEMENT	//
@@ -66,7 +68,8 @@ private:
 	//lets us put aside the scriptQueue for a while if the current State is very important (ie: death, 
 	int currentStatePriority;
 
-	GameTimer* gameTimer;
+	GameTimer* gameTimer; 
+	__int64 timeStamp;
 
 	std::vector<ScriptNames> scriptQueue;
 	void Init(ScriptNames name, ScriptStates initState, GameTimer* timer);

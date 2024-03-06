@@ -70,8 +70,10 @@ void ComponentRenderMesh::DrawRenderItem(ID3D12GraphicsCommandList* cmdList, con
 	{
 		auto ri = ritems[i];
 
-		cmdList->IASetVertexBuffers(0, 1, &ri->Geo->VertexBufferView());
-		cmdList->IASetIndexBuffer(&ri->Geo->IndexBufferView());
+		D3D12_VERTEX_BUFFER_VIEW vBV = ri->Geo->VertexBufferView();
+		cmdList->IASetVertexBuffers(0, 1, &vBV);
+		D3D12_INDEX_BUFFER_VIEW iBV = ri->Geo->IndexBufferView();
+		cmdList->IASetIndexBuffer(&iBV);
 		cmdList->IASetPrimitiveTopology(ri->PrimitiveType);
 
 		// Offset to the CBV in the descriptor heap for this object and for this frame resource.

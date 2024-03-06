@@ -9,14 +9,12 @@
 
 class GameTimer;
 
-enum ScriptNames
-{
-	tmp2
 enum ScriptNames {
+
 };
 
 enum ScriptStates {
-	tmp
+
 };
 
 class ComponentScript: public Component

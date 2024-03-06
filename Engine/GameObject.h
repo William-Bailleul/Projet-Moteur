@@ -12,12 +12,17 @@ class Component;
 
 class GameObject
 {
+private:
+	int m_posX;
+	int m_posY;
+	int m_posZ;
 public:
 	std::vector<Component*> componentList;
 
 	GameObject();
 	~GameObject();
 
+	void Init(int posX, int posY, int posZ);
 	void addComponent(Component* component);
 
 

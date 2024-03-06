@@ -9,8 +9,7 @@ using namespace std;
 
 class GameTimer;
 
-enum ScriptNames
-{
+enum ScriptNames {
 	
 };
 

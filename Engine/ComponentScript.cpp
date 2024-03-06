@@ -14,11 +14,12 @@ void ComponentScript::Init(ScriptNames name, ScriptStates initState, GameTimer* 
 }
 
 // Main Behavior Function
-// Remember that this function operates ONCE EVERY FRAME, 
-// which means we have to base our functions on time or we
-// would get different game speeds based on the framerate
+/* 
+Remember that this function operates ONCE EVERY FRAME,
+which means we have to base our functions on time or we
+would get different game speeds based on the framerate
+*/
 void ComponentScript::PlayScript() {
-	
 
 	//check the queue ?
 
@@ -38,6 +39,8 @@ void ComponentScript::ObjectShow() {
 
 }
 
+//for ^^^ those vvv two, play around with the display pipeline idk
+
 //make the object invisible
 void ComponentScript::ObjectHide() {
 
@@ -45,7 +48,7 @@ void ComponentScript::ObjectHide() {
 
 //completely end the object's existence
 void ComponentScript::ObjectDestroy() {
-
+	// /kill @p :)
 }
 
 // OBJECT SHAPE FUNCTIONS

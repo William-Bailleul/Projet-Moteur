@@ -2,20 +2,20 @@
 
 #include "Component.h"
 
-#include <string>
+//#include <string>
 #include <vector>
 
-using namespace std;
+//using namespace std;
 
 class GameTimer;
 
 enum ScriptNames
 {
-	
+	tmp2
 };
 
 enum ScriptStates {
-
+	tmp
 };
 
 class ComponentScript: public Component
@@ -69,6 +69,6 @@ private:
 
 	GameTimer* gameTimer;
 
-	vector<ScriptNames> scriptQueue;
+	std::vector<ScriptNames> scriptQueue;
 	void Init(ScriptNames name, ScriptStates initState, GameTimer* timer);
 };

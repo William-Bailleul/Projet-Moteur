@@ -3,7 +3,9 @@
 #include "GameTimer.h"
 #include "Transform.h"
 
-ComponentScript::ComponentScript(GameObject* gameObjectPointer, ScriptNames name, ScriptStates initState, GameTimer* timer) :Component::Component(gameObjectPointer) {
+using namespace std;
+
+ComponentScript::ComponentScript(GameObject* gameObjectPointer, ScriptNames name, ScriptStates initState, GameTimer* timer) : Component(gameObjectPointer) {
 	Init(name, initState, timer);
 };
 
@@ -23,9 +25,9 @@ void ComponentScript::PlayScript() {
 
 	//check the queue ?
 
-	switch (scriptState) {
+	//switch (scriptState) {
 
-	}
+	//}
 }
 
 

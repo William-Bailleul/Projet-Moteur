@@ -1,5 +1,7 @@
 #include "GameObject.h"
 
+#include "Component.h"
+
 float GetDegreeToRadian(float fAngleDegree)
 {
 	return fAngleDegree * XM_PI / 180.f;

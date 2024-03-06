@@ -12,6 +12,7 @@ enum PlayState
 
 class GameState
 {
+private:
 	std::array<PlayState, 4> states;
 public:
 	PlayState currentState;

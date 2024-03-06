@@ -1,17 +1,5 @@
 #include "GameState.h"
 
-void GameState::nextState() {
-	currentState = states[(currentState + 1) % states.size()];
-}
-
-void GameState::setState(PlayState& newState) {
-	//Before changing state 
-
-	currentState = newState;
-	// after changing statae
-
-}
-    
 GameState::GameState() {
 	states = {
 	PlayState::Home,
@@ -25,4 +13,14 @@ GameState::GameState() {
 
 GameState::~GameState() {};
 
- 
+void GameState::nextState() {
+	currentState = states[(currentState + 1) % states.size()];
+}
+
+void GameState::setState(PlayState& newState) {
+	//Before changing state 
+
+	currentState = newState;
+	// after changing statae
+
+}

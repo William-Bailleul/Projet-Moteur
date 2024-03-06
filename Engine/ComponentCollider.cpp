@@ -18,61 +18,59 @@ void ComponentCollider::Init(GameManager* manager, ComponentScript* script) {
 void ComponentCollider::FullCollisionCheck() {
 
 	// remember to parse the game's generated "field" in a grid to avoid checking the entire scene for collisions everytime 
-	if (hitBoxes.size() > 0) {
+	if (hitBoxes.size() > 0 || hitSpheres.size() > 0 || hitBoxes.size() > 0) {
 
 		std::vector<GameObject*> currentObjectList = gameManager->objectList;
 		for (int i = 0; i < currentObjectList.size(); i++) {
-
 			GameObject* currentObject = currentObjectList[i];
-			ComponentCollider* currentCollider = *currentObject->getComponent<ComponentCollider*>();
-			ComponentScript* currentScript = *currentObject->getComponent<ComponentScript*>();
+			
+			if (currentObject != gameObjectPointer) {
 
-			if (ListCollisionCheck(hitBoxes, currentCollider->hitBoxes)
-				|| ListCollisionCheck(hitBoxes, currentCollider->hitSpheres)
-				|| ListCollisionCheck(hitBoxes, currentCollider->hitFrustums)
-				|| ListCollisionCheck(hitSpheres, currentCollider->hitBoxes)
-				|| ListCollisionCheck(hitSpheres, currentCollider->hitSpheres)
-				|| ListCollisionCheck(hitSpheres, currentCollider->hitFrustums)
-				|| ListCollisionCheck(hitFrustums, currentCollider->hitBoxes)
-				|| ListCollisionCheck(hitFrustums, currentCollider->hitSpheres)
-				|| ListCollisionCheck(hitFrustums, currentCollider->hitFrustums)) {
-				objectScript->AddToQueue(currentScript->GetName());
+				ComponentCollider* currentCollider = currentObject->getComponent<ComponentCollider>();
+				ComponentScript* currentScript = currentObject->getComponent<ComponentScript>();
+
+				//if there is any collision between this object and another
+				if (ListCollisionCheck(hitBoxes, currentCollider->hitBoxes)
+					|| ListCollisionCheck(hitBoxes, currentCollider->hitSpheres)
+					|| ListCollisionCheck(hitBoxes, currentCollider->hitFrustums)
+					|| ListCollisionCheck(hitSpheres, currentCollider->hitBoxes)
+					|| ListCollisionCheck(hitSpheres, currentCollider->hitSpheres)
+					|| ListCollisionCheck(hitSpheres, currentCollider->hitFrustums)
+					|| ListCollisionCheck(hitFrustums, currentCollider->hitBoxes)
+					|| ListCollisionCheck(hitFrustums, currentCollider->hitSpheres)
+					|| ListCollisionCheck(hitFrustums, currentCollider->hitFrustums)) {
+					//retrieve the other object's name and add it to the script queue for processing
+					objectScript->AddToQueue(currentScript->GetName());
+				}
 			}
 		}
 	}
 }
-
-template <typename U, typename V> bool ComponentCollider::ListCollisionCheck(std::vector<U*> listOne, std::vector<V*> listTwo) {
-	for (int i = 0; i < listOne.size(); i++) {
-		for (int j = 0; j < listTwo.size(); j++) {
-			if (OneCollisionCheck(listOne[i], listTwo[j]) != 0) {
-				return true;
-			}
-		}
-	}
-	return false;
-}
-
-template <typename U, typename V> int ComponentCollider::OneCollisionCheck(U* boundingOne, V* boundingTwo) {
-	int collisionType;
-	collisionType = boundingOne->Contains(boundingTwo);
-	return collisionType;
-}
-
-
 
 //add a new BoundingBox to the hitBoxes list
-void ComponentCollider::NewHitBox(){
+void ComponentCollider::NewHitBox(XMFLOAT3& center, XMFLOAT3& extents){
+	hitBoxes.push_back(new BoundingBox(center, extents));
 }
 
 //add a new BoundingSphere to the hitBoxes list
-void ComponentCollider::NewHitSphere(){
+void ComponentCollider::NewHitSphere(XMFLOAT3& center, float radius){
+	hitSpheres.push_back(new BoundingSphere(center, radius));
 }
 
 //add a new BoundingFrustum to the hitBoxes list
-void ComponentCollider::NewHitFrustum(){
+void ComponentCollider::NewHitFrustum(const XMFLOAT3& _Origin, const XMFLOAT4& _Orientation, float _RightSlope, float _LeftSlope, float _TopSlope, float _BottomSlope, float _Near, float _Far){
+	hitFrustums.push_back(new BoundingFrustum());
 }
 
 ComponentCollider::~ComponentCollider() {
 	//use frees and deletes to remove all the contents of the lists etc
+	for (int i = 0; i < hitBoxes.size(); i++) {
+		delete (hitBoxes[0]);
+	}
+	for (int i = 0; i < hitFrustums.size(); i++) {
+		delete (hitFrustums[0]);
+	}
+	for (int i = 0; i < hitSpheres.size(); i++) {
+		delete (hitSpheres[0]);
+	}
 };

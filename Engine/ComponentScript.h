@@ -7,18 +7,68 @@
 
 using namespace std;
 
+class GameTimer;
+
+enum ScriptNames
+{
+	
+};
+
+enum ScriptStates {
+
+};
+
 class ComponentScript: public Component
 {
 public:
-	string scriptName;
-	string state;
-	vector<string> scriptQueue;
 
-	ComponentScript(GameObject* gameObjectPointer, string name, string initState);
+	ComponentScript(GameObject* gameObjectPointer, ScriptNames name, ScriptStates initState, GameTimer* timer);
 
-	void AddToQueue(string newInput); 
-	string GetName();
+	// Main Behavior Function
+	void PlayScript();
+
+	//////////////////////
+	// OBJECT FUNCTIONS	//
+	//////////////////////
+	
+	// Visibility Funcs
+	void ObjectShow();
+	void ObjectHide();
+	void ObjectDestroy();
+
+	// Object Shape Funcs (using the Transform struct)
+	// /?\ void move(normal direction matrix, distance/magnitude)
+	// /?\ void rotate
+	//
+
+	// Timer Funcs (using the GameTimer.h file)
+	
+
+	//////////////////////////
+	//	SCRIPT MANAGEMENT	//
+	//////////////////////////
+	
+	// Queue Funcs
+	void AddToQueue(ScriptNames newInput);
+	ScriptNames ReadFront();
+	void TrashFront();
+
+	// State Funcs
+	void SetState(ScriptStates newState);
+	ScriptStates GetState();
+
+	// Name Funcs
+	ScriptNames GetName();
 
 private:
-	void Init(string name, string initState);
+	ScriptNames scriptName;
+	ScriptStates scriptState;
+
+	//lets us put aside the scriptQueue for a while if the current State is very important (ie: death, 
+	int currentStatePriority;
+
+	GameTimer* gameTimer;
+
+	vector<ScriptNames> scriptQueue;
+	void Init(ScriptNames name, ScriptStates initState, GameTimer* timer);
 };

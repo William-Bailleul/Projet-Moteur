@@ -22,6 +22,7 @@
 #include "d3dx12.h"
 #include "DDSTextureLoader.h"
 #include "MathHelper.h"
+#include "UploadBuffer.h"
 
 extern const int gNumFrameResources;
 using Microsoft::WRL::ComPtr;
@@ -55,7 +56,7 @@ inline std::wstring AnsiToWString(const std::string& str)
     return std::wstring(buffer);
 }
 
-/*
+
 #if defined(_DEBUG)
     #ifndef Assert
     #define Assert(x, description)                                  \
@@ -81,9 +82,8 @@ inline std::wstring AnsiToWString(const std::string& str)
     #define Assert(x, description)
     #endif
 #endif
-    */
 
-class d3dUtil
+class Utile
 {
 public:
 

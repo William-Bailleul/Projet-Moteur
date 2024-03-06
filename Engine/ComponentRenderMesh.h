@@ -2,6 +2,7 @@
 
 #include "Component.h"
 #include "Utile.h"
+#include "Engine.h"
 #include "GeometryHandler.h"
 
 //struct Mesh;
@@ -11,34 +12,33 @@ class Texture;
 class ComponentRenderMesh : public Component
 {
 public:
-	struct RenderItem
-	{
-		RenderItem() = default;
-
-		//Matrice du Monde
-		DirectX::XMFLOAT4X4 World = MathHelper::Identity4x4();
-
-		const int gNumFrameResources = 3;
-		int NumFramesDirty = gNumFrameResources;
-
-		// Index into GPU constant buffer corresponding to the ObjectCB for this render item.
-		UINT ObjCBIndex = -1;
-
-		MeshGeometry* Geo = nullptr;
-
-		// Primitive topology.
-		D3D12_PRIMITIVE_TOPOLOGY PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-
-		// DrawIndexedInstanced parameters.
-		UINT IndexCount = 0;
-		UINT StartIndexLocation = 0;
-		int BaseVertexLocation = 0;
-	};
-
 	struct Vertex
 	{
 		DirectX::XMFLOAT3 Pos;
 		DirectX::XMFLOAT4 Color;
+	};
+
+	struct ObjectConstants
+	{
+		DirectX::XMFLOAT4X4 World = MathHelper::Identity4x4();
+	};
+
+	struct PassConstants
+	{
+		DirectX::XMFLOAT4X4 View = MathHelper::Identity4x4();
+		DirectX::XMFLOAT4X4 InvView = MathHelper::Identity4x4();
+		DirectX::XMFLOAT4X4 Proj = MathHelper::Identity4x4();
+		DirectX::XMFLOAT4X4 InvProj = MathHelper::Identity4x4();
+		DirectX::XMFLOAT4X4 ViewProj = MathHelper::Identity4x4();
+		DirectX::XMFLOAT4X4 InvViewProj = MathHelper::Identity4x4();
+		DirectX::XMFLOAT3 EyePosW = { 0.0f, 0.0f, 0.0f };
+		float cbPerObjectPad1 = 0.0f;
+		DirectX::XMFLOAT2 RenderTargetSize = { 0.0f, 0.0f };
+		DirectX::XMFLOAT2 InvRenderTargetSize = { 0.0f, 0.0f };
+		float NearZ = 0.0f;
+		float FarZ = 0.0f;
+		float TotalTime = 0.0f;
+		float DeltaTime = 0.0f;
 	};
 
 	struct FrameResource
@@ -68,12 +68,13 @@ public:
 	Shader* refShader;
 	Texture* refTexture;
 
+	std::vector<D3DApp::RenderItem*> mOpaqueRitems;
 	std::vector<std::unique_ptr<FrameResource>> mFrameResources;
 	FrameResource* mCurrFrameResource = nullptr;
 	int mCurrFrameResourceIndex = 0;
+	UINT mCbvSrvUavDescriptorSize = 0;
 
-	std::vector<RenderItem*> mOpaqueRitems;
-	std::vector<std::unique_ptr<RenderItem>> mAllRitems;
+	std::vector<std::unique_ptr<D3DApp::RenderItem>> mAllRitems;
 	std::unordered_map<std::string, std::unique_ptr<MeshGeometry>> mGeometries;
 
 	ComponentRenderMesh(GameObject* gameObjectPointer, GeometryHandler::Mesh& meshRef, Shader* shaderRef, Texture* textureRef);
@@ -82,7 +83,7 @@ public:
 private:
 	void Init(GeometryHandler::Mesh& meshRef, Shader* shaderRef, Texture* textureRef);
 	void BuildRenderItems();
-	void DrawRenderItem(ID3D12GraphicsCommandList* cmdList, const std::vector<RenderItem*>& ritems);
+	void DrawRenderItem(ID3D12GraphicsCommandList* cmdList, const std::vector<D3DApp::RenderItem*>& ritems, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mCbvHeap, UINT mCbvSrvUavDescriptorSize);
 
 };
 

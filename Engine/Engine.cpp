@@ -155,6 +155,7 @@ void D3DApp::CreateRootSignature()
 
 void D3DApp::CreateDescriptorHeaps()
 {
+	
 	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc;
 	rtvHeapDesc.NumDescriptors = SwapChainBufferCount;
 	rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;

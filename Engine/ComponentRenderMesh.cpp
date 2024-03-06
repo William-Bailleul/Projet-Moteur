@@ -44,7 +44,7 @@ void ComponentRenderMesh::Init(GeometryHandler::Mesh& meshRef, Shader* shaderRef
 
 void ComponentRenderMesh::BuildRenderItems()
 {
-	auto meshRitem = std::make_unique<RenderItem>();
+	auto meshRitem = std::make_unique<D3DApp::RenderItem>();
 	XMStoreFloat4x4(&meshRitem->World, DirectX::XMMatrixScaling(2.0f, 2.0f, 2.0f) * DirectX::XMMatrixTranslation(0.0f, 0.5f, 0.0f));
 	meshRitem->ObjCBIndex = 0;
 	meshRitem->Geo = mGeometries["shapeGeo"].get();
@@ -59,9 +59,9 @@ void ComponentRenderMesh::BuildRenderItems()
 		mOpaqueRitems.push_back(e.get());
 }
 
-void ComponentRenderMesh::DrawRenderItem(ID3D12GraphicsCommandList* cmdList, const std::vector<RenderItem*>& ritems)
+void ComponentRenderMesh::DrawRenderItem(ID3D12GraphicsCommandList* cmdList, const std::vector<D3DApp::RenderItem*>& ritems, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mCbvHeap, UINT mCbvSrvUavDescriptorSize)
 {
-	UINT objCBByteSize = d3dUtil::CalcConstantBufferByteSize(sizeof(DirectX::XMFLOAT4X4));
+	UINT objCBByteSize = Utile::CalcConstantBufferByteSize(sizeof(DirectX::XMFLOAT4X4));
 
 	auto objectCB = mCurrFrameResource->ObjectCB->Resource();
 
@@ -86,6 +86,21 @@ void ComponentRenderMesh::DrawRenderItem(ID3D12GraphicsCommandList* cmdList, con
 }
 
 ComponentRenderMesh::~ComponentRenderMesh() 
+{
+
+}
+
+ComponentRenderMesh::FrameResource::FrameResource(ID3D12Device* device, UINT passCount, UINT objectCount)
+{
+	ThrowIfFailed(device->CreateCommandAllocator(
+		D3D12_COMMAND_LIST_TYPE_DIRECT,
+		IID_PPV_ARGS(CmdListAlloc.GetAddressOf())));
+
+	PassCB = std::make_unique<UploadBuffer<PassConstants>>(device, passCount, true);
+	ObjectCB = std::make_unique<UploadBuffer<ObjectConstants>>(device, objectCount, true);
+}
+
+ComponentRenderMesh::FrameResource::~FrameResource()
 {
 
 }

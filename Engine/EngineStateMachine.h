@@ -6,13 +6,14 @@ enum EngineState
 	Message = 0,
 	NewGameObject = 1,
 	Render = 2,
+	DeleteObject = 3,
 };
 
 
 class GameState
 {
 private:
-	std::array<EngineState, 3> states;
+	std::array<EngineState, 4> states;
 public:
 	EngineState currentState;
 	GameState();

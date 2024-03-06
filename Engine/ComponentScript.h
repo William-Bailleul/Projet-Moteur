@@ -10,7 +10,7 @@
 class GameTimer;
 
 enum ScriptNames {
-
+	dada
 };
 
 enum ScriptStates {

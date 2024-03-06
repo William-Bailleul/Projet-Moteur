@@ -23,4 +23,4 @@ void GameState::setState(EngineState& newState) {
 	currentState = newState;
 	// after changing statae
 
-}
+} 

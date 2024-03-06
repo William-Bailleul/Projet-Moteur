@@ -6,7 +6,7 @@ enum EngineState
 	Message = 0,
 	NewGameObject = 1,
 	Render = 2,
-	DeleteObject = 3,
+	Collision = 3,
 };
 
 

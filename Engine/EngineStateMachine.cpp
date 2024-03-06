@@ -5,7 +5,7 @@ GameState::GameState() {
 	EngineState::Message,
 	EngineState::NewGameObject,
 	EngineState::Render,
-	EngineState::DeleteObject,
+	EngineState::Collision,
 	};
 
 	currentState = states[0];

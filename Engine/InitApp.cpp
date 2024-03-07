@@ -20,6 +20,8 @@ private:
 	virtual void OnResize()override;
 	virtual void Update(const GameTimer& gt)override;
 	virtual void Draw(const GameTimer& gt)override;
+	void DrawEdit(const GameTimer& gt, ComponentRenderMesh& oRMesh);
+
 
 };
 
@@ -63,7 +65,7 @@ bool InitDirect3DApp::Initialize()
 	Shader oShader(md3dDevice, mBackBufferFormat, mDepthStencilFormat, m4xMsaaState, m4xMsaaQuality);
 	Texture oTexture;
 	oTexture.Name = "texture";
-	oTexture.Filename = L"Shaders\\color.hlsl";
+	oTexture.Filename = L"color.hlsl";
 
 	oShader.BuildRootSignature();
 	oShader.CompileShaders(oTexture.Filename.c_str());
@@ -84,7 +86,17 @@ bool InitDirect3DApp::Initialize()
 		mFrameResources.push_back(std::make_unique<FrameResource>(md3dDevice.Get(),
 			1, (UINT)oRMesh.mAllRitems.size()));
 	}
-	
+
+	D3DApp::CreateDescriptorHeaps();
+	D3DApp::CreateConstantBufferViews();
+	oShader.BuildPSO();
+
+	ThrowIfFailed(mCommandList->Close());
+	ID3D12CommandList* cmdsLists[] = { mCommandList.Get() };
+	mCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
+
+	// Wait until initialization is complete.
+	FlushCommandQueue();
 
 	return true;
 }
@@ -96,10 +108,32 @@ void InitDirect3DApp::OnResize()
 
 void InitDirect3DApp::Update(const GameTimer& gt)
 {
+	
+	// Cycle through the circular frame resource array.
+	mCurrFrameResourceIndex = (mCurrFrameResourceIndex + 1) % gNumFrameResources;
+	mCurrFrameResource = mFrameResources[mCurrFrameResourceIndex].get();
 
+	// Has the GPU finished processing the commands of the current frame resource?
+	// If not, wait until the GPU has completed commands up to this fence point.
+	if (mCurrFrameResource->Fence != 0 && mFence->GetCompletedValue() < mCurrFrameResource->Fence)
+	{
+		HANDLE eventHandle = CreateEventEx(nullptr, nullptr, false, EVENT_ALL_ACCESS);
+		ThrowIfFailed(mFence->SetEventOnCompletion(mCurrFrameResource->Fence, eventHandle));
+		WaitForSingleObject(eventHandle, INFINITE);
+		CloseHandle(eventHandle);
+	}
+
+	ComponentRenderMesh oRMeshUpdate;
+	oRMeshUpdate.UpdateObjectCBs(gt);
+	//oRMesh.UpdateMainPassCB(gt);
 }
 
 void InitDirect3DApp::Draw(const GameTimer& gt)
+{
+	
+}
+
+void InitDirect3DApp::DrawEdit(const GameTimer& gt, ComponentRenderMesh& oRMesh)
 {
 	// Reuse the memory associated with command recording.
 	// We can only reset when the associated command lists have finished execution on the GPU.
@@ -125,6 +159,8 @@ void InitDirect3DApp::Draw(const GameTimer& gt)
 	D3D12_CPU_DESCRIPTOR_HANDLE tata = CurrentBackBufferView();
 	D3D12_CPU_DESCRIPTOR_HANDLE toto = DepthStencilView();
 	mCommandList->OMSetRenderTargets(1, &tata, true, &toto);
+
+	oRMesh.DrawRenderItem(mCommandList, mOpaqueRitems, mCbvHeap, mCbvSrvUavDescriptorSize);
 
 	// Indicate a state transition on the resource usage.
 	CD3DX12_RESOURCE_BARRIER tete = CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);

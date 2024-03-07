@@ -739,6 +739,58 @@ D3DApp::FrameResource::FrameResource(ID3D12Device* device, UINT passCount, UINT 
 	ObjectCB = std::make_unique<UploadBuffer<ObjectConstants>>(device, objectCount, true);
 }
 
+void D3DApp::CreateConstantBufferViews()
+{
+	UINT objCBByteSize = Utile::CalcConstantBufferByteSize(sizeof(ObjectConstants));
+
+	UINT objCount = (UINT)mOpaqueRitems.size();
+
+	// Need a CBV descriptor for each object for each frame resource.
+	for (int frameIndex = 0; frameIndex < gNumFrameResources; ++frameIndex)
+	{
+		auto objectCB = mFrameResources[frameIndex]->ObjectCB->Resource();
+		for (UINT i = 0; i < objCount; ++i)
+		{
+			D3D12_GPU_VIRTUAL_ADDRESS cbAddress = objectCB->GetGPUVirtualAddress();
+
+			// Offset to the ith object constant buffer in the buffer.
+			cbAddress += i * objCBByteSize;
+
+			// Offset to the object cbv in the descriptor heap.
+			int heapIndex = frameIndex * objCount + i;
+			auto handle = CD3DX12_CPU_DESCRIPTOR_HANDLE(mCbvHeap->GetCPUDescriptorHandleForHeapStart());
+			handle.Offset(heapIndex, mCbvSrvUavDescriptorSize);
+
+			D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc;
+			cbvDesc.BufferLocation = cbAddress;
+			cbvDesc.SizeInBytes = objCBByteSize;
+
+			md3dDevice->CreateConstantBufferView(&cbvDesc, handle);
+		}
+	}
+
+	UINT passCBByteSize = Utile::CalcConstantBufferByteSize(sizeof(PassConstants));
+
+	// Last three descriptors are the pass CBVs for each frame resource.
+	for (int frameIndex = 0; frameIndex < gNumFrameResources; ++frameIndex)
+	{
+		auto passCB = mFrameResources[frameIndex]->PassCB->Resource();
+		D3D12_GPU_VIRTUAL_ADDRESS cbAddress = passCB->GetGPUVirtualAddress();
+
+		// Offset to the pass cbv in the descriptor heap.
+		int heapIndex = mPassCbvOffset + frameIndex;
+		auto handle = CD3DX12_CPU_DESCRIPTOR_HANDLE(mCbvHeap->GetCPUDescriptorHandleForHeapStart());
+		handle.Offset(heapIndex, mCbvSrvUavDescriptorSize);
+
+		D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc;
+		cbvDesc.BufferLocation = cbAddress;
+		cbvDesc.SizeInBytes = passCBByteSize;
+
+		md3dDevice->CreateConstantBufferView(&cbvDesc, handle);
+	}
+}
+
+
 D3DApp::FrameResource::~FrameResource()
 {
 

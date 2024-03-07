@@ -27,6 +27,8 @@
 //const int gNumFrameResources;
 using Microsoft::WRL::ComPtr;
 
+const int gNumFrameResources = 3;
+
 inline void d3dSetDebugName(IDXGIObject* obj, const char* name)
 {
     if (obj)
@@ -86,6 +88,7 @@ inline std::wstring AnsiToWString(const std::string& str)
 class Utile
 {
 public:
+    void CreateConstantBufferViews();
 
     static bool IsKeyDown(int vkeyCode);
 

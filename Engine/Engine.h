@@ -13,6 +13,7 @@
 #pragma comment(lib, "D3D12.lib")
 #pragma comment(lib, "dxgi.lib")
 
+
 class D3DApp
 {
 protected:
@@ -33,10 +34,13 @@ public:
     bool Get4xMsaaState()const;
     void Set4xMsaaState(bool value);
 
+    void CreateConstantBufferViews();
+
     int Run();
 
     virtual bool Initialize();
     virtual LRESULT MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 
     struct RenderItem
     {
@@ -45,7 +49,6 @@ public:
         //Matrice du Monde
         DirectX::XMFLOAT4X4 World = MathHelper::Identity4x4();
 
-        const int gNumFrameResources = 3;
         int NumFramesDirty = gNumFrameResources;
 
         // Index into GPU constant buffer corresponding to the ObjectCB for this render item.
@@ -109,6 +112,10 @@ public:
     };
 
     std::vector<std::unique_ptr<FrameResource>> mFrameResources;
+    FrameResource* mCurrFrameResource = nullptr;
+    int mCurrFrameResourceIndex = 0;
+
+
 
 protected:
     virtual void CreateDescriptorHeaps();

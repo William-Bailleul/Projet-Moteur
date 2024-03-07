@@ -141,6 +141,7 @@
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GeometryHandler.h" />
+    <ClInclude Include="Image.h" />
     <ClInclude Include="InputController.h" />
     <ClInclude Include="ComponentRenderMesh.h" />
     <ClInclude Include="GameTimer.h" />
@@ -163,6 +164,7 @@
     <ClCompile Include="EngineStateMachine.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GeometryHandler.cpp" />
+    <ClCompile Include="Image.cpp" />
     <ClCompile Include="InputController.cpp" />
     <ClCompile Include="ComponentRenderMesh.cpp" />
     <ClCompile Include="GameTimer.cpp" />

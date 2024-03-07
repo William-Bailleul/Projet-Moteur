@@ -54,16 +54,20 @@ void ComponentScript::ObjectDestroy() {
 }
 
 // TIMER FUNCTIONS
-__int64 GetTimeStamp() {
-
+//get the saved timeStamp
+__int64 ComponentScript::GetTimeStamp() {
+	return timeStamp;
 }
 
-void SetTimeStamp() {
-
+//set the saved timeStamp to current time
+void ComponentScript::SetTimeStamp() {
+	timeStamp = gameTimer->TotalTime();
 }
 
-__int64 HowLongSinceTimeStamp() {
-
+//get how long it have been since you saved the timeStamp
+__int64 ComponentScript::HowLongSinceTimeStamp() {
+	__int64 diff = (gameTimer->TotalTime() - timeStamp);
+	return diff;
 }
 
 //////////////////////////////////

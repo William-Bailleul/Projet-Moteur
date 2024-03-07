@@ -53,9 +53,6 @@ void ComponentScript::ObjectDestroy() {
 	// /kill @p :)
 }
 
-// OBJECT SHAPE FUNCTIONS
-
-
 // TIMER FUNCTIONS
 __int64 GetTimeStamp() {
 

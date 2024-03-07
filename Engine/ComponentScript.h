@@ -35,11 +35,6 @@ public:
 	void ObjectHide();
 	void ObjectDestroy();
 
-	// Object Shape Funcs (using the Transform struct)
-	// /?\ void move(normal direction matrix, distance/magnitude)
-	// /?\ void rotate
-	//
-
 	// Timer Funcs (using the GameTimer.h file)
 	__int64 GetTimeStamp();
 	void SetTimeStamp();

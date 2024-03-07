@@ -15,13 +15,19 @@ public:
 	~InitDirect3DApp();
 
 	virtual bool Initialize()override;
+	void DrawEdit(const GameTimer& gt, ComponentRenderMesh& oRMesh);
 
 private:
 	virtual void OnResize()override;
 	virtual void Update(const GameTimer& gt)override;
 	virtual void Draw(const GameTimer& gt)override;
-	void DrawEdit(const GameTimer& gt, ComponentRenderMesh& oRMesh);
 
+	Shader oShader;
+	Texture oTexture;
+	GameManager testManager;
+	GeometryHandler oMeshH;
+	GeometryHandler::Mesh oMesh;
+	ComponentRenderMesh oRMesh;
 
 };
 
@@ -62,23 +68,18 @@ bool InitDirect3DApp::Initialize()
 	if (!D3DApp::Initialize())
 		return false;
 
-	Shader oShader(md3dDevice, mBackBufferFormat, mDepthStencilFormat, m4xMsaaState, m4xMsaaQuality);
-	Texture oTexture;
+	oShader.Init(md3dDevice, mBackBufferFormat, mDepthStencilFormat, m4xMsaaState, m4xMsaaQuality);
 	oTexture.Name = "texture";
 	oTexture.Filename = L"color.hlsl";
 
 	oShader.BuildRootSignature();
 	oShader.CompileShaders(oTexture.Filename.c_str());
 
-	GameManager testManager;
-
 	testManager.objectList.push_back(new GameObject(0, 0, 0));
 
-	GeometryHandler oMeshH;
-	GeometryHandler::Mesh oMesh;
 	oMesh = oMeshH.BuildBox(2.0f, 2.0f, 2.0f, 2);
 
-	ComponentRenderMesh oRMesh(testManager.objectList[0], oMesh, &oShader, &oTexture) ;
+	oRMesh.Init(testManager.objectList[0], oMesh, &oShader, &oTexture);
 	testManager.objectList[0]->addComponent(&oRMesh);
 	
 	for (int i = 0; i < gNumFrameResources; ++i)
@@ -130,7 +131,8 @@ void InitDirect3DApp::Update(const GameTimer& gt)
 
 void InitDirect3DApp::Draw(const GameTimer& gt)
 {
-	
+	ComponentRenderMesh oRMesh;
+	DrawEdit(gt, oRMesh);
 }
 
 void InitDirect3DApp::DrawEdit(const GameTimer& gt, ComponentRenderMesh& oRMesh)

@@ -39,6 +39,7 @@ public:
 	ComponentRenderMesh(GameObject* gameObjectPointer, GeometryHandler::Mesh& meshRef, Shader* shaderRef, Texture* textureRef);
 	~ComponentRenderMesh();
 
+	void Init(GameObject* gameObjectPointer, GeometryHandler::Mesh& meshRef, Shader* shaderRef, Texture* textureRef);
 	void BuildRenderItems();
 	void DrawRenderItem(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> cmdList, const std::vector<D3DApp::RenderItem*>& ritems, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mCbvHeap, UINT mCbvSrvUavDescriptorSize);
 	void UpdateObjectCBs(const GameTimer& gt);

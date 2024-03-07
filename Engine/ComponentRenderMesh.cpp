@@ -10,6 +10,11 @@ ComponentRenderMesh::ComponentRenderMesh(GameObject* gameObjectPointer, Geometry
 	Init(meshRef, shaderRef, textureRef);
 }
 
+void ComponentRenderMesh::Init(GameObject* gameObjectPointer, GeometryHandler::Mesh& meshRef, Shader* shaderRef, Texture* textureRef)
+{
+	Init(meshRef, shaderRef, textureRef);
+}
+
 void ComponentRenderMesh::Init(GeometryHandler::Mesh& meshRef, Shader* shaderRef, Texture* textureRef) {
 	refMesh = meshRef;
 	refShader = shaderRef;

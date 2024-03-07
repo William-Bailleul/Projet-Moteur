@@ -5,6 +5,7 @@
 class Shader
 {
 public:
+	Shader();
 	Shader(Microsoft::WRL::ComPtr<ID3D12Device> Device, DXGI_FORMAT BBufferFormat, DXGI_FORMAT DStencilFormat, bool MSAAState, UINT MSAAQuality);
 	~Shader();
 
@@ -23,6 +24,7 @@ public:
 	UINT m4xMsaaQuality;
 
 public:
+	void Init(Microsoft::WRL::ComPtr<ID3D12Device> Device, DXGI_FORMAT BBufferFormat, DXGI_FORMAT DStencilFormat, bool MSAAState, UINT MSAAQuality);
 	void BuildRootSignature();
 	void CompileShaders(LPCWSTR fileName);
 	void BuildPSO();

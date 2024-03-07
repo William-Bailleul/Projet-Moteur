@@ -7,13 +7,15 @@ enum EngineState
 	NewGameObject = 1,
 	Render = 2,
 	Collision = 3,
+	ObjectShow = 4,
+	ObjectHide = 5,
 };
 
 
 class GameState
 {
 private:
-	std::array<EngineState, 4> states;
+	std::array<EngineState, 6> states;
 public:
 	EngineState currentState;
 	GameState();

@@ -19,10 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GameState.cpp" />
+    <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="GameScripts.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GameState.h" />
+    <ClInclude Include="GameManager.h" />
+    <ClInclude Include="GameScripts.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

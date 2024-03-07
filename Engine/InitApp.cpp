@@ -1,4 +1,9 @@
 #include "Engine.h"
+#include "Utile.h"
+#include "Shader.h"
+#include "GameObject.h"
+#include "GameManager.h"
+#include "ComponentRenderMesh.h"
 #include <DirectXColors.h>
 
 using namespace DirectX;
@@ -55,7 +60,31 @@ bool InitDirect3DApp::Initialize()
 	if (!D3DApp::Initialize())
 		return false;
 
+	Shader oShader(md3dDevice, mBackBufferFormat, mDepthStencilFormat, m4xMsaaState, m4xMsaaQuality);
+	Texture oTexture;
+	oTexture.Name = "texture";
+	oTexture.Filename = L"Shaders\\color.hlsl";
 
+	oShader.BuildRootSignature();
+	oShader.CompileShaders(oTexture.Filename.c_str());
+
+	GameManager testManager;
+
+	testManager.objectList.push_back(new GameObject(0, 0, 0));
+
+	GeometryHandler oMeshH;
+	GeometryHandler::Mesh oMesh;
+	oMesh = oMeshH.BuildBox(2.0f, 2.0f, 2.0f, 2);
+
+	ComponentRenderMesh oRMesh(testManager.objectList[0], oMesh, &oShader, &oTexture) ;
+	testManager.objectList[0]->addComponent(&oRMesh);
+	
+	for (int i = 0; i < gNumFrameResources; ++i)
+	{
+		mFrameResources.push_back(std::make_unique<FrameResource>(md3dDevice.Get(),
+			1, (UINT)oRMesh.mAllRitems.size()));
+	}
+	
 
 	return true;
 }

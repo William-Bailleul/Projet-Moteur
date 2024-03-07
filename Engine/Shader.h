@@ -22,9 +22,9 @@ public:
 	bool m4xMsaaState;
 	UINT m4xMsaaQuality;
 
-private:
+public:
 	void BuildRootSignature();
-	void CompileShaders(const std::wstring filename);
+	void CompileShaders(LPCWSTR fileName);
 	void BuildPSO();
 
 

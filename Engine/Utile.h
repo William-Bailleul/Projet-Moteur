@@ -24,7 +24,7 @@
 #include "MathHelper.h"
 #include "UploadBuffer.h"
 
-extern const int gNumFrameResources;
+//const int gNumFrameResources;
 using Microsoft::WRL::ComPtr;
 
 inline void d3dSetDebugName(IDXGIObject* obj, const char* name)

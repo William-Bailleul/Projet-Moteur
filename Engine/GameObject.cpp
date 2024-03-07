@@ -2,12 +2,9 @@
 
 #include "Component.h"
 
-float GetDegreeToRadian(float fAngleDegree)
-{
-	return fAngleDegree * XM_PI / 180.f;
+GameObject::GameObject(int posX, int posY, int posZ){
+	Init(posX, posY, posZ);
 }
-
-GameObject::GameObject(){}
 
 GameObject::~GameObject(){
 	if (componentList.size() > 0) {

@@ -19,7 +19,7 @@ private:
 public:
 	std::vector<Component*> componentList;
 
-	GameObject();
+	GameObject(int posX, int posY, int posZ);
 	~GameObject();
 
 	void Init(int posX, int posY, int posZ);

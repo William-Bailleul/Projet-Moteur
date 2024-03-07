@@ -10,7 +10,7 @@
 class GameTimer;
 
 enum ScriptNames {
-	dada
+
 };
 
 enum ScriptStates {
@@ -24,7 +24,7 @@ public:
 	ComponentScript(GameObject* gameObjectPointer, ScriptNames name, ScriptStates initState, GameTimer* timer);
 
 	// Main Behavior Function
-	void PlayScript();
+	void ScriptSelector();
 
 	//////////////////////
 	// OBJECT FUNCTIONS	//
@@ -48,10 +48,7 @@ public:
 	void AddToQueue(ScriptNames newInput);
 	ScriptNames ReadFront();
 	void TrashFront();
-
-	// State Funcs
-	void SetState(ScriptStates newState);
-	ScriptStates GetState();
+	void EmptyQueue();
 
 	// Name Funcs
 	ScriptNames GetName();

@@ -21,13 +21,16 @@ Remember that this function operates ONCE EVERY FRAME,
 which means we have to base our functions on time or we
 would get different game speeds based on the framerate
 */
-void ComponentScript::PlayScript() {
+void ComponentScript::ScriptSelector() {
 
 	//check the queue ?
 
-	//switch (scriptState) {
-
-	//}
+	switch (scriptState) {
+	
+	
+	default:
+		break;
+	}
 }
 
 
@@ -88,14 +91,10 @@ void ComponentScript::TrashFront() {
 	scriptQueue.erase(scriptQueue.begin());
 }
 
-//STATE FUNCTIONS
-
-void ComponentScript::SetState(ScriptStates newState) {
-	scriptState = newState;
-}
-
-ScriptStates ComponentScript::GetState() {
-	return scriptState;
+void ComponentScript::EmptyQueue() {
+	for (int i = 0; i < scriptQueue.size(); i++) {
+		TrashFront();
+	}
 }
 
 //NAME FUNCTIONS

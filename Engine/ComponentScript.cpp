@@ -1,6 +1,6 @@
 #include "ComponentScript.h"
 
-#include "GameTimer.h"
+#include "EngineTimer.h"
 #include "Transform.h"
 
 using namespace std;

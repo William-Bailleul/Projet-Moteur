@@ -22,10 +22,10 @@
     <ClCompile Include="Engine.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject.cpp">
+    <ClCompile Include="EngineObject.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="GameTimer.cpp">
+    <ClCompile Include="EngineTimer.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="InitApp.cpp">
@@ -40,7 +40,7 @@
     <ClCompile Include="GeometryHandler.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="GameManager.cpp">
+    <ClCompile Include="EngineManager.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Shader.cpp">
@@ -84,10 +84,10 @@
     <ClInclude Include="framework.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject.h">
+    <ClInclude Include="EngineObject.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="GameTimer.h">
+    <ClInclude Include="EngineTimer.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="InputController.h">
@@ -108,7 +108,7 @@
     <ClInclude Include="GeometryHandler.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="GameManager.h">
+    <ClInclude Include="EngineManager.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Shader.h">

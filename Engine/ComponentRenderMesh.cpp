@@ -50,10 +50,12 @@ void ComponentRenderMesh::Init(GeometryHandler::Mesh& meshRef, Shader* shaderRef
 	indices.insert(indices.end(), std::begin(refMesh.GetIndices16()), std::end(refMesh.GetIndices16()));
 
 
+	BuildRenderItems();
 }
 
 void ComponentRenderMesh::BuildRenderItems()
 {
+
 	auto meshRitem = std::make_unique<D3DApp::RenderItem>();
 	XMStoreFloat4x4(&meshRitem->World, DirectX::XMMatrixScaling(2.0f, 2.0f, 2.0f) * DirectX::XMMatrixTranslation(0.0f, 0.5f, 0.0f));
 	meshRitem->ObjCBIndex = 0;
@@ -67,6 +69,7 @@ void ComponentRenderMesh::BuildRenderItems()
 	// All the render items are opaque.
 	for (auto& e : mAllRitems)
 		mOpaqueRitems.push_back(e.get());
+
 }
 
 void ComponentRenderMesh::DrawRenderItem(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> cmdList, const std::vector<D3DApp::RenderItem*>& ritems, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mCbvHeap, UINT mCbvSrvUavDescriptorSize)

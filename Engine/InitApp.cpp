@@ -22,6 +22,7 @@ private:
 	virtual void Update(const GameTimer& gt)override;
 	virtual void Draw(const GameTimer& gt)override;
 
+
 	Shader oShader;
 	Texture oTexture;
 	GameManager testManager;
@@ -68,6 +69,8 @@ bool InitDirect3DApp::Initialize()
 	if (!D3DApp::Initialize())
 		return false;
 
+
+
 	oShader.Init(md3dDevice, mBackBufferFormat, mDepthStencilFormat, m4xMsaaState, m4xMsaaQuality);
 	oTexture.Name = "texture";
 	oTexture.Filename = L"color.hlsl";
@@ -80,6 +83,9 @@ bool InitDirect3DApp::Initialize()
 	oMesh = oMeshH.BuildBox(2.0f, 2.0f, 2.0f, 2);
 
 	oRMesh.Init(testManager.objectList[0], oMesh, &oShader, &oTexture);
+
+	new UploadBuffer<D3DApp::ObjectConstants>(md3dDevice.Get(), 1, false);
+
 	testManager.objectList[0]->addComponent(&oRMesh);
 	
 	for (int i = 0; i < gNumFrameResources; ++i)

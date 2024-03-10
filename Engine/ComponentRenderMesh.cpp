@@ -1,6 +1,16 @@
 #include "ComponentRenderMesh.h"
 
+ComponentRenderMesh::ComponentRenderMesh(): Component(gameObjectPointer)
+{
+	
+}
+
 ComponentRenderMesh::ComponentRenderMesh(GameObject* gameObjectPointer, GeometryHandler::Mesh& meshRef, Shader* shaderRef, Texture* textureRef): Component(gameObjectPointer)
+{
+	Init(meshRef, shaderRef, textureRef);
+}
+
+void ComponentRenderMesh::Init(GameObject* gameObjectPointer, GeometryHandler::Mesh& meshRef, Shader* shaderRef, Texture* textureRef)
 {
 	Init(meshRef, shaderRef, textureRef);
 }
@@ -40,10 +50,12 @@ void ComponentRenderMesh::Init(GeometryHandler::Mesh& meshRef, Shader* shaderRef
 	indices.insert(indices.end(), std::begin(refMesh.GetIndices16()), std::end(refMesh.GetIndices16()));
 
 
+	BuildRenderItems();
 }
 
 void ComponentRenderMesh::BuildRenderItems()
 {
+
 	auto meshRitem = std::make_unique<D3DApp::RenderItem>();
 	XMStoreFloat4x4(&meshRitem->World, DirectX::XMMatrixScaling(2.0f, 2.0f, 2.0f) * DirectX::XMMatrixTranslation(0.0f, 0.5f, 0.0f));
 	meshRitem->ObjCBIndex = 0;
@@ -57,9 +69,10 @@ void ComponentRenderMesh::BuildRenderItems()
 	// All the render items are opaque.
 	for (auto& e : mAllRitems)
 		mOpaqueRitems.push_back(e.get());
+
 }
 
-void ComponentRenderMesh::DrawRenderItem(ID3D12GraphicsCommandList* cmdList, const std::vector<D3DApp::RenderItem*>& ritems, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mCbvHeap, UINT mCbvSrvUavDescriptorSize)
+void ComponentRenderMesh::DrawRenderItem(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> cmdList, const std::vector<D3DApp::RenderItem*>& ritems, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mCbvHeap, UINT mCbvSrvUavDescriptorSize)
 {
 	UINT objCBByteSize = Utile::CalcConstantBufferByteSize(sizeof(DirectX::XMFLOAT4X4));
 
@@ -70,8 +83,10 @@ void ComponentRenderMesh::DrawRenderItem(ID3D12GraphicsCommandList* cmdList, con
 	{
 		auto ri = ritems[i];
 
-		cmdList->IASetVertexBuffers(0, 1, &ri->Geo->VertexBufferView());
-		cmdList->IASetIndexBuffer(&ri->Geo->IndexBufferView());
+		D3D12_VERTEX_BUFFER_VIEW vBV = ri->Geo->VertexBufferView();
+		cmdList->IASetVertexBuffers(0, 1, &vBV);
+		D3D12_INDEX_BUFFER_VIEW iBV = ri->Geo->IndexBufferView();
+		cmdList->IASetIndexBuffer(&iBV);
 		cmdList->IASetPrimitiveTopology(ri->PrimitiveType);
 
 		// Offset to the CBV in the descriptor heap for this object and for this frame resource.
@@ -85,22 +100,59 @@ void ComponentRenderMesh::DrawRenderItem(ID3D12GraphicsCommandList* cmdList, con
 	}
 }
 
+void ComponentRenderMesh::UpdateObjectCBs(const GameTimer& gt)
+{
+	auto currObjectCB = mCurrFrameResource->ObjectCB.get();
+	for (auto& e : mAllRitems)
+	{
+		// Only update the cbuffer data if the constants have changed.  
+		// This needs to be tracked per frame resource.
+		if (e->NumFramesDirty > 0)
+		{
+			DirectX::XMMATRIX world = XMLoadFloat4x4(&e->World);
+
+			D3DApp::ObjectConstants objConstants;
+			XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(world));
+
+			currObjectCB->CopyData(e->ObjCBIndex, objConstants);
+
+			// Next FrameResource need to be updated too.
+			e->NumFramesDirty--;
+		}
+	}
+}
+
+/*
+void ComponentRenderMesh::UpdateMainPassCB(const GameTimer& gt)
+{
+	XMMATRIX view = XMLoadFloat4x4(&mView);
+	XMMATRIX proj = XMLoadFloat4x4(&mProj);
+
+	XMMATRIX viewProj = XMMatrixMultiply(view, proj);
+	XMMATRIX invView = XMMatrixInverse(&XMMatrixDeterminant(view), view);
+	XMMATRIX invProj = XMMatrixInverse(&XMMatrixDeterminant(proj), proj);
+	XMMATRIX invViewProj = XMMatrixInverse(&XMMatrixDeterminant(viewProj), viewProj);
+
+	XMStoreFloat4x4(&mMainPassCB.View, XMMatrixTranspose(view));
+	XMStoreFloat4x4(&mMainPassCB.InvView, XMMatrixTranspose(invView));
+	XMStoreFloat4x4(&mMainPassCB.Proj, XMMatrixTranspose(proj));
+	XMStoreFloat4x4(&mMainPassCB.InvProj, XMMatrixTranspose(invProj));
+	XMStoreFloat4x4(&mMainPassCB.ViewProj, XMMatrixTranspose(viewProj));
+	XMStoreFloat4x4(&mMainPassCB.InvViewProj, XMMatrixTranspose(invViewProj));
+	mMainPassCB.EyePosW = mEyePos;
+	mMainPassCB.RenderTargetSize = XMFLOAT2((float)mClientWidth, (float)mClientHeight);
+	mMainPassCB.InvRenderTargetSize = XMFLOAT2(1.0f / mClientWidth, 1.0f / mClientHeight);
+	mMainPassCB.NearZ = 1.0f;
+	mMainPassCB.FarZ = 1000.0f;
+	mMainPassCB.TotalTime = gt.TotalTime();
+	mMainPassCB.DeltaTime = gt.DeltaTime();
+
+	auto currPassCB = mCurrFrameResource->PassCB.get();
+	currPassCB->CopyData(0, mMainPassCB);
+}
+*/
+
 ComponentRenderMesh::~ComponentRenderMesh() 
-{
-
-}
-
-ComponentRenderMesh::FrameResource::FrameResource(ID3D12Device* device, UINT passCount, UINT objectCount)
-{
-	ThrowIfFailed(device->CreateCommandAllocator(
-		D3D12_COMMAND_LIST_TYPE_DIRECT,
-		IID_PPV_ARGS(CmdListAlloc.GetAddressOf())));
-
-	PassCB = std::make_unique<UploadBuffer<PassConstants>>(device, passCount, true);
-	ObjectCB = std::make_unique<UploadBuffer<ObjectConstants>>(device, objectCount, true);
-}
-
-ComponentRenderMesh::FrameResource::~FrameResource()
 {
 
 }

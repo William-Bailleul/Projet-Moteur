@@ -1,19 +1,16 @@
 #pragma once
-#include "Utile.h"
 
-#ifndef ThrowIfFailed
-#define ThrowIfFailed(x)                                              \
-{                                                                     \
-    HRESULT hr__ = (x);                                               \
-    std::wstring wfn = AnsiToWString(__FILE__);                       \
-    if(FAILED(hr__)) { throw DxException(hr__, L#x, wfn, __LINE__); } \
-}
-#endif
+#include "Utile.h"
 
 template<typename T>
 class UploadBuffer
 {
 public:
+    UINT CalcConstantBufferByteSize(UINT byteSize)
+    {
+        return (byteSize + 255) & ~255;
+    }
+
     UploadBuffer(ID3D12Device* device, UINT elementCount, bool isConstantBuffer) : mIsConstantBuffer(isConstantBuffer)
     {
         mElementByteSize = sizeof(T);
@@ -26,17 +23,19 @@ public:
         // UINT   SizeInBytes;   // multiple of 256
         // } D3D12_CONSTANT_BUFFER_VIEW_DESC;
         if (isConstantBuffer)
-            mElementByteSize = Utile::CalcConstantBufferByteSize(sizeof(T));
+            mElementByteSize = CalcConstantBufferByteSize(sizeof(T));
 
-        ThrowIfFailed(device->CreateCommittedResource(
-            &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+        CD3DX12_HEAP_PROPERTIES hProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+        CD3DX12_RESOURCE_DESC rDesc = CD3DX12_RESOURCE_DESC::Buffer(mElementByteSize * elementCount);
+        device->CreateCommittedResource(
+            &hProp,
             D3D12_HEAP_FLAG_NONE,
-            &CD3DX12_RESOURCE_DESC::Buffer(mElementByteSize * elementCount),
+            &rDesc,
             D3D12_RESOURCE_STATE_GENERIC_READ,
             nullptr,
-            IID_PPV_ARGS(&mUploadBuffer)));
+            IID_PPV_ARGS(&mUploadBuffer));
 
-        ThrowIfFailed(mUploadBuffer->Map(0, nullptr, reinterpret_cast<void**>(&mMappedData)));
+        mUploadBuffer->Map(0, nullptr, reinterpret_cast<void**>(&mMappedData));
 
         // We do not need to unmap until we are done with the resource.  However, we must not write to
         // the resource while it is in use by the GPU (so we must use synchronization techniques).
@@ -61,7 +60,6 @@ public:
     {
         memcpy(&mMappedData[elementIndex * mElementByteSize], &data, sizeof(T));
     }
-
 
 private:
     Microsoft::WRL::ComPtr<ID3D12Resource> mUploadBuffer;

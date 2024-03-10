@@ -74,3 +74,4 @@ ComponentCollider::~ComponentCollider() {
 		delete (hitSpheres[0]);
 	}
 };
+*/

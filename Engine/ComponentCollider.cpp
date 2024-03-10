@@ -4,7 +4,7 @@
 #include "ComponentScript.h"
 
 #include <vector>
-
+/*
 ComponentCollider::ComponentCollider(GameObject* gameObjectPointer, GameManager* manager, ComponentScript* script) :Component::Component(gameObjectPointer) {
 	Init(manager, script);
 };

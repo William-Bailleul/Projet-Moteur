@@ -1,5 +1,4 @@
 #include "ComponentRenderMesh.h"
-
 ComponentRenderMesh::ComponentRenderMesh(GameObject* gameObjectPointer, GeometryHandler::Mesh& meshRef, Shader* shaderRef, Texture* textureRef): Component(gameObjectPointer)
 {
 	Init(meshRef, shaderRef, textureRef);

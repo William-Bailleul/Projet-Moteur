@@ -1,5 +1,6 @@
 #include "Engine.h"
 #include "InputController.h"
+#include "ComponentCamera.h"
 #include <WindowsX.h>
 
 using Microsoft::WRL::ComPtr;

@@ -120,6 +120,7 @@
     <ClInclude Include="Transform.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="defineKey.h">
     <ClInclude Include="UploadBuffer.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>

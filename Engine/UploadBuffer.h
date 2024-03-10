@@ -1,18 +1,17 @@
 #pragma once
+
 #include "Utile.h"
 
 template<typename T>
 class UploadBuffer
 {
 public:
-
     UINT CalcConstantBufferByteSize(UINT byteSize)
     {
         return (byteSize + 255) & ~255;
     }
 
-    UploadBuffer(ID3D12Device* device, UINT elementCount, bool isConstantBuffer) :
-        mIsConstantBuffer(isConstantBuffer)
+    UploadBuffer(ID3D12Device* device, UINT elementCount, bool isConstantBuffer) : mIsConstantBuffer(isConstantBuffer)
     {
         mElementByteSize = sizeof(T);
 
@@ -61,7 +60,6 @@ public:
     {
         memcpy(&mMappedData[elementIndex * mElementByteSize], &data, sizeof(T));
     }
-
 
 private:
     Microsoft::WRL::ComPtr<ID3D12Resource> mUploadBuffer;

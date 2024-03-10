@@ -170,6 +170,7 @@
     <ClCompile Include="InitApp.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="UploadBuffer.cpp" />
     <ClCompile Include="Utile.cpp" />
     <ClCompile Include="GameObject.cpp" />
   </ItemGroup>

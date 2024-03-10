@@ -9,8 +9,8 @@ class EngineManager
 public:
 	std::vector<EngineObject*> objectList;
 
-	EngineManager();
-	~EngineManager();
+	//EngineManager();
+	//~EngineManager();
 
 };
 

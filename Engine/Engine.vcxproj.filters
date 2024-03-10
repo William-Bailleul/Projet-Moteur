@@ -2,61 +2,61 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Component.cpp">
-      <Filter>Fichiers source</Filter>
+      <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="ComponentCamera.cpp">
-      <Filter>Fichiers source</Filter>
+      <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="ComponentCollider.cpp">
-      <Filter>Fichiers source</Filter>
+      <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="ComponentRenderMesh.cpp">
-      <Filter>Fichiers source</Filter>
+      <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="ComponentScript.cpp">
-      <Filter>Fichiers source</Filter>
+      <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="DDSTextureLoader.cpp">
-      <Filter>Fichiers source</Filter>
+      <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Effect.cpp">
-      <Filter>Fichiers source</Filter>
+      <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Engine.cpp">
-      <Filter>Fichiers source</Filter>
+      <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="EngineManager.cpp">
-      <Filter>Fichiers source</Filter>
+      <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="EngineObject.cpp">
-      <Filter>Fichiers source</Filter>
+      <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="EngineStateMachine.cpp">
-      <Filter>Fichiers source</Filter>
+      <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="EngineTimer.cpp">
-      <Filter>Fichiers source</Filter>
+      <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="GeometryHandler.cpp">
-      <Filter>Fichiers source</Filter>
+      <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="InitApp.cpp">
-      <Filter>Fichiers source</Filter>
+      <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="InputController.cpp">
-      <Filter>Fichiers source</Filter>
+      <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Shader.cpp">
-      <Filter>Fichiers source</Filter>
+      <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Transform.cpp">
-      <Filter>Fichiers source</Filter>
+      <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="UploadBuffer.cpp">
-      <Filter>Fichiers source</Filter>
+      <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Utile.cpp">
-      <Filter>Fichiers source</Filter>
+      <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -145,11 +145,11 @@
     <Filter Include="Fichiers d%27en-tête">
       <UniqueIdentifier>{e9bdcf22-3666-470f-8d01-c0801086c2e1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Fichiers source">
-      <UniqueIdentifier>{3ad426b0-4c03-479d-8a86-a946a8a0c8ba}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Fichiers de ressources">
       <UniqueIdentifier>{75618114-86d3-46cf-b8af-f9480f598d97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources">
+      <UniqueIdentifier>{3ad426b0-4c03-479d-8a86-a946a8a0c8ba}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

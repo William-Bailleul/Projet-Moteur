@@ -2,15 +2,15 @@
 
 #include <vector>
 
-class GameObject;
+class EngineObject;
 
-class GameManager
+class EngineManager
 {
 public:
-	std::vector<GameObject*> objectList;
+	std::vector<EngineObject*> objectList;
 
-	GameManager();
-	~GameManager();
+	EngineManager();
+	~EngineManager();
 
 };
 

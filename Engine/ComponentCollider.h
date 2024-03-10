@@ -7,7 +7,7 @@
 
 using namespace DirectX;
 
-class GameManager;
+class EngineManager;
 class ComponentScript;
 
 class ComponentCollider : public Component
@@ -18,14 +18,14 @@ public:
 	ComponentScript* objectScript;
 
 	//saving the GameManager's address to check its objectList
-	GameManager* gameManager;
+	EngineManager* gameManager;
 
 	// vectors can remain empty without issue
 	std::vector<BoundingBox*> hitBoxes;
 	std::vector<BoundingSphere*> hitSpheres;
 	std::vector<BoundingFrustum*> hitFrustums;
 
-	ComponentCollider(GameObject* gameObjectPointer, GameManager* manager, ComponentScript* script);
+	ComponentCollider(EngineObject* gameObjectPointer, EngineManager* manager, ComponentScript* script);
 	~ComponentCollider();
 
 	//check functions
@@ -39,7 +39,7 @@ public:
 	void NewHitFrustum(const XMFLOAT3& _Origin, const XMFLOAT4& _Orientation, float _RightSlope, float _LeftSlope, float _TopSlope, float _BottomSlope, float _Near, float _Far);
 
 private:
-	void Init(GameManager* manager, ComponentScript* script);
+	void Init(EngineManager* manager, ComponentScript* script);
 };
 
 

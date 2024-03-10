@@ -25,7 +25,7 @@ private:
 
 	Shader oShader;
 	Texture oTexture;
-	GameManager testManager;
+	EngineManager testManager;
 	GeometryHandler oMeshH;
 	GeometryHandler::Mesh oMesh;
 	ComponentRenderMesh oRMesh;
@@ -78,7 +78,7 @@ bool InitDirect3DApp::Initialize()
 	oShader.BuildRootSignature();
 	oShader.CompileShaders(oTexture.Filename.c_str());
 
-	testManager.objectList.push_back(new GameObject(0, 0, 0));
+	testManager.objectList.push_back(new EngineObject(0, 0, 0));
 
 	oMesh = oMeshH.BuildBox(2.0f, 2.0f, 2.0f, 2);
 

@@ -5,7 +5,7 @@
 
 using namespace std;
 
-ComponentScript::ComponentScript(GameObject* gameObjectPointer, ScriptNames name, ScriptStates initState, GameTimer* timer) : Component(gameObjectPointer) {
+ComponentScript::ComponentScript(EngineObject* gameObjectPointer, ScriptNames name, ScriptStates initState, GameTimer* timer) : Component(gameObjectPointer) {
 	Init(name, initState, timer);
 };
 

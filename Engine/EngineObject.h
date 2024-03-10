@@ -10,7 +10,7 @@ using namespace DirectX::PackedVector;
 
 class Component;
 
-class GameObject
+class EngineObject
 {
 private:
 	int m_posX;
@@ -19,8 +19,8 @@ private:
 public:
 	std::vector<Component*> componentList;
 
-	GameObject(int posX, int posY, int posZ);
-	~GameObject();
+	EngineObject(int posX, int posY, int posZ);
+	~EngineObject();
 
 	void Init(int posX, int posY, int posZ);
 	void addComponent(Component* component);
@@ -32,7 +32,7 @@ public:
 };
 
 template <typename T>
-T* GameObject::getComponent() {
+T* EngineObject::getComponent() {
 	if (componentList.size() > 0) {
 		for (int i = 0; i < componentList.size(); i++) {
 			if (typeid(componentList[i]) == typeid(T*)) {

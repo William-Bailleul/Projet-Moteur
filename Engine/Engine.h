@@ -38,8 +38,33 @@ public:
     virtual bool Initialize();
     virtual LRESULT MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
+    struct RenderItem
+    {
+        RenderItem() = default;
+
+        //Matrice du Monde
+        DirectX::XMFLOAT4X4 World = MathHelper::Identity4x4();
+
+        const int gNumFrameResources = 3;
+        int NumFramesDirty = gNumFrameResources;
+
+        // Index into GPU constant buffer corresponding to the ObjectCB for this render item.
+        UINT ObjCBIndex = -1;
+
+        MeshGeometry* Geo = nullptr;
+
+        // Primitive topology.
+        D3D12_PRIMITIVE_TOPOLOGY PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
+        // DrawIndexedInstanced parameters.
+        UINT IndexCount = 0;
+        UINT StartIndexLocation = 0;
+        int BaseVertexLocation = 0;
+    };
+
 protected:
-    virtual void CreateRtvAndDsvDescriptorHeaps();
+    virtual void CreateDescriptorHeaps();
+    virtual void CreateRootSignature();
     virtual void OnResize();
     virtual void Update(const GameTimer& gt) = 0;
     virtual void Draw(const GameTimer& gt) = 0;
@@ -103,18 +128,25 @@ protected:
     Microsoft::WRL::ComPtr<ID3D12Resource> mSwapChainBuffer[SwapChainBufferCount];
     Microsoft::WRL::ComPtr<ID3D12Resource> mDepthStencilBuffer;
 
+    ComPtr<ID3D12RootSignature> mRootSignature = nullptr;
+
+    std::vector<RenderItem*> mOpaqueRitems;
+    UINT mPassCbvOffset = 0;
+
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mRtvHeap;
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mDsvHeap;
+    Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mCbvHeap;
 
     D3D12_VIEWPORT mScreenViewport;
     D3D12_RECT mScissorRect;
 
     UINT mRtvDescriptorSize = 0;
     UINT mDsvDescriptorSize = 0;
+    UINT mCbvDescriptorSize = 0;
     UINT mCbvSrvUavDescriptorSize = 0;
 
     // Derived class should set these in derived constructor to customize starting values.
-    std::wstring mMainWndCaption = L"d3d App";
+    std::wstring mMainWndCaption = L"GAMING ???";
     D3D_DRIVER_TYPE md3dDriverType = D3D_DRIVER_TYPE_HARDWARE;
     DXGI_FORMAT mBackBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
     DXGI_FORMAT mDepthStencilFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;

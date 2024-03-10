@@ -16,7 +16,7 @@ bool Utile::IsKeyDown(int vkeyCode)
     return (GetAsyncKeyState(vkeyCode) & 0x8000) != 0;
 }
 
-static UINT CalcConstantBufferByteSize(UINT byteSize)
+UINT Utile::CalcConstantBufferByteSize(UINT byteSize)
 {
     // Constant buffers must be a multiple of the minimum hardware
     // allocation size (usually 256 bytes).  So round up to nearest

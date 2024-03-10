@@ -1,8 +1,8 @@
 #include "Engine.h"
 #include "Utile.h"
 #include "Shader.h"
-#include "GameObject.h"
-#include "GameManager.h"
+#include "EngineObject.h"
+#include "EngineManager.h"
 #include "ComponentRenderMesh.h"
 #include <DirectXColors.h>
 

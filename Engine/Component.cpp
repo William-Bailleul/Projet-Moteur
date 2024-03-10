@@ -1,5 +1,5 @@
 #include "Component.h"
-#include "GameObject.h"
+#include "EngineObject.h"
 
 Component::Component(GameObject* GOPointer) {
 	Init(GOPointer);

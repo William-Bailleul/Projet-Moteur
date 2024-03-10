@@ -7,7 +7,7 @@
 
 //struct Mesh;
 class Shader;
-class Texture;
+struct Texture;
 
 class ComponentRenderMesh : public Component
 {

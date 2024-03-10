@@ -19,7 +19,16 @@
     <ClCompile Include="DDSTextureLoader.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="Effect.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
     <ClCompile Include="Engine.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineStateMachine.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="GameManager.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
@@ -28,34 +37,25 @@
     <ClCompile Include="GameTimer.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="GeometryHandler.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
     <ClCompile Include="InitApp.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="InputController.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Utile.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="GeometryHandler.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="GameManager.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="Shader.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Effect.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Transform.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="EngineStateMachine.cpp">
+    <ClCompile Include="UploadBuffer.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="UploadBuffer.cpp">
+    <ClCompile Include="Utile.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
@@ -81,16 +81,31 @@
     <ClInclude Include="DDSTextureLoader.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="defineKey.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Effect.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
     <ClInclude Include="Engine.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="framework.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="EngineStateMachine.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="GameManager.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
     <ClInclude Include="GameObject.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="GameTimer.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryHandler.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="InputController.h">
@@ -102,32 +117,19 @@
     <ClInclude Include="Resource.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Utile.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="GeometryHandler.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="GameManager.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="Shader.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Effect.h">
+    <ClInclude Include="targetver.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Transform.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="defineKey.h">
     <ClInclude Include="UploadBuffer.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="EngineStateMachine.h">
+    <ClInclude Include="Utile.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
@@ -140,14 +142,14 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Fichiers de ressources">
-      <UniqueIdentifier>{f210c002-d302-44f1-8e5b-6fb29ceb716f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Fichiers d%27en-tête">
-      <UniqueIdentifier>{07b6ecbd-b789-4165-ba87-6dd312b80943}</UniqueIdentifier>
+      <UniqueIdentifier>{67baff53-76f2-4675-879a-c6ee523d48a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers de ressources">
+      <UniqueIdentifier>{09a64903-7fc1-48c0-be2b-6136bf868b10}</UniqueIdentifier>
     </Filter>
     <Filter Include="Fichiers sources">
-      <UniqueIdentifier>{0e424bde-8296-43da-9f9e-5e6fbfce3992}</UniqueIdentifier>
+      <UniqueIdentifier>{c60e2a99-0d4b-4466-bd3f-7ee2bbc32d56}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

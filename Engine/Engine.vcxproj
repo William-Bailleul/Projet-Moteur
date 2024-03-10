@@ -139,12 +139,12 @@
     <ClInclude Include="Engine.h" />
     <ClInclude Include="EngineStateMachine.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="GameManager.h" />
-    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="EngineManager.h" />
+    <ClInclude Include="EngineObject.h" />
     <ClInclude Include="GeometryHandler.h" />
     <ClInclude Include="InputController.h" />
     <ClInclude Include="ComponentRenderMesh.h" />
-    <ClInclude Include="GameTimer.h" />
+    <ClInclude Include="EngineTimer.h" />
     <ClInclude Include="MathHelper.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Shader.h" />
@@ -162,17 +162,17 @@
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="EngineStateMachine.cpp" />
-    <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="EngineManager.cpp" />
     <ClCompile Include="GeometryHandler.cpp" />
     <ClCompile Include="InputController.cpp" />
     <ClCompile Include="ComponentRenderMesh.cpp" />
-    <ClCompile Include="GameTimer.cpp" />
+    <ClCompile Include="EngineTimer.cpp" />
     <ClCompile Include="InitApp.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="UploadBuffer.cpp" />
     <ClCompile Include="Utile.cpp" />
-    <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="EngineObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc" />

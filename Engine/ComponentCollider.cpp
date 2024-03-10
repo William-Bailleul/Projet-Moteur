@@ -1,6 +1,6 @@
 #include "ComponentCollider.h"
-#include "GameManager.h"
-#include "GameObject.h"
+#include "EngineManager.h"
+#include "EngineObject.h"
 #include "ComponentScript.h"
 
 #include <vector>

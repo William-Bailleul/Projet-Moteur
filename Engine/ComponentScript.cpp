@@ -1,6 +1,6 @@
 #include "ComponentScript.h"
 
-#include "GameTimer.h"
+#include "EngineTimer.h"
 #include "Transform.h"
 
 using namespace std;
@@ -15,24 +15,6 @@ void ComponentScript::Init(ScriptNames name, ScriptStates initState, GameTimer* 
 	gameTimer = timer;
 }
 
-// Main Behavior Function
-/* 
-Remember that this function operates ONCE EVERY FRAME,
-which means we have to base our functions on time or we
-would get different game speeds based on the framerate
-*/
-void ComponentScript::ScriptSelector() {
-
-	//check the queue ?
-
-	switch (scriptState) {
-	
-	
-	default:
-		break;
-	}
-}
-
 
 //////////////////////////////////
 //		OBJECT MANAGEMENT		//
@@ -44,7 +26,7 @@ void ComponentScript::ObjectShow() {
 
 }
 
-//for ^^^ those vvv two, play around with the display pipeline idk
+//for ^^^ those vvv two, play around with the display list once it works
 
 //make the object invisible
 void ComponentScript::ObjectHide() {

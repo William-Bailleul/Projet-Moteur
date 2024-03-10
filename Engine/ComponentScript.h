@@ -9,13 +9,12 @@
 
 class GameTimer;
 
-enum ScriptNames
-{
-	tmp2
+enum ScriptNames {
+
 };
 
 enum ScriptStates {
-	tmp
+
 };
 
 class ComponentScript: public Component
@@ -25,7 +24,7 @@ public:
 	ComponentScript(GameObject* gameObjectPointer, ScriptNames name, ScriptStates initState, GameTimer* timer);
 
 	// Main Behavior Function
-	void PlayScript();
+	void ScriptSelector();
 
 	//////////////////////
 	// OBJECT FUNCTIONS	//
@@ -36,13 +35,10 @@ public:
 	void ObjectHide();
 	void ObjectDestroy();
 
-	// Object Shape Funcs (using the Transform struct)
-	// /?\ void move(normal direction matrix, distance/magnitude)
-	// /?\ void rotate
-	//
-
 	// Timer Funcs (using the GameTimer.h file)
-	
+	__int64 GetTimeStamp();
+	void SetTimeStamp();
+	__int64 HowLongSinceTimeStamp();
 
 	//////////////////////////
 	//	SCRIPT MANAGEMENT	//
@@ -52,10 +48,7 @@ public:
 	void AddToQueue(ScriptNames newInput);
 	ScriptNames ReadFront();
 	void TrashFront();
-
-	// State Funcs
-	void SetState(ScriptStates newState);
-	ScriptStates GetState();
+	void EmptyQueue();
 
 	// Name Funcs
 	ScriptNames GetName();
@@ -64,10 +57,11 @@ private:
 	ScriptNames scriptName;
 	ScriptStates scriptState;
 
-	//lets us put aside the scriptQueue for a while if the current State is very important (ie: death, 
+	//lets us put aside the scriptQueue for a while if the current State is very important (ie: death)
 	int currentStatePriority;
 
-	GameTimer* gameTimer;
+	GameTimer* gameTimer; 
+	__int64 timeStamp;
 
 	std::vector<ScriptNames> scriptQueue;
 	void Init(ScriptNames name, ScriptStates initState, GameTimer* timer);

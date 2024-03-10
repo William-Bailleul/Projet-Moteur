@@ -1,8 +1,6 @@
 #pragma once
 
-#include <cstdint>
-#include <DirectXMath.h>
-#include <vector>
+#include "Utile.h"
 
 class GeometryHandler
 {

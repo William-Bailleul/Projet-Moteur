@@ -1,6 +1,4 @@
 #include "GeometryHandler.h"
-#include "Utile.h"
-#include <algorithm>
 
 using namespace DirectX;
 

@@ -2,62 +2,61 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Component.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Fichiers source</Filter>
     </ClCompile>
     <ClCompile Include="ComponentCamera.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Fichiers source</Filter>
     </ClCompile>
     <ClCompile Include="ComponentCollider.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Fichiers source</Filter>
     </ClCompile>
     <ClCompile Include="ComponentRenderMesh.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Fichiers source</Filter>
     </ClCompile>
     <ClCompile Include="ComponentScript.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Fichiers source</Filter>
     </ClCompile>
     <ClCompile Include="DDSTextureLoader.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Fichiers source</Filter>
     </ClCompile>
     <ClCompile Include="Effect.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Fichiers source</Filter>
     </ClCompile>
     <ClCompile Include="Engine.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="EngineStateMachine.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="GameManager.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="GameTimer.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="GeometryHandler.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Fichiers source</Filter>
     </ClCompile>
     <ClCompile Include="EngineManager.cpp">
+      <Filter>Fichiers source</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineObject.cpp">
+      <Filter>Fichiers source</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineStateMachine.cpp">
+      <Filter>Fichiers source</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineTimer.cpp">
+      <Filter>Fichiers source</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryHandler.cpp">
+      <Filter>Fichiers source</Filter>
+    </ClCompile>
     <ClCompile Include="InitApp.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Fichiers source</Filter>
     </ClCompile>
     <ClCompile Include="InputController.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Fichiers source</Filter>
     </ClCompile>
     <ClCompile Include="Shader.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Fichiers source</Filter>
     </ClCompile>
     <ClCompile Include="Transform.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Fichiers source</Filter>
     </ClCompile>
     <ClCompile Include="UploadBuffer.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Fichiers source</Filter>
     </ClCompile>
     <ClCompile Include="Utile.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Fichiers source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -79,36 +78,28 @@
     <ClInclude Include="d3dx12.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="DDSTextureLoader.h">
+    <ClInclude Include="defineKey.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="defineKey.h">
+    <ClInclude Include="DDSTextureLoader.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Effect.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Engine.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="framework.h">
+    <ClInclude Include="EngineManager.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="EngineObject.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
     <ClInclude Include="EngineStateMachine.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="EngineTimer.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="InputController.h">
-    <ClInclude Include="GameManager.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="GameTimer.h">
+    <ClInclude Include="framework.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="GeometryHandler.h">
@@ -120,7 +111,6 @@
     <ClInclude Include="MathHelper.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="EngineManager.h">
     <ClInclude Include="Resource.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -139,6 +129,9 @@
     <ClInclude Include="Utile.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="Engine.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Engine.ico">
@@ -150,13 +143,13 @@
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Fichiers d%27en-tête">
-      <UniqueIdentifier>{67baff53-76f2-4675-879a-c6ee523d48a5}</UniqueIdentifier>
+      <UniqueIdentifier>{e9bdcf22-3666-470f-8d01-c0801086c2e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers source">
+      <UniqueIdentifier>{3ad426b0-4c03-479d-8a86-a946a8a0c8ba}</UniqueIdentifier>
     </Filter>
     <Filter Include="Fichiers de ressources">
-      <UniqueIdentifier>{09a64903-7fc1-48c0-be2b-6136bf868b10}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Fichiers sources">
-      <UniqueIdentifier>{c60e2a99-0d4b-4466-bd3f-7ee2bbc32d56}</UniqueIdentifier>
+      <UniqueIdentifier>{75618114-86d3-46cf-b8af-f9480f598d97}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

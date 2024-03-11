@@ -40,7 +40,7 @@ void ComponentCollider::FullCollisionCheck() {
 					|| ListCollisionCheck(hitFrustums, currentCollider->hitSpheres)
 					|| ListCollisionCheck(hitFrustums, currentCollider->hitFrustums)) {
 					//retrieve the other object's name and add it to the script queue for processing
-					objectScript->AddToQueue(currentScript->GetName());
+					objectScript->AddToQueue(currentScript->scriptName);
 				}
 			}
 		}

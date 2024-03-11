@@ -3,18 +3,15 @@
 #include "EngineTimer.h"
 #include "Transform.h"
 
-using namespace std;
-
-ComponentScript::ComponentScript(EngineObject* gameObjectPointer, ScriptNames name, ScriptStates initState, GameTimer* timer) : Component(gameObjectPointer) {
+ComponentScript::ComponentScript(EngineObject* gameObjectPointer, std::string name, std::string initState, GameTimer* timer) : Component(gameObjectPointer) {
 	Init(name, initState, timer);
 };
 
-void ComponentScript::Init(ScriptNames name, ScriptStates initState, GameTimer* timer) {
+void ComponentScript::Init(std::string name, std::string initState, GameTimer* timer) {
 	scriptName = name;
 	scriptState = initState;
 	gameTimer = timer;
 }
-
 
 //////////////////////////////////
 //		OBJECT MANAGEMENT		//
@@ -23,14 +20,12 @@ void ComponentScript::Init(ScriptNames name, ScriptStates initState, GameTimer* 
 //VISIBILITY FUNCTIONS
 //make the object visible
 void ComponentScript::ObjectShow() {
-
 }
 
 //for ^^^ those vvv two, play around with the display list once it works
 
 //make the object invisible
 void ComponentScript::ObjectHide() {
-
 }
 
 //completely end the object's existence
@@ -40,7 +35,7 @@ void ComponentScript::ObjectDestroy() {
 
 // TIMER FUNCTIONS
 //get the saved timeStamp
-__int64 ComponentScript::GetTimeStamp() {
+float ComponentScript::GetTimeStamp() {
 	return timeStamp;
 }
 
@@ -50,8 +45,8 @@ void ComponentScript::SetTimeStamp() {
 }
 
 //get how long it have been since you saved the timeStamp
-__int64 ComponentScript::HowLongSinceTimeStamp() {
-	__int64 diff = (gameTimer->TotalTime() - timeStamp);
+float ComponentScript::HowLongSinceTimeStamp() {
+	float diff = (gameTimer->TotalTime() - timeStamp);
 	return diff;
 }
 
@@ -61,11 +56,11 @@ __int64 ComponentScript::HowLongSinceTimeStamp() {
 
 //QUEUE FUNCTIONS
 
-void ComponentScript::AddToQueue(ScriptNames newInput) {
+void ComponentScript::AddToQueue(std::string newInput) {
 	scriptQueue.push_back(newInput);
 }
 
-ScriptNames ComponentScript::ReadFront() {
+std::string ComponentScript::ReadFront() {
 	return scriptQueue[0];
 }
 
@@ -79,8 +74,3 @@ void ComponentScript::EmptyQueue() {
 	}
 }
 
-//NAME FUNCTIONS
-
-ScriptNames ComponentScript::GetName() {
-	return scriptName;
-}

@@ -42,7 +42,6 @@ private:
 	void Init(EngineManager* manager, ComponentScript* script);
 };
 
-
 template <typename U, typename V> bool ComponentCollider::ListCollisionCheck(std::vector<U*> listOne, std::vector<V*> listTwo) {
 	for (int i = 0; i < listOne.size(); i++) {
 		for (int j = 0; j < listTwo.size(); j++) {

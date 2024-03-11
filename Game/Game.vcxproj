@@ -27,6 +27,7 @@
     <ClCompile Include="LevelManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="GameObjectShot.cpp" />
+    <ClCompile Include="ScriptHandler.cpp" />
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
@@ -38,6 +39,7 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="LevelManager.h" />
     <ClInclude Include="GameObjectShot.h" />
+    <ClInclude Include="ScriptHandler.h" />
     <ClInclude Include="TimeManager.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>

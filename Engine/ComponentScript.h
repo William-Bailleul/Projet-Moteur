@@ -2,29 +2,18 @@
 
 #include "Component.h"
 
-//#include <string>
+#include <string>
 #include <vector>
 
 //using namespace std;
 
 class GameTimer;
 
-enum ScriptNames {
-
-};
-
-enum ScriptStates {
-
-};
-
 class ComponentScript: public Component
 {
 public:
 
-	ComponentScript(EngineObject* gameObjectPointer, ScriptNames name, ScriptStates initState, GameTimer* timer);
-
-	// Main Behavior Function
-	void ScriptSelector();
+	ComponentScript(EngineObject* gameObjectPointer, std::string name, std::string initState, GameTimer* timer);
 
 	//////////////////////
 	// OBJECT FUNCTIONS	//
@@ -36,33 +25,31 @@ public:
 	void ObjectDestroy();
 
 	// Timer Funcs (using the GameTimer.h file)
-	__int64 GetTimeStamp();
+	float GetTimeStamp();
 	void SetTimeStamp();
-	__int64 HowLongSinceTimeStamp();
+	float HowLongSinceTimeStamp();
 
 	//////////////////////////
 	//	SCRIPT MANAGEMENT	//
 	//////////////////////////
 	
 	// Queue Funcs
-	void AddToQueue(ScriptNames newInput);
-	ScriptNames ReadFront();
+	void AddToQueue(std::string newInput);
+	std::string ReadFront();
 	void TrashFront();
 	void EmptyQueue();
 
-	// Name Funcs
-	ScriptNames GetName();
+	std::string scriptName;
+	std::string scriptState;
 
 private:
-	ScriptNames scriptName;
-	ScriptStates scriptState;
 
 	//lets us put aside the scriptQueue for a while if the current State is very important (ie: death)
 	int currentStatePriority;
 
 	GameTimer* gameTimer; 
-	__int64 timeStamp;
+	float timeStamp;
 
-	std::vector<ScriptNames> scriptQueue;
-	void Init(ScriptNames name, ScriptStates initState, GameTimer* timer);
+	std::vector<std::string> scriptQueue;
+	void Init(std::string name, std::string initState, GameTimer* timer);
 };

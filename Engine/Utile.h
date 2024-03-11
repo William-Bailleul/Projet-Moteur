@@ -5,7 +5,6 @@
 #include <dxgi1_4.h>
 #include <d3d12.h>
 #include <D3Dcompiler.h>
-#include <DirectXMath.h>
 #include <DirectXPackedVector.h>
 #include <DirectXColors.h>
 #include <DirectXCollision.h>
@@ -19,6 +18,7 @@
 #include <fstream>
 #include <sstream>
 #include <cassert>
+
 #include "d3dx12.h"
 #include "DDSTextureLoader.h"
 #include "MathHelper.h"
@@ -126,7 +126,12 @@ public:
     int LineNumber = -1;
 };
 
-// Defines a subrange of geometry in a MeshGeometry.  This is for when multiple
+// Defines a subrange of 
+// 
+// 
+// 
+// 
+// metry in a MeshGeometry.  This is for when multiple
 // geometries are stored in one vertex and index buffer.  It provides the offsets
 // and data needed to draw a subset of geometry stores in the vertex and index 
 // buffers so that we can implement the technique described by Figure 6.3.

@@ -5,7 +5,11 @@ ComponentRenderMesh::ComponentRenderMesh(): Component(gameObjectPointer)
 	
 }
 
-ComponentRenderMesh::ComponentRenderMesh(EngineObject* gameObjectPointer, GeometryHandler::Mesh& meshRef, Shader* shaderRef, Texture* textureRef): Component(gameObjectPointer)
+ComponentRenderMesh::ComponentRenderMesh(EngineObject* gameObjectPointer, 
+	
+	
+	
+	GeometryHandler::Mesh& meshRef, Shader* shaderRef, Texture* textureRef): Component(gameObjectPointer)
 {
 	Init(meshRef, shaderRef, textureRef);
 }

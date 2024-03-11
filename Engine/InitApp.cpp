@@ -114,17 +114,34 @@ bool InitDirect3DApp::Initialize()
 	boxSubmesh.StartIndexLocation = boxIndexOffset;
 	boxSubmesh.BaseVertexLocation = boxVertexOffset;
 
+	SubmeshGeometry sphereSubmesh;
+	sphereSubmesh.IndexCount = (UINT)sphere.Indices32.size();
+	sphereSubmesh.StartIndexLocation = sphereIndexOffset;
+	sphereSubmesh.BaseVertexLocation = sphereVertexOffset;
+	
+	SubmeshGeometry cylinderSubmesh;
+	cylinderSubmesh.IndexCount = (UINT)cylinder.Indices32.size();
+	cylinderSubmesh.StartIndexLocation = cylinderIndexOffset;
+	cylinderSubmesh.BaseVertexLocation = cylinderVertexOffset;
+	
 	SubmeshGeometry geosphereSubmesh;
 	geosphereSubmesh.IndexCount = (UINT)geosphere.Indices32.size();
 	geosphereSubmesh.StartIndexLocation = geosphereIndexOffset;
 	geosphereSubmesh.BaseVertexLocation = geosphereVertexOffset;
 
+	SubmeshGeometry enemySubmesh;
+	enemySubmesh.IndexCount = (UINT)enemy.Indices32.size();
+	enemySubmesh.StartIndexLocation = enemyIndexOffset;
+	enemySubmesh.BaseVertexLocation = enemyVertexOffset;
 
 	//VERTEX COUNT
 
 	auto totalVertexCount =
 		box.Vertices.size() +
-		geosphere.Vertices.size();
+		sphere.Vertices.size() +
+		cylinder.Vertices.size() +
+		geosphere.Vertices.size() +
+		enemy.Vertices.size();
 
 
 	//SET POS + COLOR
@@ -135,13 +152,31 @@ bool InitDirect3DApp::Initialize()
 	for (size_t i = 0; i < box.Vertices.size(); ++i, ++k)
 	{
 		vertices[k].Pos = box.Vertices[i].Position;
-		vertices[k].Color = XMFLOAT4(DirectX::Colors::AliceBlue);
+		vertices[k].Color = XMFLOAT4(DirectX::Colors::DarkGreen);
+	}
+
+	for (size_t i = 0; i < sphere.Vertices.size(); ++i, ++k)
+	{
+		vertices[k].Pos = sphere.Vertices[i].Position;
+		vertices[k].Color = XMFLOAT4(DirectX::Colors::Crimson);
+	}
+
+	for (size_t i = 0; i < cylinder.Vertices.size(); ++i, ++k)
+	{
+		vertices[k].Pos = cylinder.Vertices[i].Position;
+		vertices[k].Color = XMFLOAT4(DirectX::Colors::SteelBlue);
 	}
 
 	for (size_t i = 0; i < geosphere.Vertices.size(); ++i, ++k)
 	{
 		vertices[k].Pos = geosphere.Vertices[i].Position;
-		vertices[k].Color = XMFLOAT4(DirectX::Colors::IndianRed);
+		vertices[k].Color = XMFLOAT4(DirectX::Colors::Cyan);
+	}
+
+	for (size_t i = 0; i < enemy.Vertices.size(); ++i, ++k)
+	{
+		vertices[k].Pos = enemy.Vertices[i].Position;
+		vertices[k].Color = XMFLOAT4(DirectX::Colors::MintCream);
 	}
 
 
@@ -149,7 +184,10 @@ bool InitDirect3DApp::Initialize()
 
 	std::vector<std::uint16_t> indices;
 	indices.insert(indices.end(), std::begin(box.GetIndices16()), std::end(box.GetIndices16()));
+	indices.insert(indices.end(), std::begin(sphere.GetIndices16()), std::end(sphere.GetIndices16()));
+	indices.insert(indices.end(), std::begin(cylinder.GetIndices16()), std::end(cylinder.GetIndices16()));
 	indices.insert(indices.end(), std::begin(geosphere.GetIndices16()), std::end(geosphere.GetIndices16()));
+	indices.insert(indices.end(), std::begin(enemy.GetIndices16()), std::end(enemy.GetIndices16()));
 
 	const UINT vbByteSize = (UINT)vertices.size() * sizeof(ComponentRenderMesh::Vertex);
 	const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
@@ -178,7 +216,10 @@ bool InitDirect3DApp::Initialize()
 	geo->IndexBufferByteSize = ibByteSize;
 
 	geo->DrawArgs["box"] = boxSubmesh;
+	geo->DrawArgs["sphere"] = sphereSubmesh;
+	geo->DrawArgs["cylinder"] = cylinderSubmesh;
 	geo->DrawArgs["geosphere"] = geosphereSubmesh;
+	geo->DrawArgs["enemy"] = enemySubmesh;
 
 	std::unordered_map<std::string, MeshGeometry*> mGeometries;
 	mGeometries[geo->Name] = geo;
@@ -197,13 +238,13 @@ bool InitDirect3DApp::Initialize()
 
 	UINT objCBIndex = 2;
 	RenderItem* leftSphereRitem = new RenderItem;
-	XMStoreFloat4x4(&leftSphereRitem->World, XMMatrixScaling(2.0f, 2.0f, 2.0f) * XMMatrixTranslation(5.0f, 4.5f, 2.0f));
+	XMStoreFloat4x4(&leftSphereRitem->World, XMMatrixScaling(1.0f, 1.0f, 1.0f));
 	leftSphereRitem->ObjCBIndex = objCBIndex++;
 	leftSphereRitem->Geo = mGeometries["shapeGeo"];
 	leftSphereRitem->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	leftSphereRitem->IndexCount = leftSphereRitem->Geo->DrawArgs["geosphere"].IndexCount;
-	leftSphereRitem->StartIndexLocation = leftSphereRitem->Geo->DrawArgs["geosphere"].StartIndexLocation;
-	leftSphereRitem->BaseVertexLocation = leftSphereRitem->Geo->DrawArgs["geosphere"].BaseVertexLocation;
+	leftSphereRitem->IndexCount = leftSphereRitem->Geo->DrawArgs["enemy"].IndexCount;
+	leftSphereRitem->StartIndexLocation = leftSphereRitem->Geo->DrawArgs["enemy"].StartIndexLocation;
+	leftSphereRitem->BaseVertexLocation = leftSphereRitem->Geo->DrawArgs["enemy"].BaseVertexLocation;
 	mAllRitems.push_back(leftSphereRitem);
 
 	// All the render items are opaque.

@@ -1,4 +1,6 @@
 #include "GeometryHandler.h"
+#include "Utile.h"
+#include <algorithm>
 
 using namespace DirectX;
 
@@ -83,52 +85,6 @@ GeometryHandler::Mesh GeometryHandler::BuildBox(float width, float height, float
 	mesh.Indices32.assign(&indices[0], &indices[36]);
 
 	//limite le nombre de subdivisions. (Si sub > 4u alors sub = 4u)
-	subs = std::min<uint32>(subs, 4u);
-
-	for (uint32 i = 0; i < subs; ++i)
-		Subdivide(mesh);
-
-	return mesh;
-}
-
-GeometryHandler::Mesh GeometryHandler::BuildPyramid(float width, float height, float depth, uint32 subs)
-{
-	Mesh mesh;
-
-	Vertex vertex[4];
-
-	float w = 0.5f * width;
-	float h = 0.5f * height;
-	float d = 0.5f * depth;
-
-	//Creation des Vertices (Points)
-
-	vertex[0] = Vertex(-w, -h, -d, -1.0f, 0.0f, +1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-	vertex[1] = Vertex(0.0f, +h, 0.0f, 0.0f, +1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
-	vertex[2] = Vertex(+w, -h, -d, +1.0f, 0.0f, +1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
-	vertex[3] = Vertex(0.0f, -h, +d, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
-
-	mesh.Vertices.assign(&vertex[0], &vertex[4]);
-
-	//Creation des indices (Triangles)
-
-	uint32 indices[12];
-
-	//Face avant.
-	indices[0] = 0; indices[1] = 1; indices[2] = 2;
-
-	//Face droite.
-	indices[3] = 2; indices[4] = 1; indices[5] = 3;
-
-	//Face gauche.
-	indices[6] = 3; indices[7] = 1; indices[8] = 0;
-
-	//Base.
-	indices[9] = 0; indices[10] = 2; indices[11] = 3;
-
-	mesh.Indices32.assign(&indices[0], &indices[12]);
-
-	//limite le nombre de subdivisions. (Si subs > 4u alors subs = 4u)
 	subs = std::min<uint32>(subs, 4u);
 
 	for (uint32 i = 0; i < subs; ++i)
@@ -289,7 +245,7 @@ GeometryHandler::Mesh GeometryHandler::BuildGeosphere(float radius, uint32 subs)
 	return mesh;
 }
 
-GeometryHandler::Mesh GeometryHandler::BuildCylinder(float bottomRadius, float topRadius, float height, uint32 sliceCount, uint32 stackCount) 
+GeometryHandler::Mesh GeometryHandler::BuildCylinder(float bottomRadius, float topRadius, float height, uint32 sliceCount, uint32 stackCount)
 {
 	Mesh mesh;
 
@@ -446,7 +402,7 @@ GeometryHandler::Vertex GeometryHandler::MidPoint(const Vertex& vertex0, const V
 	return vertex;
 }
 
-void GeometryHandler::BuildCylinderTopCap(float bottomRadius, float topRadius, float height,uint32 sliceCount, uint32 stackCount, Mesh& mesh)
+void GeometryHandler::BuildCylinderTopCap(float bottomRadius, float topRadius, float height, uint32 sliceCount, uint32 stackCount, Mesh& mesh)
 {
 	uint32 baseIndex = (uint32)mesh.Vertices.size();
 
@@ -476,7 +432,7 @@ void GeometryHandler::BuildCylinderTopCap(float bottomRadius, float topRadius, f
 	}
 }
 
-void GeometryHandler::BuildCylinderBottomCap(float bottomRadius, float topRadius, float height,uint32 sliceCount, uint32 stackCount, Mesh& mesh)
+void GeometryHandler::BuildCylinderBottomCap(float bottomRadius, float topRadius, float height, uint32 sliceCount, uint32 stackCount, Mesh& mesh)
 {
 	uint32 baseIndex = (uint32)mesh.Vertices.size();
 
@@ -504,4 +460,122 @@ void GeometryHandler::BuildCylinderBottomCap(float bottomRadius, float topRadius
 		mesh.Indices32.push_back(baseIndex + i);
 		mesh.Indices32.push_back(baseIndex + i + 1);
 	}
+}
+
+GeometryHandler::Mesh GeometryHandler::BuildPyramid(float size, uint32 state)
+{
+	Mesh meshData;
+
+	float w = size;
+	float h = size;
+	float d = size;
+
+	Vertex vertex[8];
+	uint32 indices[24];
+
+	switch (state)
+	{
+	case 2:
+
+		//set points
+		vertex[0] = Vertex(-w, -h, -d, -1.0f, 0.0f, +1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+		vertex[1] = Vertex(0.0f, +h, 0.0f, 0.0f, +1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+		vertex[2] = Vertex(+w, -h, -d, +1.0f, 0.0f, +1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+		vertex[3] = Vertex(0.0f, -h, +d, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
+		vertex[4] = Vertex(0.0f, -(3 * h), 0.0f, 0.0f, +1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+
+		meshData.Vertices.assign(&vertex[0], &vertex[5]);
+
+		//set verteces
+		indices[0] = 0; indices[1] = 1; indices[2] = 2;
+		indices[3] = 2; indices[4] = 1; indices[5] = 3;
+		indices[6] = 3; indices[7] = 1; indices[8] = 0;
+		indices[9] = 2; indices[10] = 4; indices[11] = 0;
+		indices[12] = 0; indices[13] = 4; indices[14] = 3;
+		indices[15] = 3; indices[16] = 4; indices[17] = 2;
+
+		meshData.Indices32.assign(&indices[0], &indices[18]);
+
+		break;
+
+	case 3:
+
+		w *= 3;
+		h *= 3;
+		d *= 3;
+
+		//set points
+		vertex[0] = Vertex(-w, -h, -d, -1.0f, 0.0f, +1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+		vertex[1] = Vertex(0.0f, +h, 0.0f, 0.0f, +1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+		vertex[2] = Vertex(+w, -h, -d, +1.0f, 0.0f, +1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+		vertex[3] = Vertex(0.0f, -h, +d, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
+		meshData.Vertices.assign(&vertex[0], &vertex[4]);
+
+		//set verteces
+		indices[0] = 0; indices[1] = 1; indices[2] = 2;
+		indices[3] = 2; indices[4] = 1; indices[5] = 3;
+		indices[6] = 3; indices[7] = 1; indices[8] = 0;
+		indices[9] = 0; indices[10] = 2; indices[11] = 3;
+
+		meshData.Indices32.assign(&indices[0], &indices[12]);
+
+		Subdivide(meshData);
+
+		break;
+
+	case 4:
+
+		w *= 3;
+		h *= 3;
+		d *= 3;
+
+		//set points
+		vertex[0] = Vertex(-w, -h, -d, -1.0f, 0.0f, +1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+		vertex[1] = Vertex(0.0f, +h, 0.0f, 0.0f, +1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+		vertex[2] = Vertex(+w, -h, -d, +1.0f, 0.0f, +1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+		vertex[3] = Vertex(0.0f, -h, +d, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
+		vertex[4] = Vertex(+w, +h - (h * 0.75), +d, -1.0f, 0.0f, +1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+		vertex[5] = Vertex(0.0f, -h - (h * 0.75), 0.0f, 0.0f, +1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+		vertex[6] = Vertex(-w, +h - (h * 0.75), +d, +1.0f, 0.0f, +1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+		vertex[7] = Vertex(0.0f, +h - (h * 0.75), -d, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
+
+		meshData.Vertices.assign(&vertex[0], &vertex[8]);
+
+		//set verteces
+		indices[0] = 0; indices[1] = 1; indices[2] = 2;
+		indices[3] = 2; indices[4] = 1; indices[5] = 3;
+		indices[6] = 3; indices[7] = 1; indices[8] = 0;
+		indices[9] = 0; indices[10] = 2; indices[11] = 3;
+		indices[12] = 6; indices[13] = 5; indices[14] = 4;
+		indices[15] = 7; indices[16] = 5; indices[17] = 6;
+		indices[18] = 4; indices[19] = 5; indices[20] = 7;
+		indices[21] = 7; indices[22] = 6; indices[23] = 4;
+
+		meshData.Indices32.assign(&indices[0], &indices[24]);
+
+
+		break;
+
+	default:
+
+		//set points
+		vertex[0] = Vertex(-w, -h, -d, -1.0f, 0.0f, +1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+		vertex[1] = Vertex(0.0f, +h, 0.0f, 0.0f, +1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+		vertex[2] = Vertex(+w, -h, -d, +1.0f, 0.0f, +1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+		vertex[3] = Vertex(0.0f, -h, +d, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
+
+		meshData.Vertices.assign(&vertex[0], &vertex[4]);
+
+		//set verteces
+		indices[0] = 0; indices[1] = 1; indices[2] = 2;
+		indices[3] = 2; indices[4] = 1; indices[5] = 3;
+		indices[6] = 3; indices[7] = 1; indices[8] = 0;
+		indices[9] = 2; indices[10] = 3; indices[11] = 0;
+
+		meshData.Indices32.assign(&indices[0], &indices[12]);
+
+		break;
+	}
+
+	return meshData;
 }

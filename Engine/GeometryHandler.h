@@ -66,9 +66,6 @@ public:
 	//et a sub coupures verticales et horizontales sur chaques faces
 	Mesh BuildBox(float width, float height, float depth, uint32 subs);
 
-	//BuildCone - Creee une cone a 4 faces en prennant une largeur lenght, une hauteur height, 
-	//une profondeur depth et a sub*4 triangles sur chaques faces
-	Mesh BuildPyramid(float width, float height, float depth, uint32 subs);
 
 	//BuildSphere - Creee une sphere en prennant une rayon radius, un nombre de tranches verticales sliceCount 
 	//et horizontale stackCount (ces deux parametres controllent la tesselation)
@@ -82,6 +79,10 @@ public:
 	//BuildCylinder - Creee un cylindre en prennant un rayon de bases bottomRadius et topRadius, une hauteur height, 
 	//un nombre de tranches sliceCount et couches stackCount (ces deux parametres controllent la tesselation)
 	Mesh BuildCylinder(float bottomRadius, float topRadius, float height, uint32 sliceCount, uint32 stackCount);
+
+	//BuildCylinder - Creee un cylindre en prennant un rayon de bases bottomRadius et topRadius, une hauteur height, 
+	//un nombre de tranches sliceCount et couches stackCount (ces deux parametres controllent la tesselation)
+	GeometryHandler::Mesh BuildPyramid(float size, uint32 state);
 
 private:
 	//Decoupe une face en 4 parties egales en utilisant les centres des vertices

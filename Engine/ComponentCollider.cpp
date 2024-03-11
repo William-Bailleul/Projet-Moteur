@@ -5,11 +5,11 @@
 
 #include <vector>
 
-ComponentCollider::ComponentCollider(GameObject* gameObjectPointer, GameManager* manager, ComponentScript* script) :Component::Component(gameObjectPointer) {
+ComponentCollider::ComponentCollider(EngineObject* gameObjectPointer, EngineManager* manager, ComponentScript* script) :Component::Component(gameObjectPointer) {
 	Init(manager, script);
 };
 
-void ComponentCollider::Init(GameManager* manager, ComponentScript* script) {
+void ComponentCollider::Init(EngineManager* manager, ComponentScript* script) {
 	gameManager = manager;
 	objectScript = script;
 }
@@ -20,9 +20,9 @@ void ComponentCollider::FullCollisionCheck() {
 	// remember to parse the game's generated "field" in a grid to avoid checking the entire scene for collisions everytime 
 	if (hitBoxes.size() > 0 || hitSpheres.size() > 0 || hitBoxes.size() > 0) {
 
-		std::vector<GameObject*> currentObjectList = gameManager->objectList;
+		std::vector<EngineObject*> currentObjectList = gameManager->objectList;
 		for (int i = 0; i < currentObjectList.size(); i++) {
-			GameObject* currentObject = currentObjectList[i];
+			EngineObject* currentObject = currentObjectList[i];
 			
 			if (currentObject != gameObjectPointer) {
 

@@ -1,10 +1,11 @@
 #include "Component.h"
+#include "EngineObject.h"
 
-Component::Component(GameObject* GOPointer) {
+Component::Component(EngineObject* GOPointer) {
 	Init(GOPointer);
 }
 
-void Component::Init(GameObject* GOPointer) {
+void Component::Init(EngineObject* GOPointer) {
 	gameObjectPointer = GOPointer;
 }
 

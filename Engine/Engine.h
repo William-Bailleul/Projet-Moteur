@@ -13,6 +13,7 @@
 #pragma comment(lib, "D3D12.lib")
 #pragma comment(lib, "dxgi.lib")
 
+
 class D3DApp
 {
 protected:
@@ -33,10 +34,13 @@ public:
     bool Get4xMsaaState()const;
     void Set4xMsaaState(bool value);
 
+    void CreateConstantBufferViews();
+
     int Run();
 
     virtual bool Initialize();
     virtual LRESULT MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 
     struct RenderItem
     {
@@ -45,7 +49,6 @@ public:
         //Matrice du Monde
         DirectX::XMFLOAT4X4 World = MathHelper::Identity4x4();
 
-        const int gNumFrameResources = 3;
         int NumFramesDirty = gNumFrameResources;
 
         // Index into GPU constant buffer corresponding to the ObjectCB for this render item.
@@ -61,6 +64,46 @@ public:
         UINT StartIndexLocation = 0;
         int BaseVertexLocation = 0;
     };
+
+    struct ObjectConstants
+    {
+        DirectX::XMFLOAT4X4 World = MathHelper::Identity4x4();
+    };
+
+    struct PassConstants
+    {
+        DirectX::XMFLOAT4X4 View = MathHelper::Identity4x4();
+        DirectX::XMFLOAT4X4 Proj = MathHelper::Identity4x4();
+    };
+
+    struct FrameResource
+    {
+    public:
+
+        FrameResource(ID3D12Device* device, UINT passCount, UINT objectCount);
+        FrameResource(const FrameResource& rhs) = delete;
+        FrameResource& operator=(const FrameResource& rhs) = delete;
+        ~FrameResource();
+
+        // We cannot reset the allocator until the GPU is done processing the commands.
+        // So each frame needs their own allocator.
+        Microsoft::WRL::ComPtr<ID3D12CommandAllocator> CmdListAlloc;
+
+        // We cannot update a cbuffer until the GPU is done processing the commands
+        // that reference it.  So each frame needs their own cbuffers.
+        std::unique_ptr<UploadBuffer<PassConstants>> PassCB = nullptr;
+        std::unique_ptr<UploadBuffer<ObjectConstants>> ObjectCB = nullptr;
+
+        // Fence value to mark commands up to this fence point.  This lets us
+        // check if these frame resources are still in use by the GPU.
+        UINT64 Fence = 0;
+    };
+
+    std::vector<std::unique_ptr<FrameResource>> mFrameResources;
+    FrameResource* mCurrFrameResource = nullptr;
+    int mCurrFrameResourceIndex = 0;
+
+
 
 protected:
     virtual void CreateDescriptorHeaps();
@@ -146,7 +189,7 @@ protected:
     UINT mCbvSrvUavDescriptorSize = 0;
 
     // Derived class should set these in derived constructor to customize starting values.
-    std::wstring mMainWndCaption = L"GAMING ???";
+    std::wstring mMainWndCaption = L"Game Window";
     D3D_DRIVER_TYPE md3dDriverType = D3D_DRIVER_TYPE_HARDWARE;
     DXGI_FORMAT mBackBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
     DXGI_FORMAT mDepthStencilFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;

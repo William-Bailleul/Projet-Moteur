@@ -5,7 +5,7 @@
 #include "Input.h"
 #include "LevelManager.h"
 #include "TimeManager.h"
-class GameManager
+class EngineManager
 {
 };
 

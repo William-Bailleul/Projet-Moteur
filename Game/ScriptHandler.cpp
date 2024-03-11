@@ -33,3 +33,5 @@ void ScriptHandler::QueueCheck() {
 ScriptHandler::~ScriptHandler() {
 
 }
+
+//maybe make small move and scale funcs to shorten and clean code ???

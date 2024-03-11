@@ -26,10 +26,7 @@ private:
 
 	Shader oShader;
 	Texture oTexture;
-	EngineManager testManager;
-	GeometryHandler oMeshH;
-	GeometryHandler::Mesh oMesh;
-	ComponentRenderMesh oRMesh;
+	EngineManager oManager;
 
 	std::vector<RenderItem*> mAllRitems;
 	std::unordered_map<std::string, ComPtr<ID3DBlob>> mShaders;
@@ -37,6 +34,8 @@ private:
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC opaquePsoDesc;
 	std::unordered_map<std::string, ComPtr<ID3D12PipelineState>> mPSOs;
+
+	XMFLOAT3 mEyePos = { 0.0f, 0.0f, 0.0f };
 
 };
 
@@ -82,78 +81,31 @@ bool InitDirect3DApp::Initialize()
 
 	//BUILD ROOT SIGNATURES
 
-
-	CD3DX12_DESCRIPTOR_RANGE cbvTable0;
-	cbvTable0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
-
-	CD3DX12_DESCRIPTOR_RANGE cbvTable1;
-	cbvTable1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 1);
-
-	// Root parameter can be a table, root descriptor or root constants.
-	CD3DX12_ROOT_PARAMETER slotRootParameter[2];
-
-	// Create root CBVs.
-	slotRootParameter[0].InitAsDescriptorTable(1, &cbvTable0);
-	slotRootParameter[1].InitAsDescriptorTable(1, &cbvTable1);
-
-	// A root signature is an array of root parameters.
-	CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc(2, slotRootParameter, 0, nullptr,
-		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
-
-	// create a root signature with a single slot which points to a descriptor range consisting of a single constant buffer
-	ComPtr<ID3DBlob> serializedRootSig = nullptr;
-	ComPtr<ID3DBlob> errorBlob = nullptr;
-	HRESULT hr = D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1,
-		serializedRootSig.GetAddressOf(), errorBlob.GetAddressOf());
-
-	if (errorBlob != nullptr)
-	{
-		::OutputDebugStringA((char*)errorBlob->GetBufferPointer());
-	}
-	ThrowIfFailed(hr);
-
-	ThrowIfFailed(md3dDevice->CreateRootSignature(
-		0,
-		serializedRootSig->GetBufferPointer(),
-		serializedRootSig->GetBufferSize(),
-		IID_PPV_ARGS(mRootSignature.GetAddressOf())));
+	oShader.BuildRootSignature();
 
 	//INIT
 
-
-	const char* entrypoint = "VS";
-	const char* target = "vs_5_1";
-	const char* entrypoint2 = "PS";
-	const char* target2 = "ps_5_1";
-
-	mShaders["VS"] = Utile::CompileShader(L"color.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["PS"] = Utile::CompileShader(L"color.hlsl", nullptr, "PS", "ps_5_1");
-
-	mInputLayout =
-	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-	};
-
+	oShader.Init(md3dDevice, mBackBufferFormat, mDepthStencilFormat, m4xMsaaState, m4xMsaaQuality);
+	oShader.CompileShaders(L"color.hlsl");
 
 	//CREATION DE BOITE + GEOSPHERE
+
+	EngineObject oBox(0, 0, 0);
+	EngineObject oGeoSphere(0, 0, 0);
 
 	GeometryHandler meshObject;
 	GeometryHandler::Mesh box = meshObject.BuildBox(5.0f, 5.0f, 5.0f, 1);
 	GeometryHandler::Mesh geosphere = meshObject.BuildGeosphere(2.5f, 5);
 
+	oManager.objectList.push_back(&oBox);
+	oManager.objectList.push_back(&oGeoSphere);
 
-	//VERTEX OFFSET
+	ComponentRenderMesh* renderBox = new ComponentRenderMesh;
+	renderBox->Init(&oBox, box, &oShader, &oTexture);
 
-	UINT boxVertexOffset = 0;
-	UINT geosphereVertexOffset = (UINT)box.Vertices.size();
-
-
-	//INDEX OFFSET
-
-	UINT boxIndexOffset = 0;
-	UINT geosphereIndexOffset = (UINT)box.Indices32.size();
-
+	ComponentRenderMesh* renderGSphere = new ComponentRenderMesh;
+	renderGSphere->Init(&oGeoSphere, geosphere, &oShader, &oTexture);
+	//MIGHT FUCK UP BE CAREFUL
 
 	//SUBMESH GEOMETRY
 
@@ -234,7 +186,7 @@ bool InitDirect3DApp::Initialize()
 	//BUILDRENDERITEMS
 
 	RenderItem* boxRitem = new RenderItem;
-	XMStoreFloat4x4(&boxRitem->World, XMMatrixScaling(2.0f, 2.0f, 2.0f) * XMMatrixTranslation(0.0f, 0.5f, 0.0f));
+	XMStoreFloat4x4(&boxRitem->World, XMMatrixScaling(2.0f, 2.0f, 2.0f) * XMMatrixTranslation(1.0f, 0.5f, 0.0f));
 	boxRitem->ObjCBIndex = 0;
 	boxRitem->Geo = mGeometries["shapeGeo"];
 	boxRitem->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
@@ -473,16 +425,20 @@ void InitDirect3DApp::Update(const GameTimer& gt)
 
 	//MAIN PASS
 
-	XMFLOAT4X4 mView = MathHelper::Identity4x4();
-	XMFLOAT4X4 mProj = MathHelper::Identity4x4();
+	PassConstants PassCB;
 
-	XMMATRIX view = XMLoadFloat4x4(&mView);
-	XMMATRIX proj = XMLoadFloat4x4(&mProj);
+	XMMATRIX view = XMLoadFloat4x4(&PassCB.View);
+	XMMATRIX proj = XMLoadFloat4x4(&PassCB.Proj);
 
-	PassConstants mMainPassCB;
+	XMMATRIX viewProj = XMLoadFloat4x4(viewProj, XMMatrixMultiply(view, proj));
+	XMMATRIX invView = XMMatrixInverse(&XMMatrixDeterminant(view), view);
+	XMMATRIX invProj = XMMatrixInverse(&XMMatrixDeterminant(proj), proj);
+	XMMATRIX invViewProj = XMMatrixInverse(&XMMatrixDeterminant(viewProj), viewProj);
 
 	auto currPassCB = mCurrFrameResource->PassCB.get();
-	currPassCB->CopyData(0, mMainPassCB);
+	currPassCB->CopyData(0, PassCB);
+
+
 
 	/* 
 			ANCIEN CODE

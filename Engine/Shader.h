@@ -22,6 +22,7 @@ public:
 	DXGI_FORMAT mDepthStencilFormat;
 	bool m4xMsaaState;
 	UINT m4xMsaaQuality;
+	std::unordered_map<std::string, ComPtr<ID3DBlob>> mShaders;
 
 public:
 	void Init(Microsoft::WRL::ComPtr<ID3D12Device> Device, DXGI_FORMAT BBufferFormat, DXGI_FORMAT DStencilFormat, bool MSAAState, UINT MSAAQuality);

@@ -23,26 +23,22 @@ public:
 	Shader* refShader;
 	Texture* refTexture;
 
-	std::vector<D3DApp::RenderItem*> mOpaqueRitems;
-	D3DApp::FrameResource* mCurrFrameResource = nullptr;
-	int mCurrFrameResourceIndex = 0;
-	UINT mCbvSrvUavDescriptorSize = 0;
-
 	XMFLOAT4X4 mView = MathHelper::Identity4x4();
 	XMFLOAT4X4 mProj = MathHelper::Identity4x4();
 
 	std::vector<std::unique_ptr<D3DApp::RenderItem>> mAllRitems;
 	std::unordered_map<std::string, std::unique_ptr<MeshGeometry>> mGeometries;
 
+	UINT meshVertexOffset;
+	UINT meshIndexOffset;
+	UINT totalVertexCount;
+
 	ComponentRenderMesh();
 	ComponentRenderMesh(EngineObject* gameObjectPointer, GeometryHandler::Mesh& meshRef, Shader* shaderRef, Texture* textureRef);
 	~ComponentRenderMesh();
 
 	void Init(EngineObject* gameObjectPointer, GeometryHandler::Mesh& meshRef, Shader* shaderRef, Texture* textureRef);
-	void BuildRenderItems();
-	void DrawRenderItem(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> cmdList, const std::vector<D3DApp::RenderItem*>& ritems, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mCbvHeap, UINT mCbvSrvUavDescriptorSize);
-	void UpdateObjectCBs(const GameTimer& gt);
-	void UpdateMainPassCB(const GameTimer& gt);
+	
 
 private:
 	void Init(GeometryHandler::Mesh& meshRef, Shader* shaderRef, Texture* textureRef);

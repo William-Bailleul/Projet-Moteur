@@ -146,6 +146,7 @@
     <ClInclude Include="ComponentRenderMesh.h" />
     <ClInclude Include="EngineTimer.h" />
     <ClInclude Include="MathHelper.h" />
+    <ClInclude Include="Renderer.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="targetver.h" />
@@ -168,6 +169,7 @@
     <ClCompile Include="ComponentRenderMesh.cpp" />
     <ClCompile Include="EngineTimer.cpp" />
     <ClCompile Include="InitApp.cpp" />
+    <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="UploadBuffer.cpp" />

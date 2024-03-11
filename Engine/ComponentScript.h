@@ -45,7 +45,7 @@ public:
 private:
 
 	//lets us put aside the scriptQueue for a while if the current State is very important (ie: death)
-	int currentStatePriority;
+	bool currentStatePriority;
 
 	GameTimer* gameTimer; 
 	float timeStamp;

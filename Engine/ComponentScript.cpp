@@ -11,6 +11,7 @@ void ComponentScript::Init(std::string name, std::string initState, GameTimer* t
 	scriptName = name;
 	scriptState = initState;
 	gameTimer = timer;
+	currentStatePriority = false;
 }
 
 //////////////////////////////////

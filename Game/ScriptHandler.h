@@ -1,18 +1,19 @@
 #pragma once
 
+class ComponentScript;
 
 class ScriptHandler
 {
 public:
 
-	ScriptHandler();
+	ScriptHandler(ComponentScript* linkedScript);
 	~ScriptHandler();
 
 	void Act();
-	void StateCheck();
 	void QueueCheck();
 
 private:
-	void Init();
-};
+	ComponentScript* linkedObjectScript;
 
+	void Init(ComponentScript* linkedScript);
+};

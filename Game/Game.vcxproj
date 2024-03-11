@@ -22,7 +22,6 @@
     <ClCompile Include="GameObjectEnemy.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="GameScripts.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="LevelManager.cpp" />
     <ClCompile Include="main.cpp" />
@@ -35,7 +34,6 @@
     <ClInclude Include="GameObjectEnemy.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameObject.h" />
-    <ClInclude Include="GameScripts.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="LevelManager.h" />
     <ClInclude Include="GameObjectShot.h" />

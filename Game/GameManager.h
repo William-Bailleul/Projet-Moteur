@@ -1,6 +1,6 @@
 #pragma once
-#include "Enemy.h"
-#include "Shoot.h"
+#include "GameObjectEnemy.h"
+#include "GameObjectShot.h"
 #include "GameScripts.h"
 #include "Input.h"
 #include "LevelManager.h"

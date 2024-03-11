@@ -27,7 +27,7 @@
 //const int gNumFrameResources;
 using Microsoft::WRL::ComPtr;
 
-const int gNumFrameResources = 3;
+const int gNumFrameResources = 1;
 
 inline void d3dSetDebugName(IDXGIObject* obj, const char* name)
 {

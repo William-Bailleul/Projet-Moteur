@@ -31,7 +31,7 @@ private:
 	GeometryHandler::Mesh oMesh;
 	ComponentRenderMesh oRMesh;
 
-	std::vector<std::unique_ptr<RenderItem>> mAllRitems;
+	std::vector<RenderItem*> mAllRitems;
 	std::unordered_map<std::string, ComPtr<ID3DBlob>> mShaders;
 	std::vector<D3D12_INPUT_ELEMENT_DESC> mInputLayout;
 
@@ -205,7 +205,7 @@ bool InitDirect3DApp::Initialize()
 
 	//GEO
 
-	auto geo = std::make_unique<MeshGeometry>();
+	auto geo = new MeshGeometry;
 	geo->Name = "shapeGeo";
 
 	ThrowIfFailed(D3DCreateBlob(vbByteSize, &geo->VertexBufferCPU));
@@ -228,36 +228,35 @@ bool InitDirect3DApp::Initialize()
 	geo->DrawArgs["box"] = boxSubmesh;
 	geo->DrawArgs["geosphere"] = geosphereSubmesh;
 
-	std::unordered_map<std::string, std::unique_ptr<MeshGeometry>> mGeometries;
-	mGeometries[geo->Name] = std::move(geo);
-
+	std::unordered_map<std::string, MeshGeometry*> mGeometries;
+	mGeometries[geo->Name] = geo;
 
 	//BUILDRENDERITEMS
 
-	auto boxRitem = std::make_unique<RenderItem>();
+	RenderItem* boxRitem = new RenderItem;
 	XMStoreFloat4x4(&boxRitem->World, XMMatrixScaling(2.0f, 2.0f, 2.0f) * XMMatrixTranslation(0.0f, 0.5f, 0.0f));
 	boxRitem->ObjCBIndex = 0;
-	boxRitem->Geo = mGeometries["shapeGeo"].get();
+	boxRitem->Geo = mGeometries["shapeGeo"];
 	boxRitem->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	boxRitem->IndexCount = boxRitem->Geo->DrawArgs["box"].IndexCount;
 	boxRitem->StartIndexLocation = boxRitem->Geo->DrawArgs["box"].StartIndexLocation;
 	boxRitem->BaseVertexLocation = boxRitem->Geo->DrawArgs["box"].BaseVertexLocation;
-	mAllRitems.push_back(std::move(boxRitem));
+	mAllRitems.push_back(boxRitem);
 
 	UINT objCBIndex = 2;
-	auto leftSphereRitem = std::make_unique<RenderItem>();
+	RenderItem* leftSphereRitem = new RenderItem;
 	XMStoreFloat4x4(&leftSphereRitem->World, XMMatrixScaling(2.0f, 2.0f, 2.0f) * XMMatrixTranslation(5.0f, 4.5f, 2.0f));
 	leftSphereRitem->ObjCBIndex = objCBIndex++;
-	leftSphereRitem->Geo = mGeometries["shapeGeo"].get();
+	leftSphereRitem->Geo = mGeometries["shapeGeo"];
 	leftSphereRitem->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	leftSphereRitem->IndexCount = leftSphereRitem->Geo->DrawArgs["geosphere"].IndexCount;
 	leftSphereRitem->StartIndexLocation = leftSphereRitem->Geo->DrawArgs["geosphere"].StartIndexLocation;
 	leftSphereRitem->BaseVertexLocation = leftSphereRitem->Geo->DrawArgs["geosphere"].BaseVertexLocation;
-	mAllRitems.push_back(std::move(leftSphereRitem));
+	mAllRitems.push_back(leftSphereRitem);
 
 	// All the render items are opaque.
 	for (auto& e : mAllRitems)
-		mOpaqueRitems.push_back(e.get());
+		mOpaqueRitems.push_back(e);
 
 
 	//FRAME RESOURCES

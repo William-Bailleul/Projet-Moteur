@@ -13,12 +13,14 @@ void ScriptHandler::Init(ComponentScript* linkedScript) {
 
 void ScriptHandler::Act() {
 	//follow this object's script
+	/*
 	if (linkedObjectScript->scriptState == "un truc") {
 
 	}
 	else if (linkedObjectScript->scriptState == "un autre") {
 
 	}
+	*/
 }
 
 void ScriptHandler::QueueCheck() {

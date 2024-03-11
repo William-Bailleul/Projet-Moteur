@@ -1,17 +1,16 @@
 #include "ComponentRenderMesh.h"
 
+
 ComponentRenderMesh::ComponentRenderMesh(): Component(gameObjectPointer)
 {
 	
 }
 
 ComponentRenderMesh::ComponentRenderMesh(EngineObject* gameObjectPointer, 
-	
-	
-	
 	GeometryHandler::Mesh& meshRef, Shader* shaderRef, Texture* textureRef): Component(gameObjectPointer)
 {
 	Init(meshRef, shaderRef, textureRef);
+	
 }
 
 void ComponentRenderMesh::Init(EngineObject* gameObjectPointer, GeometryHandler::Mesh& meshRef, Shader* shaderRef, Texture* textureRef)
@@ -60,15 +59,15 @@ void ComponentRenderMesh::Init(GeometryHandler::Mesh& meshRef, Shader* shaderRef
 void ComponentRenderMesh::BuildRenderItems()
 {
 
-	auto meshRitem = std::make_unique<D3DApp::RenderItem>();
-	XMStoreFloat4x4(&meshRitem->World, DirectX::XMMatrixScaling(2.0f, 2.0f, 2.0f) * DirectX::XMMatrixTranslation(0.0f, 0.5f, 0.0f));
-	meshRitem->ObjCBIndex = 0;
-	meshRitem->Geo = mGeometries["shapeGeo"].get();
-	meshRitem->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	meshRitem->IndexCount = meshRitem->Geo->DrawArgs["mesh"].IndexCount;
-	meshRitem->StartIndexLocation = meshRitem->Geo->DrawArgs["mesh"].StartIndexLocation;
-	meshRitem->BaseVertexLocation = meshRitem->Geo->DrawArgs["mesh"].BaseVertexLocation;
-	mAllRitems.push_back(std::move(meshRitem));
+	auto boxRitem = std::make_unique<D3DApp::RenderItem>();
+	XMStoreFloat4x4(&boxRitem->World, XMMatrixScaling(2.0f, 2.0f, 2.0f) * XMMatrixTranslation(0.0f, 0.5f, 0.0f));
+	boxRitem->ObjCBIndex = 0;
+	boxRitem->Geo = mGeometries["shapeGeo"].get();
+	boxRitem->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	boxRitem->IndexCount = boxRitem->Geo->DrawArgs["box"].IndexCount;
+	boxRitem->StartIndexLocation = boxRitem->Geo->DrawArgs["box"].StartIndexLocation;
+	boxRitem->BaseVertexLocation = boxRitem->Geo->DrawArgs["box"].BaseVertexLocation;
+	mAllRitems.push_back(std::move(boxRitem));
 
 	// All the render items are opaque.
 	for (auto& e : mAllRitems)

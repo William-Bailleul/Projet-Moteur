@@ -56,9 +56,14 @@ public:
 			return mIndices16;
 		}
 
+		
+
 	private:
 		std::vector<uint16> mIndices16;
 	};
+
+	std::vector<Mesh*> MeshList;
+	int listTotal;
 
 	//MESH-BUILDING FUNCTIONS HERE, MAKE THEM RETURN A Mesh OR A Mesh REFERENCE
 
@@ -82,7 +87,11 @@ public:
 
 	//BuildCylinder - Creee un cylindre en prennant un rayon de bases bottomRadius et topRadius, une hauteur height, 
 	//un nombre de tranches sliceCount et couches stackCount (ces deux parametres controllent la tesselation)
-	GeometryHandler::Mesh BuildPyramid(float size, uint32 state);
+	Mesh BuildPyramid(float size, uint32 state);
+
+	void CreateMeshList();
+	void AddMeshList(Mesh& mesh);
+	void RemoveMeshList(Mesh& mesh);
 
 private:
 	//Decoupe une face en 4 parties egales en utilisant les centres des vertices

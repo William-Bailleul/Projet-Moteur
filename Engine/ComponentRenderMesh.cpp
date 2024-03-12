@@ -25,7 +25,6 @@ void ComponentRenderMesh::Init(GeometryHandler::Mesh& meshRef, Shader* shaderRef
 	// Define the SubmeshGeometry that cover different 
 	// regions of the vertex/index buffers.
 
-	SubmeshGeometry meshSubmesh;
 	meshSubmesh.IndexCount = (UINT)refMesh.Indices32.size();
 	meshSubmesh.StartIndexLocation = meshIndexOffset;
 	meshSubmesh.BaseVertexLocation = meshVertexOffset;

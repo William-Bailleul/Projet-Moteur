@@ -33,6 +33,8 @@ public:
 	UINT meshIndexOffset;
 	UINT totalVertexCount;
 
+	SubmeshGeometry meshSubmesh;
+
 	ComponentRenderMesh();
 	ComponentRenderMesh(EngineObject* gameObjectPointer, GeometryHandler::Mesh& meshRef, Shader* shaderRef, Texture* textureRef);
 	~ComponentRenderMesh();

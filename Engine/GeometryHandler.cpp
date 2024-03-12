@@ -579,3 +579,27 @@ GeometryHandler::Mesh GeometryHandler::BuildPyramid(float size, uint32 state)
 
 	return meshData;
 }
+
+void GeometryHandler::CreateMeshList()
+{
+	GeometryHandler GeoList;
+	GeoList.listTotal = 0;
+}
+
+void GeometryHandler::AddMeshList(Mesh& mesh)
+{
+	MeshList.push_back(&mesh);
+	listTotal++;
+}
+
+void GeometryHandler::RemoveMeshList(Mesh& mesh)
+{
+	for (int i = 0; i < listTotal; i++)
+	{
+		if (MeshList[i] = &mesh)
+		{
+			MeshList.erase(MeshList.begin() + (i - 1));
+			listTotal--;
+		}
+	}
+}

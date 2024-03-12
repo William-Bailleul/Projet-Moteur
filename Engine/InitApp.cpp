@@ -93,101 +93,42 @@ bool InitDirect3DApp::Initialize()
 	EngineObject oBox(0, 0, 0);
 	EngineObject oGeoSphere(0, 0, 0);
 
+	GeometryHandler meshList;
+	meshList.CreateMeshList();
+
 	GeometryHandler meshObject;
 	GeometryHandler::Mesh box = meshObject.BuildBox(5.0f, 5.0f, 5.0f, 1);
 	GeometryHandler::Mesh geosphere = meshObject.BuildGeosphere(2.5f, 5);
 
+	meshList.AddMeshList(box);
+	meshList.AddMeshList(geosphere);
+
 	oManager.objectList.push_back(&oBox);
 	oManager.objectList.push_back(&oGeoSphere);
 
-	ComponentRenderMesh* renderBox = new ComponentRenderMesh;
-	renderBox->Init(&oBox, box, &oShader, &oTexture);
+	ComponentRenderMesh* renderedBox = new ComponentRenderMesh;
+	renderedBox->Init(&oBox, box, &oShader, &oTexture);
 
 	ComponentRenderMesh* renderGSphere = new ComponentRenderMesh;
 	renderGSphere->Init(&oGeoSphere, geosphere, &oShader, &oTexture);
 	//MIGHT FUCK UP BE CAREFUL
 
-	//SUBMESH GEOMETRY
-
-	SubmeshGeometry boxSubmesh;
-	boxSubmesh.IndexCount = (UINT)box.Indices32.size();
-	boxSubmesh.StartIndexLocation = boxIndexOffset;
-	boxSubmesh.BaseVertexLocation = boxVertexOffset;
-
-	SubmeshGeometry sphereSubmesh;
-	sphereSubmesh.IndexCount = (UINT)sphere.Indices32.size();
-	sphereSubmesh.StartIndexLocation = sphereIndexOffset;
-	sphereSubmesh.BaseVertexLocation = sphereVertexOffset;
-	
-	SubmeshGeometry cylinderSubmesh;
-	cylinderSubmesh.IndexCount = (UINT)cylinder.Indices32.size();
-	cylinderSubmesh.StartIndexLocation = cylinderIndexOffset;
-	cylinderSubmesh.BaseVertexLocation = cylinderVertexOffset;
-	
-	SubmeshGeometry geosphereSubmesh;
-	geosphereSubmesh.IndexCount = (UINT)geosphere.Indices32.size();
-	geosphereSubmesh.StartIndexLocation = geosphereIndexOffset;
-	geosphereSubmesh.BaseVertexLocation = geosphereVertexOffset;
-
-	SubmeshGeometry enemySubmesh;
-	enemySubmesh.IndexCount = (UINT)enemy.Indices32.size();
-	enemySubmesh.StartIndexLocation = enemyIndexOffset;
-	enemySubmesh.BaseVertexLocation = enemyVertexOffset;
 
 	//VERTEX COUNT
 
-	auto totalVertexCount =
-		box.Vertices.size() +
-		sphere.Vertices.size() +
-		cylinder.Vertices.size() +
-		geosphere.Vertices.size() +
-		enemy.Vertices.size();
-
-
-	//SET POS + COLOR
-
+	size_t totalVertexCount;
+	for (int i = 0; i < meshList.listTotal; i++)
+	{
+		totalVertexCount += meshList.MeshList[i]->Vertices.size();
+	};
 	std::vector<ComponentRenderMesh::Vertex> vertices(totalVertexCount);
 
-	UINT k = 0;
-	for (size_t i = 0; i < box.Vertices.size(); ++i, ++k)
-	{
-		vertices[k].Pos = box.Vertices[i].Position;
-		vertices[k].Color = XMFLOAT4(DirectX::Colors::DarkGreen);
-	}
-
-	for (size_t i = 0; i < sphere.Vertices.size(); ++i, ++k)
-	{
-		vertices[k].Pos = sphere.Vertices[i].Position;
-		vertices[k].Color = XMFLOAT4(DirectX::Colors::Crimson);
-	}
-
-	for (size_t i = 0; i < cylinder.Vertices.size(); ++i, ++k)
-	{
-		vertices[k].Pos = cylinder.Vertices[i].Position;
-		vertices[k].Color = XMFLOAT4(DirectX::Colors::SteelBlue);
-	}
-
-	for (size_t i = 0; i < geosphere.Vertices.size(); ++i, ++k)
-	{
-		vertices[k].Pos = geosphere.Vertices[i].Position;
-		vertices[k].Color = XMFLOAT4(DirectX::Colors::Cyan);
-	}
-
-	for (size_t i = 0; i < enemy.Vertices.size(); ++i, ++k)
-	{
-		vertices[k].Pos = enemy.Vertices[i].Position;
-		vertices[k].Color = XMFLOAT4(DirectX::Colors::MintCream);
-	}
-
-
+	
 	//INSERT INDICES
 
 	std::vector<std::uint16_t> indices;
 	indices.insert(indices.end(), std::begin(box.GetIndices16()), std::end(box.GetIndices16()));
-	indices.insert(indices.end(), std::begin(sphere.GetIndices16()), std::end(sphere.GetIndices16()));
-	indices.insert(indices.end(), std::begin(cylinder.GetIndices16()), std::end(cylinder.GetIndices16()));
 	indices.insert(indices.end(), std::begin(geosphere.GetIndices16()), std::end(geosphere.GetIndices16()));
-	indices.insert(indices.end(), std::begin(enemy.GetIndices16()), std::end(enemy.GetIndices16()));
 
 	const UINT vbByteSize = (UINT)vertices.size() * sizeof(ComponentRenderMesh::Vertex);
 	const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
@@ -215,11 +156,8 @@ bool InitDirect3DApp::Initialize()
 	geo->IndexFormat = DXGI_FORMAT_R16_UINT;
 	geo->IndexBufferByteSize = ibByteSize;
 
-	geo->DrawArgs["box"] = boxSubmesh;
-	geo->DrawArgs["sphere"] = sphereSubmesh;
-	geo->DrawArgs["cylinder"] = cylinderSubmesh;
-	geo->DrawArgs["geosphere"] = geosphereSubmesh;
-	geo->DrawArgs["enemy"] = enemySubmesh;
+	geo->DrawArgs["box"] = renderedBox->meshSubmesh;
+	geo->DrawArgs["geosphere"] = renderGSphere->meshSubmesh;
 
 	std::unordered_map<std::string, MeshGeometry*> mGeometries;
 	mGeometries[geo->Name] = geo;
@@ -471,7 +409,8 @@ void InitDirect3DApp::Update(const GameTimer& gt)
 	XMMATRIX view = XMLoadFloat4x4(&PassCB.View);
 	XMMATRIX proj = XMLoadFloat4x4(&PassCB.Proj);
 
-	XMMATRIX viewProj = XMLoadFloat4x4(viewProj, XMMatrixMultiply(view, proj));
+	XMMATRIX viewProj = XMMatrixMultiply(view, proj);
+	XMMATRIX viewDet = XMMatrixDeterminant(view);
 	XMMATRIX invView = XMMatrixInverse(&XMMatrixDeterminant(view), view);
 	XMMATRIX invProj = XMMatrixInverse(&XMMatrixDeterminant(proj), proj);
 	XMMATRIX invViewProj = XMMatrixInverse(&XMMatrixDeterminant(viewProj), viewProj);

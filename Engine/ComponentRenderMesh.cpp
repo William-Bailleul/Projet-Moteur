@@ -1,5 +1,7 @@
 #include "ComponentRenderMesh.h"
 #include "ComponentCamera.h"
+#include "Engine.h"
+#include "Utile.h"
 
 
 ComponentRenderMesh::ComponentRenderMesh(): Component(gameObjectPointer)
@@ -57,7 +59,7 @@ void ComponentRenderMesh::Init(GeometryHandler::Mesh& meshRef, Shader* shaderRef
 	BuildRenderItems();
 }
 
-void OnMouseDown(WPARAM btnState, int x, int y)
+void ComponentRenderMesh::OnMouseDown(WPARAM btnState, int x, int y)
 {
 	mLastMousePos.x = x;
 	mLastMousePos.y = y;
@@ -65,12 +67,12 @@ void OnMouseDown(WPARAM btnState, int x, int y)
 	SetCapture(mhMainWnd);
 }
 
-void OnMouseUp(WPARAM btnState, int x, int y)
+void ComponentRenderMesh::OnMouseUp(WPARAM btnState, int x, int y)
 {
 	ReleaseCapture();
 }
 
-void OnMouseMove(WPARAM btnState, int x, int y)
+void ComponentRenderMesh::OnMouseMove(WPARAM btnState, int x, int y)
 {
 	if ((btnState & MK_LBUTTON) != 0)
 	{
@@ -83,7 +85,7 @@ void OnMouseMove(WPARAM btnState, int x, int y)
 		mPhi += dy;
 
 		// Restrict the angle mPhi.
-		mPhi = MathHelper::Clamp(mPhi, 0.1f, MathHelper::Pi - 0.1f);
+		mPhi = MathHelper::Clamp(mPhi, 0.1f, XM_PI - 0.1f);
 	}
 	else if ((btnState & MK_RBUTTON) != 0)
 	{
@@ -102,7 +104,7 @@ void OnMouseMove(WPARAM btnState, int x, int y)
 	mLastMousePos.y = y;
 }
 
-void OnKeyboardInput(const GameTimer& gt)
+void ComponentRenderMesh::OnKeyboardInput(const GameTimer& gt)
 {
 	if (GetAsyncKeyState('1') & 0x8000)
 		mIsWireframe = true;
@@ -110,7 +112,7 @@ void OnKeyboardInput(const GameTimer& gt)
 		mIsWireframe = false;
 }
 
-void UpdateCamera(const GameTimer& gt)
+void ComponentRenderMesh::UpdateCamera(const GameTimer& gt)
 {
 	// Convert Spherical to Cartesian coordinates.
 	mEyePos.x = mRadius * sinf(mPhi) * cosf(mTheta);
@@ -195,9 +197,6 @@ void ComponentRenderMesh::UpdateObjectCBs(const GameTimer& gt)
 	}
 }
 
-void ComponentRenderMesh::OnMouseUp(WPARAM btnState, int x, int y)
-{
-}
 
 /*
 void ComponentRenderMesh::UpdateMainPassCB(const GameTimer& gt)

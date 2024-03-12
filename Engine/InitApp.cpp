@@ -4,6 +4,7 @@
 #include "EngineObject.h"
 #include "EngineManager.h"
 #include "ComponentRenderMesh.h"
+#include "ComponentCamera.h"
 #include <DirectXColors.h>
 
 using namespace DirectX;
@@ -117,6 +118,10 @@ bool InitDirect3DApp::Initialize()
 		serializedRootSig->GetBufferPointer(),
 		serializedRootSig->GetBufferSize(),
 		IID_PPV_ARGS(mRootSignature.GetAddressOf())));
+
+	Camera camera;
+	
+
 
 	//INIT
 
@@ -482,7 +487,7 @@ void InitDirect3DApp::OnResize()
 
 void InitDirect3DApp::Update(const GameTimer& gt)
 {
-	
+
 	// Cycle through the circular frame resource array.
 	mCurrFrameResourceIndex = (mCurrFrameResourceIndex + 1) % gNumFrameResources;
 	mCurrFrameResource = mFrameResources[mCurrFrameResourceIndex].get();
@@ -496,7 +501,6 @@ void InitDirect3DApp::Update(const GameTimer& gt)
 		WaitForSingleObject(eventHandle, INFINITE);
 		CloseHandle(eventHandle);
 	}
-
 
 	//OBJECT CBs
 

@@ -3,6 +3,7 @@
 #include "Component.h"
 #include "Engine.h"
 #include "GeometryHandler.h"
+#include "FrameResource.h"
 
 //struct Mesh;
 class Shader;
@@ -27,6 +28,7 @@ public:
 	D3DApp::FrameResource* mCurrFrameResource = nullptr;
 	int mCurrFrameResourceIndex = 0;
 	UINT mCbvSrvUavDescriptorSize = 0;
+	HWND mhMainWnd;
 
 	XMFLOAT4X4 mView = MathHelper::Identity4x4();
 	XMFLOAT4X4 mProj = MathHelper::Identity4x4();
@@ -49,6 +51,9 @@ public:
 	void OnMouseMove(WPARAM btnState, int x, int y);
 	void OnKeyboardInput(const GameTimer& gt);
 	void UpdateCamera(const GameTimer& gt);
+
+
+	PassConstants mMainPassCB;
 
 
 	ComPtr<ID3D12RootSignature> mRootSignature = nullptr;
@@ -76,5 +81,7 @@ public:
 
 private:
 	void Init(GeometryHandler::Mesh& meshRef, Shader* shaderRef, Texture* textureRef);
+	int mClientWidth = 800;
+	int mClientHeight = 600;
 };
 

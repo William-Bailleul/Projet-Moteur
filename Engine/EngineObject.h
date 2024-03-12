@@ -2,6 +2,7 @@
 #include <DirectXPackedVector.h>
 #include <iostream>
 #include<vector>
+
 #include "Transform.h"
 
 using namespace DirectX;
@@ -11,23 +12,19 @@ class Component;
 
 class EngineObject
 {
-private:
-	int m_posX;
-	int m_posY;
-	int m_posZ;
 public:
 	std::vector<Component*> componentList;
+	Transform m_transform;
 
-	EngineObject(int posX, int posY, int posZ);
+	EngineObject();
 	~EngineObject();
 
-	void Init(int posX, int posY, int posZ);
+	void Init();
 	void addComponent(Component* component);
 
 
 	//create template function to return component instance of a type
 	template <typename T> T* getComponent();
-	Transform m_transform;
 };
 
 template <typename T>

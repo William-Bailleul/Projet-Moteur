@@ -29,6 +29,12 @@ public:
 	void SetTimeStamp();
 	float HowLongSinceTimeStamp();
 
+	// Object Funcs (using the transform struct)
+	void SetObjPosition(float X, float Y, float Z);
+	void AddToObjPosition(float X, float Y, float Z);
+	void SetObjScale(float X, float Y, float Z);
+	void AddToObjScale(float X, float Y, float Z);
+
 	//////////////////////////
 	//	SCRIPT MANAGEMENT	//
 	//////////////////////////

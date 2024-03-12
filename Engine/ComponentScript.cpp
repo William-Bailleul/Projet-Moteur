@@ -2,6 +2,7 @@
 
 #include "EngineTimer.h"
 #include "Transform.h"
+#include "EngineObject.h"
 
 ComponentScript::ComponentScript(EngineObject* gameObjectPointer, std::string name, std::string initState, GameTimer* timer) : Component(gameObjectPointer) {
 	Init(name, initState, timer);

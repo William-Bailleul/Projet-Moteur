@@ -410,10 +410,15 @@ void InitDirect3DApp::Update(const GameTimer& gt)
 	XMMATRIX proj = XMLoadFloat4x4(&PassCB.Proj);
 
 	XMMATRIX viewProj = XMMatrixMultiply(view, proj);
-	XMMATRIX viewDet = XMMatrixDeterminant(view);
-	XMMATRIX invView = XMMatrixInverse(&XMMatrixDeterminant(view), view);
-	XMMATRIX invProj = XMMatrixInverse(&XMMatrixDeterminant(proj), proj);
-	XMMATRIX invViewProj = XMMatrixInverse(&XMMatrixDeterminant(viewProj), viewProj);
+
+	// Note that these three are vectors not matrixes
+	XMVECTOR viewDet = XMMatrixDeterminant(view);
+	XMVECTOR projDet = XMMatrixDeterminant(proj);
+	XMVECTOR viewProjDet = XMMatrixDeterminant(viewProj);
+	
+	XMMATRIX invView = XMMatrixInverse(&viewDet, view);
+	XMMATRIX invProj = XMMatrixInverse(&projDet, proj);
+	XMMATRIX invViewProj = XMMatrixInverse(&viewProjDet, viewProj);
 
 	auto currPassCB = mCurrFrameResource->PassCB.get();
 	currPassCB->CopyData(0, PassCB);

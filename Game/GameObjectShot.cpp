@@ -8,5 +8,9 @@ void GameObjectShot::Init() {
 	damage = 1;
 }
 
+int GameObjectShot::getDamage() {
+	return damage;
+}
+
 GameObjectShot::~GameObjectShot() {
 }

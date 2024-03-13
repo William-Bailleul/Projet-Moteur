@@ -16,7 +16,6 @@ public:
 	ComPtr<ID3D12PipelineState> mPSO = nullptr;
 	ComPtr<ID3D12RootSignature> mRootSignature = nullptr;
 
-public:
 	Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice;
 	DXGI_FORMAT mBackBufferFormat;
 	DXGI_FORMAT mDepthStencilFormat;
@@ -24,7 +23,6 @@ public:
 	UINT m4xMsaaQuality;
 	std::unordered_map<std::string, ComPtr<ID3DBlob>> mShaders;
 
-public:
 	void Init(Microsoft::WRL::ComPtr<ID3D12Device> Device, DXGI_FORMAT BBufferFormat, DXGI_FORMAT DStencilFormat, bool MSAAState, UINT MSAAQuality);
 	void BuildRootSignature();
 	void CompileShaders(LPCWSTR fileName);

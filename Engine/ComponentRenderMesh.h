@@ -13,11 +13,6 @@ using namespace DirectX;
 class ComponentRenderMesh : public Component
 {
 public:
-	struct Vertex
-	{
-		DirectX::XMFLOAT3 Pos;
-		DirectX::XMFLOAT4 Color;
-	};
 
 	GeometryHandler::GeometryHandler::Mesh refMesh;
 	Shader* refShader;
@@ -25,9 +20,6 @@ public:
 
 	XMFLOAT4X4 mView = MathHelper::Identity4x4();
 	XMFLOAT4X4 mProj = MathHelper::Identity4x4();
-
-	std::vector<std::unique_ptr<D3DApp::RenderItem>> mAllRitems;
-	std::unordered_map<std::string, std::unique_ptr<MeshGeometry>> mGeometries;
 
 	UINT meshVertexOffset;
 	UINT meshIndexOffset;
@@ -40,7 +32,6 @@ public:
 	~ComponentRenderMesh();
 
 	void Init(EngineObject* gameObjectPointer, GeometryHandler::Mesh& meshRef, Shader* shaderRef, Texture* textureRef);
-	
 
 private:
 	void Init(GeometryHandler::Mesh& meshRef, Shader* shaderRef, Texture* textureRef);

@@ -1,6 +1,7 @@
 #include "Engine.h"
 #include "Utile.h"
 #include "Shader.h"
+#include "Renderer.h"
 #include "EngineObject.h"
 #include "EngineManager.h"
 #include "ComponentRenderMesh.h"
@@ -93,80 +94,70 @@ bool InitDirect3DApp::Initialize()
 	EngineObject oBox(0, 0, 0);
 	EngineObject oGeoSphere(0, 0, 0);
 
-	GeometryHandler meshList;
-	meshList.CreateMeshList();
-
 	GeometryHandler meshObject;
+	meshObject.CreateMeshList();
 	GeometryHandler::Mesh box = meshObject.BuildBox(5.0f, 5.0f, 5.0f, 1);
 	GeometryHandler::Mesh geosphere = meshObject.BuildGeosphere(2.5f, 5);
 
-	meshList.AddMeshList(box);
-	meshList.AddMeshList(geosphere);
+	meshObject.AddMeshList(box);
+	meshObject.AddMeshList(geosphere);
 
 	oManager.objectList.push_back(&oBox);
 	oManager.objectList.push_back(&oGeoSphere);
 
+	Renderer* oRenderer = new Renderer;
+	oRenderer->CreateList();
+
 	ComponentRenderMesh* renderedBox = new ComponentRenderMesh;
 	renderedBox->Init(&oBox, box, &oShader, &oTexture);
+	oRenderer->AddList(*renderedBox);
 
-	ComponentRenderMesh* renderGSphere = new ComponentRenderMesh;
-	renderGSphere->Init(&oGeoSphere, geosphere, &oShader, &oTexture);
+	ComponentRenderMesh* renderedGSphere = new ComponentRenderMesh;
+	renderedGSphere->Init(&oGeoSphere, geosphere, &oShader, &oTexture);
+	oRenderer->AddList(*renderedGSphere);
+
 	//MIGHT FUCK UP BE CAREFUL
 
 
-	//VERTEX COUNT
+	//VERTEX COUNT + INDICES
 
-	size_t totalVertexCount;
-	for (int i = 0; i < meshList.listTotal; i++)
-	{
-		totalVertexCount += meshList.MeshList[i]->Vertices.size();
-	};
-	std::vector<ComponentRenderMesh::Vertex> vertices(totalVertexCount);
-
-	
-	//INSERT INDICES
-
-	std::vector<std::uint16_t> indices;
-	indices.insert(indices.end(), std::begin(box.GetIndices16()), std::end(box.GetIndices16()));
-	indices.insert(indices.end(), std::begin(geosphere.GetIndices16()), std::end(geosphere.GetIndices16()));
-
-	const UINT vbByteSize = (UINT)vertices.size() * sizeof(ComponentRenderMesh::Vertex);
-	const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
-
+	meshObject.CountVertInd();
 
 	//GEO
 
 	auto geo = new MeshGeometry;
 	geo->Name = "shapeGeo";
 
-	ThrowIfFailed(D3DCreateBlob(vbByteSize, &geo->VertexBufferCPU));
-	CopyMemory(geo->VertexBufferCPU->GetBufferPointer(), vertices.data(), vbByteSize);
+	ThrowIfFailed(D3DCreateBlob(meshObject.vbByteSize, &geo->VertexBufferCPU));
+	CopyMemory(geo->VertexBufferCPU->GetBufferPointer(), meshObject.vertices.data(), meshObject.vbByteSize);
 
-	ThrowIfFailed(D3DCreateBlob(ibByteSize, &geo->IndexBufferCPU));
-	CopyMemory(geo->IndexBufferCPU->GetBufferPointer(), indices.data(), ibByteSize);
+	ThrowIfFailed(D3DCreateBlob(meshObject.ibByteSize, &geo->IndexBufferCPU));
+	CopyMemory(geo->IndexBufferCPU->GetBufferPointer(), meshObject.indices.data(), meshObject.ibByteSize);
 
 	geo->VertexBufferGPU = Utile::CreateDefaultBuffer(md3dDevice.Get(),
-		mCommandList.Get(), vertices.data(), vbByteSize, geo->VertexBufferUploader);
+		mCommandList.Get(), meshObject.vertices.data(), meshObject.vbByteSize, geo->VertexBufferUploader);
 
 	geo->IndexBufferGPU = Utile::CreateDefaultBuffer(md3dDevice.Get(),
-		mCommandList.Get(), indices.data(), ibByteSize, geo->IndexBufferUploader);
+		mCommandList.Get(), meshObject.indices.data(), meshObject.ibByteSize, geo->IndexBufferUploader);
 
-	geo->VertexByteStride = sizeof(ComponentRenderMesh::Vertex);
-	geo->VertexBufferByteSize = vbByteSize;
+	geo->VertexByteStride = sizeof(GeometryHandler::VertexPC);
+	geo->VertexBufferByteSize = meshObject.vbByteSize;
 	geo->IndexFormat = DXGI_FORMAT_R16_UINT;
-	geo->IndexBufferByteSize = ibByteSize;
+	geo->IndexBufferByteSize = meshObject.ibByteSize;
 
 	geo->DrawArgs["box"] = renderedBox->meshSubmesh;
-	geo->DrawArgs["geosphere"] = renderGSphere->meshSubmesh;
+	geo->DrawArgs["geosphere"] = renderedGSphere->meshSubmesh;
 
 	std::unordered_map<std::string, MeshGeometry*> mGeometries;
 	mGeometries[geo->Name] = geo;
 
 	//BUILDRENDERITEMS
 
+	UINT objCBIndex = 0;
+
 	RenderItem* boxRitem = new RenderItem;
 	XMStoreFloat4x4(&boxRitem->World, XMMatrixScaling(2.0f, 2.0f, 2.0f) * XMMatrixTranslation(1.0f, 0.5f, 0.0f));
-	boxRitem->ObjCBIndex = 0;
+	boxRitem->ObjCBIndex = objCBIndex++;
 	boxRitem->Geo = mGeometries["shapeGeo"];
 	boxRitem->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	boxRitem->IndexCount = boxRitem->Geo->DrawArgs["box"].IndexCount;
@@ -174,15 +165,15 @@ bool InitDirect3DApp::Initialize()
 	boxRitem->BaseVertexLocation = boxRitem->Geo->DrawArgs["box"].BaseVertexLocation;
 	mAllRitems.push_back(boxRitem);
 
-	UINT objCBIndex = 2;
+
 	RenderItem* leftSphereRitem = new RenderItem;
 	XMStoreFloat4x4(&leftSphereRitem->World, XMMatrixScaling(1.0f, 1.0f, 1.0f));
 	leftSphereRitem->ObjCBIndex = objCBIndex++;
 	leftSphereRitem->Geo = mGeometries["shapeGeo"];
 	leftSphereRitem->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	leftSphereRitem->IndexCount = leftSphereRitem->Geo->DrawArgs["enemy"].IndexCount;
-	leftSphereRitem->StartIndexLocation = leftSphereRitem->Geo->DrawArgs["enemy"].StartIndexLocation;
-	leftSphereRitem->BaseVertexLocation = leftSphereRitem->Geo->DrawArgs["enemy"].BaseVertexLocation;
+	leftSphereRitem->IndexCount = leftSphereRitem->Geo->DrawArgs["geosphere"].IndexCount;
+	leftSphereRitem->StartIndexLocation = leftSphereRitem->Geo->DrawArgs["geosphere"].StartIndexLocation;
+	leftSphereRitem->BaseVertexLocation = leftSphereRitem->Geo->DrawArgs["geosphere"].BaseVertexLocation;
 	mAllRitems.push_back(leftSphereRitem);
 
 	// All the render items are opaque.

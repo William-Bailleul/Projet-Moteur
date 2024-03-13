@@ -582,8 +582,7 @@ GeometryHandler::Mesh GeometryHandler::BuildPyramid(float size, uint32 state)
 
 void GeometryHandler::CreateMeshList()
 {
-	GeometryHandler GeoList;
-	GeoList.listTotal = 0;
+	listTotal = 0;
 }
 
 void GeometryHandler::AddMeshList(Mesh& mesh)
@@ -598,8 +597,25 @@ void GeometryHandler::RemoveMeshList(Mesh& mesh)
 	{
 		if (MeshList[i] = &mesh)
 		{
-			MeshList.erase(MeshList.begin() + (i - 1));
+			MeshList.erase(MeshList.begin() + i);
 			listTotal--;
 		}
 	}
+}
+
+void GeometryHandler::CountVertInd()
+{
+	totalVertexCount = 0;
+	indices.clear();
+	
+	for (int i = 0; i < listTotal; i++)
+	{
+		totalVertexCount += MeshList[i]->Vertices.size();
+		indices.insert(indices.end(), std::begin(MeshList[i]->GetIndices16()), std::end(MeshList[i]->GetIndices16()));
+	};
+	std::vector<VertexPC> vertices(totalVertexCount);
+
+	vbByteSize = (UINT)vertices.size() * sizeof(VertexPC);
+	ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
+
 }

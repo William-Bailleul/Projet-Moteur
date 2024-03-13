@@ -8,19 +8,23 @@ Renderer::Renderer()
 void Renderer::BuildRenderItems()
 {
 
-	auto meshRitem = std::make_unique<D3DApp::RenderItem>();
-	XMStoreFloat4x4(&meshRitem->World, DirectX::XMMatrixScaling(2.0f, 2.0f, 2.0f) * DirectX::XMMatrixTranslation(0.0f, 0.5f, 0.0f));
-	meshRitem->ObjCBIndex = 0;
-	meshRitem->Geo = mGeometries["shapeGeo"].get();
-	meshRitem->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	meshRitem->IndexCount = meshRitem->Geo->DrawArgs["mesh"].IndexCount;
-	meshRitem->StartIndexLocation = meshRitem->Geo->DrawArgs["mesh"].StartIndexLocation;
-	meshRitem->BaseVertexLocation = meshRitem->Geo->DrawArgs["mesh"].BaseVertexLocation;
-	mAllRitems.push_back(std::move(meshRitem));
+	for (int i = 0; i < listTotal; i++)
+	{
+		D3DApp::RenderItem* meshRitem = new D3DApp::RenderItem;
+		XMStoreFloat4x4(&meshRitem->World, DirectX::XMMatrixScaling(2.0f, 2.0f, 2.0f) * DirectX::XMMatrixTranslation(0.0f, 0.5f, 0.0f));
+		meshRitem->ObjCBIndex = i + 1;
+		*meshRitem->Geo = mGeometries["shapeGeo"];
+		meshRitem->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		meshRitem->IndexCount = meshRitem->Geo->DrawArgs["mesh"].IndexCount;
+		meshRitem->StartIndexLocation = meshRitem->Geo->DrawArgs["mesh"].StartIndexLocation;
+		meshRitem->BaseVertexLocation = meshRitem->Geo->DrawArgs["mesh"].BaseVertexLocation;
+		rItemList.push_back(*meshRitem);
+	}
+
 
 	// All the render items are opaque.
 	for (auto& e : mAllRitems)
-		mOpaqueRitems.push_back(e.get());
+		mOpaqueRitems.push_back(e);
 
 }
 
@@ -55,21 +59,21 @@ void Renderer::DrawRenderItem(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> 
 void Renderer::UpdateObjectCBs(const GameTimer& gt)
 {
 	auto currObjectCB = mCurrFrameResource->ObjectCB.get();
-	for (auto& e : mAllRitems)
+	for (auto& e : rItemList)
 	{
 		// Only update the cbuffer data if the constants have changed.  
 		// This needs to be tracked per frame resource.
-		if (e->NumFramesDirty > 0)
+		if (e.NumFramesDirty > 0)
 		{
-			DirectX::XMMATRIX world = XMLoadFloat4x4(&e->World);
+			DirectX::XMMATRIX world = XMLoadFloat4x4(&e.World);
 
 			D3DApp::ObjectConstants objConstants;
 			XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(world));
 
-			currObjectCB->CopyData(e->ObjCBIndex, objConstants);
+			currObjectCB->CopyData(e.ObjCBIndex, objConstants);
 
 			// Next FrameResource need to be updated too.
-			e->NumFramesDirty--;
+			e.NumFramesDirty--;
 		}
 	}
 }
@@ -111,4 +115,27 @@ void Renderer::UpdateCaches(GeometryHandler::Mesh& meshRef)
 
 	// Cache the starting index for each object in the concatenated index buffer.
 	meshIndexOffset += meshRef.Indices32.size();
+}
+
+void Renderer::CreateList()
+{
+	listTotal = 0;
+}
+
+void Renderer::AddList(ComponentRenderMesh& rMesh)
+{
+	rItemList.push_back(&rMesh);
+	listTotal++;
+}
+
+void Renderer::RemoveList(ComponentRenderMesh& rMesh)
+{
+	for (int i = 0; i < listTotal; i++)
+	{
+		if (rItemList[i] = &rMesh)
+		{
+			rItemList.erase(rItemList.begin() + i);
+			listTotal--;
+		}
+	}
 }

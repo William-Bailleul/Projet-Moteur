@@ -9,6 +9,13 @@ public:
 	using uint16 = std::uint16_t;
 	using uint32 = std::uint32_t;
 
+	size_t totalVertexCount;
+	std::vector<std::uint16_t> indices;
+	
+
+	UINT vbByteSize;
+	UINT ibByteSize;
+
 	struct Vertex
 	{
 		Vertex(){}
@@ -36,6 +43,14 @@ public:
 		DirectX::XMFLOAT3 TanU;
 		DirectX::XMFLOAT2 TexC;
 	};
+
+	struct VertexPC
+	{
+		DirectX::XMFLOAT3 Pos;
+		DirectX::XMFLOAT4 Color;
+	};
+
+	std::vector<VertexPC> vertices;
 
 	struct Mesh
 	{
@@ -92,6 +107,7 @@ public:
 	void CreateMeshList();
 	void AddMeshList(Mesh& mesh);
 	void RemoveMeshList(Mesh& mesh);
+	void CountVertInd();
 
 private:
 	//Decoupe une face en 4 parties egales en utilisant les centres des vertices

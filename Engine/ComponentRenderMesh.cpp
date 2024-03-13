@@ -31,7 +31,7 @@ void ComponentRenderMesh::Init(GeometryHandler::Mesh& meshRef, Shader* shaderRef
 
 	totalVertexCount += refMesh.Vertices.size();
 
-	std::vector<Vertex> vertices(totalVertexCount);
+	std::vector<GeometryHandler::VertexPC> vertices(totalVertexCount);
 
 	UINT k = 0;
 	for (size_t i = 0; i < refMesh.Vertices.size(); ++i, ++k)
@@ -46,6 +46,9 @@ void ComponentRenderMesh::Init(GeometryHandler::Mesh& meshRef, Shader* shaderRef
 
 	//BuildRenderItems();
 }
+
+
+
 
 
 

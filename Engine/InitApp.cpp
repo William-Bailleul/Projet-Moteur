@@ -4,6 +4,7 @@
 #include "EngineObject.h"
 #include "EngineManager.h"
 #include "ComponentRenderMesh.h"
+#include "InputController.h"
 #include "ComponentCamera.h"
 #include <DirectXColors.h>
 
@@ -76,7 +77,7 @@ private:
 
 	bool mIsWireframe = false;
 
-	XMFLOAT3 mVectStart = { 0.0f,0.0f,3.0f };
+	XMFLOAT3 mVectStart = { 0.0f,0.0f,8.0f };
 	XMFLOAT3 mEyePos = { 0.0f, 0.0f, 0.0f };
 	XMFLOAT4X4 mView = MathHelper::Identity4x4();
 	//XMFLOAT4X4 mProj = MathHelper::Identity4x4();
@@ -201,7 +202,8 @@ bool InitDirect3DApp::Initialize()
 	//CREATION DE BOITE + GEOSPHERE
 
 	GeometryHandler meshObject;
-	GeometryHandler::Mesh box = meshObject.BuildBox(5.0f, 5.0f, 5.0f, 1);
+	float x = 1.8f;
+	GeometryHandler::Mesh box = meshObject.BuildBox(x, x,x , 1);
 	GeometryHandler::Mesh sphere = meshObject.BuildSphere(3.0f, 20, 20);
 	GeometryHandler::Mesh cylinder = meshObject.BuildCylinder(3.0f, 3.0f, 5.0f, 20,20);
 	GeometryHandler::Mesh geosphere = meshObject.BuildGeosphere(2.5f, 5);
@@ -346,7 +348,7 @@ bool InitDirect3DApp::Initialize()
 	//BUILDRENDERITEMS
 
 	RenderItem* boxRitem = new RenderItem;
-	XMStoreFloat4x4(&boxRitem->World, XMMatrixScaling(2.0f, 2.0f, 2.0f));
+	XMStoreFloat4x4(&boxRitem->World, XMMatrixScaling(1.0f, 1.0f, 1.0f));
 	boxRitem->ObjCBIndex = 0;
 	boxRitem->Geo = mGeometries["shapeGeo"];
 	boxRitem->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
@@ -593,11 +595,15 @@ void InitDirect3DApp::UpdateCamera(const GameTimer& gt)
 
 	// Build the view matrix.
 	XMVECTOR pos = XMVectorSet(mEyePos.x, mEyePos.y, mEyePos.z, 1.0f);
-	XMVECTOR target = XMVectorZero();
+	XMVECTOR target = camera.GetPosition() + camera.GetLook();
 	XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
-	XMMATRIX view = XMMatrixLookAtLH(pos, target, up);
+	XMMATRIX view = XMMatrixLookAtLH(camera.GetPosition(), target, camera.GetUp());
 	XMStoreFloat4x4(&mView, view);
+
+	//InputManager::getKeyState()
+
+
 }
 
 

@@ -3,7 +3,6 @@
 #include "Component.h"
 #include "Engine.h"
 #include "GeometryHandler.h"
-#include "FrameResource.h"
 
 //struct Mesh;
 class Shader;
@@ -28,7 +27,6 @@ public:
 	D3DApp::FrameResource* mCurrFrameResource = nullptr;
 	int mCurrFrameResourceIndex = 0;
 	UINT mCbvSrvUavDescriptorSize = 0;
-	HWND mhMainWnd;
 
 	XMFLOAT4X4 mView = MathHelper::Identity4x4();
 	XMFLOAT4X4 mProj = MathHelper::Identity4x4();
@@ -43,17 +41,6 @@ public:
 	void Init(EngineObject* gameObjectPointer, GeometryHandler::Mesh& meshRef, Shader* shaderRef, Texture* textureRef);
 	void BuildRenderItems();
 	void DrawRenderItem(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> cmdList, const std::vector<D3DApp::RenderItem*>& ritems, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mCbvHeap, UINT mCbvSrvUavDescriptorSize);
-	void UpdateObjectCBs(const GameTimer& gt);
-	void UpdateMainPassCB(const GameTimer& gt);
-
-	void OnMouseDown(WPARAM btnState, int x, int y);
-	void OnMouseUp(WPARAM btnState, int x, int y);
-	void OnMouseMove(WPARAM btnState, int x, int y);
-	void OnKeyboardInput(const GameTimer& gt);
-	void UpdateCamera(const GameTimer& gt);
-
-
-	PassConstants mMainPassCB;
 
 
 	ComPtr<ID3D12RootSignature> mRootSignature = nullptr;

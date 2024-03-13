@@ -58,7 +58,6 @@
     <ClCompile Include="Utile.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="FrameResource.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component.h">
@@ -133,7 +132,6 @@
     <ClInclude Include="Engine.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="FrameResource.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Engine.ico">

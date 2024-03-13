@@ -4,6 +4,7 @@
 #include "EngineObject.h"
 #include "EngineManager.h"
 #include "ComponentRenderMesh.h"
+#include "Renderer.h"
 #include <DirectXColors.h>
 
 using namespace DirectX;
@@ -117,6 +118,7 @@ bool InitDirect3DApp::Initialize()
 	//VERTEX COUNT
 
 	size_t totalVertexCount;
+
 	for (int i = 0; i < meshList.listTotal; i++)
 	{
 		totalVertexCount += meshList.MeshList[i]->Vertices.size();
@@ -561,7 +563,11 @@ void InitDirect3DApp::DrawEdit(const GameTimer& gt, ComponentRenderMesh& oRMesh)
 	D3D12_CPU_DESCRIPTOR_HANDLE toto = DepthStencilView();
 	mCommandList->OMSetRenderTargets(1, &tata, true, &toto);
 
-	oRMesh.DrawRenderItem(mCommandList, mOpaqueRitems, mCbvHeap, mCbvSrvUavDescriptorSize);
+	oManager.gameRenderer->DrawRenderItem(mCommandList, mOpaqueRitems, mCbvHeap, mCbvSrvUavDescriptorSize);
+	////////////////////////////
+	// MAKE SURE GAMERENDERER IS PROPERLY USED HERE
+
+
 
 	// Indicate a state transition on the resource usage.
 	CD3DX12_RESOURCE_BARRIER tete = CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);

@@ -61,7 +61,6 @@ float ScriptHandler::HowLongSinceTimeStamp() {
 
 //QUEUE FUNCTIONS
 
-
 void ScriptHandler::EmptyQueue(std::vector<std::string> Queue) {
 	for (int i = 0; i < Queue.size(); i++) {
 		Queue.erase(Queue.begin());

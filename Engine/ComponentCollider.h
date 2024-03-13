@@ -23,6 +23,7 @@ public:
 	EngineManager* gameManager;
 
 	std::vector<std::string> currentHitNames;
+	std::vector<std::string> previousHitNames;
 
 	// vectors can remain empty without issue
 	std::vector<BoundingBox*> hitBoxes;
@@ -33,7 +34,8 @@ public:
 	~ComponentCollider();
 
 	//check functions
-	void FullCollisionCheck();
+	void FullCollisionCheck(); 
+	void SaveToPrevious();
 	template  <typename U, typename V> bool ListCollisionCheck(std::vector<U*> listOne, std::vector<V*> listTwo);
 	template <typename U, typename V> int OneCollisionCheck(U* boundingOne, V* boundingTwo);
 

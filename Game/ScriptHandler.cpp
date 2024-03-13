@@ -68,21 +68,14 @@ void ScriptHandler::EmptyQueue(std::vector<std::string> Queue) {
 	}
 }
 
-void ScriptHandler::UpdateQueues() {
-	ComponentCollider* objectCollider;
-	if (objectCollider = linkedObject->GetComponent<ComponentCollider>()) {
-		//emptying the previous collision list
-		EmptyQueue(previousCollideNames);
-		//refilling it again with the current data before updating
-		for (int i = 0; i < collideNames.size(); i++) {
-			previousCollideNames.push_back(collideNames[i]);
-		}
+void ScriptHandler::UpdateCollisionLists() {
+	ComponentCollider* objectCollider = linkedObject->GetComponent<ComponentCollider>();
 
-		//emptying the collision list
-		EmptyQueue(collideNames);
 		//acquire new data from object's collider
-
-
+		// distribute it to the script names lists
+		for (int i = 0; i > objectCollider->currentHitNames.size(); i++) {
+			scriptNamesList.push_back(objectCollider->currentHitNames[i]);
+		}
 	}
 }
 

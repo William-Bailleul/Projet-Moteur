@@ -40,7 +40,7 @@ public:
 
 	// Queue Funcs
 	void EmptyQueue(std::vector<std::string> Queue);
-	void UpdateQueues();
+	void UpdateCollisionLists();
 
 	ScriptHandler(EngineObject* objectLink, std::string name, std::string initState, GameTimer* timer);
 	~ScriptHandler();
@@ -54,12 +54,8 @@ private:
 	GameTimer* gameTimer;
 	float timeStamp;
 
-	// vectors of names for the different collisions 
-	std::vector<std::string> previousCollideNames;
-	std::vector<std::string> collideNames;
-
 	// vector of script names to follow
-	std::vector<std::string> scriptNames;
+	std::vector<std::string> scriptNamesList;
 	
 	void Init(EngineObject* linkedScript, std::string name, std::string initState, GameTimer* timer);
 };

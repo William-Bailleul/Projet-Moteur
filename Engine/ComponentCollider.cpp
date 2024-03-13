@@ -69,6 +69,18 @@ void ComponentCollider::FullCollisionCheck() {
 	}
 }
 
+void ComponentCollider::SaveToPrevious() {
+	
+	//emptying the previous collision list
+	for (int i = 0; i < previousHitNames.size(); i++) {
+		previousHitNames.erase(previousHitNames.begin());
+	}
+	//refilling it again with the current data before updating
+	for (int i = 0; i < currentHitNames.size(); i++) {
+		previousHitNames.push_back(currentHitNames[i]);
+	}
+}
+
 //add a new BoundingBox to the hitBoxes list
 void ComponentCollider::NewHitBox(XMFLOAT3& center, XMFLOAT3& extents){
 	hitBoxes.push_back(new BoundingBox(center, extents));

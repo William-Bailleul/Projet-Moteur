@@ -47,7 +47,14 @@ void ComponentRenderMesh::Init(GeometryHandler::Mesh& meshRef, Shader* shaderRef
 	//BuildRenderItems();
 }
 
+void ComponentRenderMesh::UpdateCaches(GeometryHandler::Mesh& meshRef)
+{
+	// Cache the vertex offsets to each object in the concatenated vertex buffer.
+	meshVertexOffset += meshRef.Vertices.size();
 
+	// Cache the starting index for each object in the concatenated index buffer.
+	meshIndexOffset += meshRef.Indices32.size();
+}
 
 ComponentRenderMesh::~ComponentRenderMesh() 
 {

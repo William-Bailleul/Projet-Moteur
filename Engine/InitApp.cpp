@@ -117,7 +117,7 @@ bool InitDirect3DApp::Initialize()
 
 	//VERTEX COUNT
 
-	size_t totalVertexCount;
+	size_t totalVertexCount = 0;
 
 	for (int i = 0; i < meshList.listTotal; i++)
 	{

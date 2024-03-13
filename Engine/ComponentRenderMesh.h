@@ -38,6 +38,8 @@ public:
 	ComponentRenderMesh();
 	ComponentRenderMesh(EngineObject* gameObjectPointer, GeometryHandler::Mesh& meshRef, Shader* shaderRef, Texture* textureRef);
 	~ComponentRenderMesh();
+	void UpdateCaches(GeometryHandler::Mesh& meshRef);
+
 
 	void Init(EngineObject* gameObjectPointer, GeometryHandler::Mesh& meshRef, Shader* shaderRef, Texture* textureRef);
 	

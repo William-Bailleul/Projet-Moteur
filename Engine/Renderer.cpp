@@ -103,12 +103,3 @@ void Renderer::UpdateMainPassCB(const GameTimer& gt)
 	currPassCB->CopyData(0, mMainPassCB);
 }
 */
-
-void Renderer::UpdateCaches(GeometryHandler::Mesh& meshRef)
-{
-	// Cache the vertex offsets to each object in the concatenated vertex buffer.
-	meshVertexOffset += meshRef.Vertices.size();
-
-	// Cache the starting index for each object in the concatenated index buffer.
-	meshIndexOffset += meshRef.Indices32.size();
-}

@@ -7,7 +7,11 @@
 #include "ComponentCamera.h"
 #include <DirectXColors.h>
 
+
+
 using namespace DirectX;
+
+
 
 struct PassConstants
 {
@@ -118,6 +122,16 @@ InitDirect3DApp::~InitDirect3DApp()
 
 bool InitDirect3DApp::Initialize()
 {
+	#if defined(DEBUG) || defined(_DEBUG) // Enable the D3D12 debug layer.
+		{
+			ID3D12Debug* debugController;
+			if (FAILED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)))) {
+				return false;
+			}
+			debugController->EnableDebugLayer();
+			debugController->Release();
+		}
+	#endif
 	if (!D3DApp::Initialize())
 		return false;
 
@@ -294,6 +308,7 @@ bool InitDirect3DApp::Initialize()
 	const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
 
 
+
 	//GEO
 
 	auto geo = new MeshGeometry;
@@ -337,16 +352,7 @@ bool InitDirect3DApp::Initialize()
 	boxRitem->BaseVertexLocation = boxRitem->Geo->DrawArgs["box"].BaseVertexLocation;
 	mAllRitems.push_back(boxRitem);
 
-	UINT objCBIndex = 2;
-	RenderItem* leftSphereRitem = new RenderItem;
-	XMStoreFloat4x4(&leftSphereRitem->World, XMMatrixScaling(1.0f, 1.0f, 1.0f));
-	leftSphereRitem->ObjCBIndex = objCBIndex++;
-	leftSphereRitem->Geo = mGeometries["shapeGeo"];
-	leftSphereRitem->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	leftSphereRitem->IndexCount = leftSphereRitem->Geo->DrawArgs["enemy"].IndexCount;
-	leftSphereRitem->StartIndexLocation = leftSphereRitem->Geo->DrawArgs["enemy"].StartIndexLocation;
-	leftSphereRitem->BaseVertexLocation = leftSphereRitem->Geo->DrawArgs["enemy"].BaseVertexLocation;
-	mAllRitems.push_back(leftSphereRitem);
+
 
 	// All the render items are opaque.
 	for (auto& e : mAllRitems)
@@ -612,7 +618,6 @@ void InitDirect3DApp::UpdateObjectCBs(const GameTimer& gt)
 
 void InitDirect3DApp::Draw(const GameTimer& gt)
 {
-
 	auto cmdListAlloc = mCurrFrameResource->CmdListAlloc;
 
 	// Reuse the memory associated with command recording.

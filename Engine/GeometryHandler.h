@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Utile.h"
+#include "Renderer.h"
 
 class GeometryHandler
 {
@@ -108,6 +109,7 @@ public:
 	void AddMeshList(Mesh& mesh);
 	void RemoveMeshList(Mesh& mesh);
 	void CountVertInd();
+	void CreateGeos(MeshGeometry& geo, ComPtr<ID3D12Device> md3dDevice, ComPtr<ID3D12GraphicsCommandList> mCommandList, Renderer& oRenderer);
 
 private:
 	//Decoupe une face en 4 parties egales en utilisant les centres des vertices

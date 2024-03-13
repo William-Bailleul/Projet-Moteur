@@ -14,7 +14,7 @@ class ComponentRenderMesh : public Component
 {
 public:
 
-	GeometryHandler::GeometryHandler::Mesh refMesh;
+	GeometryHandler::Mesh* refMesh;
 	Shader* refShader;
 	Texture* refTexture;
 

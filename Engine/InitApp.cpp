@@ -110,11 +110,11 @@ bool InitDirect3DApp::Initialize()
 
 	ComponentRenderMesh* renderedBox = new ComponentRenderMesh;
 	renderedBox->Init(&oBox, box, &oShader, &oTexture);
-	oRenderer->AddList(*renderedBox);
+	oRenderer->AddList(renderedBox);
 
 	ComponentRenderMesh* renderedGSphere = new ComponentRenderMesh;
 	renderedGSphere->Init(&oGeoSphere, geosphere, &oShader, &oTexture);
-	oRenderer->AddList(*renderedGSphere);
+	oRenderer->AddList(renderedGSphere);
 
 	//MIGHT FUCK UP BE CAREFUL
 
@@ -128,25 +128,11 @@ bool InitDirect3DApp::Initialize()
 	auto geo = new MeshGeometry;
 	geo->Name = "shapeGeo";
 
-	ThrowIfFailed(D3DCreateBlob(meshObject.vbByteSize, &geo->VertexBufferCPU));
-	CopyMemory(geo->VertexBufferCPU->GetBufferPointer(), meshObject.vertices.data(), meshObject.vbByteSize);
+	meshObject.CreateGeos(*geo, md3dDevice, mCommandList, *oRenderer);
+	oRenderer->rItemList;
 
-	ThrowIfFailed(D3DCreateBlob(meshObject.ibByteSize, &geo->IndexBufferCPU));
-	CopyMemory(geo->IndexBufferCPU->GetBufferPointer(), meshObject.indices.data(), meshObject.ibByteSize);
-
-	geo->VertexBufferGPU = Utile::CreateDefaultBuffer(md3dDevice.Get(),
-		mCommandList.Get(), meshObject.vertices.data(), meshObject.vbByteSize, geo->VertexBufferUploader);
-
-	geo->IndexBufferGPU = Utile::CreateDefaultBuffer(md3dDevice.Get(),
-		mCommandList.Get(), meshObject.indices.data(), meshObject.ibByteSize, geo->IndexBufferUploader);
-
-	geo->VertexByteStride = sizeof(GeometryHandler::VertexPC);
-	geo->VertexBufferByteSize = meshObject.vbByteSize;
-	geo->IndexFormat = DXGI_FORMAT_R16_UINT;
-	geo->IndexBufferByteSize = meshObject.ibByteSize;
-
-	geo->DrawArgs["box"] = renderedBox->meshSubmesh;
-	geo->DrawArgs["geosphere"] = renderedGSphere->meshSubmesh;
+	//geo->DrawArgs[] = renderedBox->meshSubmesh;
+	//geo->DrawArgs["geosphere"] = renderedGSphere->meshSubmesh;
 
 	std::unordered_map<std::string, MeshGeometry*> mGeometries;
 	mGeometries[geo->Name] = geo;
@@ -160,9 +146,9 @@ bool InitDirect3DApp::Initialize()
 	boxRitem->ObjCBIndex = objCBIndex++;
 	boxRitem->Geo = mGeometries["shapeGeo"];
 	boxRitem->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	boxRitem->IndexCount = boxRitem->Geo->DrawArgs["box"].IndexCount;
-	boxRitem->StartIndexLocation = boxRitem->Geo->DrawArgs["box"].StartIndexLocation;
-	boxRitem->BaseVertexLocation = boxRitem->Geo->DrawArgs["box"].BaseVertexLocation;
+	boxRitem->IndexCount = boxRitem->Geo->DrawArgs[0].IndexCount;
+	boxRitem->StartIndexLocation = boxRitem->Geo->DrawArgs[0].StartIndexLocation;
+	boxRitem->BaseVertexLocation = boxRitem->Geo->DrawArgs[0].BaseVertexLocation;
 	mAllRitems.push_back(boxRitem);
 
 
@@ -171,9 +157,9 @@ bool InitDirect3DApp::Initialize()
 	leftSphereRitem->ObjCBIndex = objCBIndex++;
 	leftSphereRitem->Geo = mGeometries["shapeGeo"];
 	leftSphereRitem->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	leftSphereRitem->IndexCount = leftSphereRitem->Geo->DrawArgs["geosphere"].IndexCount;
-	leftSphereRitem->StartIndexLocation = leftSphereRitem->Geo->DrawArgs["geosphere"].StartIndexLocation;
-	leftSphereRitem->BaseVertexLocation = leftSphereRitem->Geo->DrawArgs["geosphere"].BaseVertexLocation;
+	leftSphereRitem->IndexCount = leftSphereRitem->Geo->DrawArgs[1].IndexCount;
+	leftSphereRitem->StartIndexLocation = leftSphereRitem->Geo->DrawArgs[1].StartIndexLocation;
+	leftSphereRitem->BaseVertexLocation = leftSphereRitem->Geo->DrawArgs[1].BaseVertexLocation;
 	mAllRitems.push_back(leftSphereRitem);
 
 	// All the render items are opaque.
@@ -552,7 +538,7 @@ void InitDirect3DApp::DrawEdit(const GameTimer& gt, ComponentRenderMesh& oRMesh)
 	D3D12_CPU_DESCRIPTOR_HANDLE toto = DepthStencilView();
 	mCommandList->OMSetRenderTargets(1, &tata, true, &toto);
 
-	oRMesh.DrawRenderItem(mCommandList, mOpaqueRitems, mCbvHeap, mCbvSrvUavDescriptorSize);
+	//oRMesh.DrawRenderItem(mCommandList, mOpaqueRitems, mCbvHeap, mCbvSrvUavDescriptorSize);
 
 	// Indicate a state transition on the resource usage.
 	CD3DX12_RESOURCE_BARRIER tete = CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);

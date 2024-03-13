@@ -47,11 +47,6 @@ void ComponentRenderMesh::Init(GeometryHandler::Mesh& meshRef, Shader* shaderRef
 	//BuildRenderItems();
 }
 
-
-
-
-
-
 ComponentRenderMesh::~ComponentRenderMesh() 
 {
 

@@ -619,3 +619,34 @@ void GeometryHandler::CountVertInd()
 	ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
 
 }
+
+void GeometryHandler::CreateGeos(MeshGeometry& geo, Microsoft::WRL::ComPtr<ID3D12Device> md3dDevice, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommandList, Renderer& oRenderer)
+{
+	ThrowIfFailed(D3DCreateBlob(vbByteSize, &geo.VertexBufferCPU));
+	CopyMemory(geo.VertexBufferCPU->GetBufferPointer(), vertices.data(), vbByteSize);
+
+	ThrowIfFailed(D3DCreateBlob(ibByteSize, &geo.IndexBufferCPU));
+	CopyMemory(geo.IndexBufferCPU->GetBufferPointer(), indices.data(), ibByteSize);
+
+	geo.VertexBufferGPU = Utile::CreateDefaultBuffer(md3dDevice.Get(),
+		mCommandList.Get(), vertices.data(), vbByteSize, geo.VertexBufferUploader);
+
+	geo.IndexBufferGPU = Utile::CreateDefaultBuffer(md3dDevice.Get(),
+		mCommandList.Get(), indices.data(), ibByteSize, geo.IndexBufferUploader);
+
+	geo.VertexByteStride = sizeof(GeometryHandler::VertexPC);
+	geo.VertexBufferByteSize = vbByteSize;
+	geo.IndexFormat = DXGI_FORMAT_R16_UINT;
+	geo.IndexBufferByteSize = ibByteSize;
+
+	for (int i = 0; i > listTotal; i++)
+	{
+		geo.DrawArgs[i] = oRenderer.rItemList[i]->meshSubmesh;
+	}
+
+	//geo->DrawArgs["box"] = renderedBox->meshSubmesh;
+	//geo->DrawArgs["geosphere"] = renderedGSphere->meshSubmesh;
+
+	//std::unordered_map<std::string, MeshGeometry*> mGeometries;
+	//mGeometries[geo->Name] = geo;
+}

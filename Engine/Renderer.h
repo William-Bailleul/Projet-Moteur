@@ -20,8 +20,8 @@ public:
 	void UpdateCaches(GeometryHandler::Mesh& meshRef);
 
 	void CreateList();
-	void AddList(ComponentRenderMesh& rMesh);
-	void RemoveList(ComponentRenderMesh& rMesh);
+	void AddList(ComponentRenderMesh* rMesh);
+	void RemoveList(ComponentRenderMesh* rMesh);
 
 public:
 	std::vector<ComponentRenderMesh*> rItemList;

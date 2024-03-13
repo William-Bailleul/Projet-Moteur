@@ -7,7 +7,7 @@ Renderer::Renderer()
 
 void Renderer::BuildRenderItems()
 {
-
+	/*
 	for (int i = 0; i < listTotal; i++)
 	{
 		D3DApp::RenderItem* meshRitem = new D3DApp::RenderItem;
@@ -25,7 +25,7 @@ void Renderer::BuildRenderItems()
 	// All the render items are opaque.
 	for (auto& e : mAllRitems)
 		mOpaqueRitems.push_back(e);
-
+*/
 }
 
 void Renderer::DrawRenderItem(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> cmdList, const std::vector<D3DApp::RenderItem*>& ritems, Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> mCbvHeap, UINT mCbvSrvUavDescriptorSize)
@@ -122,17 +122,17 @@ void Renderer::CreateList()
 	listTotal = 0;
 }
 
-void Renderer::AddList(ComponentRenderMesh& rMesh)
+void Renderer::AddList(ComponentRenderMesh* rMesh)
 {
-	rItemList.push_back(&rMesh);
+	rItemList.push_back(rMesh);
 	listTotal++;
 }
 
-void Renderer::RemoveList(ComponentRenderMesh& rMesh)
+void Renderer::RemoveList(ComponentRenderMesh* rMesh)
 {
 	for (int i = 0; i < listTotal; i++)
 	{
-		if (rItemList[i] = &rMesh)
+		if (rItemList[i] == rMesh)
 		{
 			rItemList.erase(rItemList.begin() + i);
 			listTotal--;

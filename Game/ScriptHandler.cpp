@@ -2,6 +2,7 @@
 
 //#include "Engine.lib/EngineTimer.h"
 //#include "Engine.lib/EngineObject.h"
+//#include "Engine.lib/ComponentCollider.h"
 //#include "Engine.lib/Transform.h"
 
 ScriptHandler::ScriptHandler(EngineObject* objectLink, std::string name, std::string initState, GameTimer* timer){
@@ -68,7 +69,21 @@ void ScriptHandler::EmptyQueue(std::vector<std::string> Queue) {
 }
 
 void ScriptHandler::UpdateQueues() {
+	ComponentCollider* objectCollider;
+	if (objectCollider = linkedObject->GetComponent<ComponentCollider>()) {
+		//emptying the previous collision list
+		EmptyQueue(previousCollideNames);
+		//refilling it again with the current data before updating
+		for (int i = 0; i < collideNames.size(); i++) {
+			previousCollideNames.push_back(collideNames[i]);
+		}
 
+		//emptying the collision list
+		EmptyQueue(collideNames);
+		//acquire new data from object's collider
+
+
+	}
 }
 
 //BEHAVIOR FUNCTIONS

@@ -7,6 +7,7 @@
 
 class GameTimer;
 class EngineObject;
+class ComponentCollider;
 
 class ScriptHandler
 {
@@ -53,8 +54,11 @@ private:
 	GameTimer* gameTimer;
 	float timeStamp;
 
-	// lists of names for the different collisions 
-	std::vector<std::string> previousScriptNames;
+	// vectors of names for the different collisions 
+	std::vector<std::string> previousCollideNames;
+	std::vector<std::string> collideNames;
+
+	// vector of script names to follow
 	std::vector<std::string> scriptNames;
 	
 	void Init(EngineObject* linkedScript, std::string name, std::string initState, GameTimer* timer);

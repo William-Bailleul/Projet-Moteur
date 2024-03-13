@@ -26,7 +26,7 @@ public:
 	template <typename T> T* getComponent();
 };
 
-template <typename T>
+template <typename T> 
 T* EngineObject::getComponent() {
 	if (componentList.size() > 0) {
 		for (int i = 0; i < componentList.size(); i++) {

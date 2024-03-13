@@ -46,7 +46,7 @@ void ComponentCollider::FullCollisionCheck() {
 	}
 
 	//then we remove the names we haven't kept between currentHitNames and thisLoopHitNames
-	int vecSize = currentHitNames.size();
+	size_t vecSize = currentHitNames.size();
 	int index = 0;
 
 	while (index < vecSize) {

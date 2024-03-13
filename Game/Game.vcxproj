@@ -42,6 +42,7 @@
     <ClInclude Include="LevelManager.h" />
     <ClInclude Include="GameObjectShot.h" />
     <ClInclude Include="SplashScreen.h" />
+    <ClInclude Include="stb_image.h" />
     <ClInclude Include="TimeManager.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>

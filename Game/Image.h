@@ -1,22 +1,26 @@
 #pragma once
+#include <d3d12.h>
+#include <dxgi1_4.h>
+#include <wrl.h>
+#include <vector>
+#include "../Engine/d3dx12.h"
 #include <iostream>
-#include "../Engine/DDSTextureLoader.h"
 
+using Microsoft::WRL::ComPtr;
+
+// Load image using STB Image
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 class Image
 {
 private:
-	std::wstring m_sFilename;
-	HRESULT m_Texture;
+	std::string m_Filename;
+	ComPtr<ID3D12Fence> fence;
 
-	ID3D11Device* m_d3dDevice;
-	const wchar_t* m_charFileName;
-	ID3D11Resource** m_texture;
-	ID3D11ShaderResourceView** m_textureView;
 	
 public:
-	Image(std::wstring FileName);
-	void Load();
-	
+	Image(std::string FileName);
+	ComPtr<ID3D12Resource> CreateTextureResource(ID3D12Device* device);
 };
 

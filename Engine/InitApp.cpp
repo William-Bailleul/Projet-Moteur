@@ -44,6 +44,8 @@ public:
 	void OnMouseMove(WPARAM btnState, int x, int y);
 	void OnKeyboardInput(const GameTimer& gt);
 
+	Camera camera;
+
 
 private:
 	virtual void OnResize()override;
@@ -77,6 +79,7 @@ private:
 
 	bool mIsWireframe = false;
 
+	XMFLOAT3 mVectStart = { 3.f,3.f,3.f };
 	XMFLOAT3 mEyePos = { 0.0f, 0.0f, 0.0f };
 	XMFLOAT4X4 mView = MathHelper::Identity4x4();
 	XMFLOAT4X4 mProj = MathHelper::Identity4x4();
@@ -84,6 +87,7 @@ private:
 	float mTheta = 1.5f * XM_PI;
 	float mPhi = 0.2f * XM_PI;
 	float mRadius = 15.0f;
+
 
 	POINT mLastMousePos;
 };
@@ -177,8 +181,10 @@ bool InitDirect3DApp::Initialize()
 		IID_PPV_ARGS(mRootSignature.GetAddressOf())));
 
 
-	//INIT
+	//Camera
+	camera.SetPosition(mVectStart);
 
+	//INIT
 
 	const char* entrypoint = "VS";
 	const char* target = "vs_5_1";
@@ -573,8 +579,11 @@ void InitDirect3DApp::Update(const GameTimer& gt)
 	}
 
 	auto currPassCB = mCurrFrameResource->PassCB.get();
+	XMMATRIX camStartPos = XMMatrixTranslation(mVectStart.x,mVectStart.y,mVectStart.z);
+	XMFLOAT4X4 ref = MathHelper::Identity4x4();
+	XMStoreFloat4x4(&ref, camStartPos);
+	mMainPassCB.Proj = ref;
 	currPassCB->CopyData(0, mMainPassCB);
-
 }
 
 void InitDirect3DApp::UpdateCamera(const GameTimer& gt)

@@ -51,7 +51,7 @@ ComPtr<ID3D12Resource> Image::CreateTextureResource(ID3D12Device* device) {
         commandList->Close(); 
         ID3D12CommandList* ppCommandLists[] = { commandList.Get() }; 
         device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence)); 
-        //commandQueue->ExecuteCommandLists(1, ppCommandLists); 
+        mCommandQueue->ExecuteCommandLists(1, ppCommandLists); 
 
     return texture;
 }

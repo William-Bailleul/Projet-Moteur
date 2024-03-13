@@ -17,9 +17,9 @@ class Image
 private:
 	std::string m_Filename;
 	ComPtr<ID3D12Fence> fence;
-
-	
 public:
+	ComPtr<ID3D12CommandQueue> mCommandQueue;
+
 	Image(std::string FileName);
 	ComPtr<ID3D12Resource> CreateTextureResource(ID3D12Device* device);
 };

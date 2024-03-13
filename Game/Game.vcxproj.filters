@@ -91,6 +91,8 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="test.hlsl" />
+    <FxCompile Include="test.hlsl">
+      <Filter>Fichiers sources</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

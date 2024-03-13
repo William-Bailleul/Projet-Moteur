@@ -579,17 +579,11 @@ void InitDirect3DApp::Update(const GameTimer& gt)
 	}
 
 	auto currPassCB = mCurrFrameResource->PassCB.get();
-
-	XMMATRIX camStartProj = XMMatrixTranslation(mVectStart.x,mVectStart.y,mVectStart.z);
-	XMFLOAT4X4 refP = MathHelper::Identity4x4();
-	XMStoreFloat4x4(&refP, XMMatrixTranspose(camStartProj));
-
-	XMMATRIX camStartView = XMMatrixTranslation(mVectStart.x, mVectStart.y, mVectStart.z);
-	XMFLOAT4X4 refV = MathHelper::Identity4x4();
-	XMStoreFloat4x4(&refV, XMMatrixTranspose(camStartView));
-
-	mMainPassCB.Proj = refP;
-	mMainPassCB.View = refV;
+	XMMATRIX camStartPos = XMMatrixTranslation(mVectStart.x,mVectStart.y,mVectStart.z);
+	XMFLOAT4X4 ref = MathHelper::Identity4x4();
+	XMStoreFloat4x4(&ref, XMMatrixTranspose(camStartPos));
+	mMainPassCB.Proj = mProj;
+	mMainPassCB.View = ref;
 	currPassCB->CopyData(0, mMainPassCB);
 }
 

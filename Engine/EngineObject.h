@@ -22,7 +22,6 @@ public:
 	void Init();
 	void addComponent(Component* component);
 
-
 	//create template function to return component instance of a type
 	template <typename T> T* getComponent();
 };

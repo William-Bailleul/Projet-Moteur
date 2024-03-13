@@ -1,9 +1,7 @@
 #include "ComponentCollider.h"
 #include "EngineManager.h"
 #include "EngineObject.h"
-#include "ComponentScript.h"
 
-#include <vector>
 
 ComponentCollider::ComponentCollider(EngineObject* gameObjectPointer, EngineManager* manager, ComponentScript* script) :Component::Component(gameObjectPointer) {
 	Init(manager, script);
@@ -17,8 +15,10 @@ void ComponentCollider::Init(EngineManager* manager, ComponentScript* script) {
 //checks for collisions
 void ComponentCollider::FullCollisionCheck() {
 
+	std::vector<std::string> thisLoopHitNames;
 	// remember to parse the game's generated "field" in a grid to avoid checking the entire scene for collisions everytime 
 	if (hitBoxes.size() > 0 || hitSpheres.size() > 0 || hitBoxes.size() > 0) {
+
 
 		std::vector<EngineObject*> currentObjectList = gameManager->objectList;
 		for (int i = 0; i < currentObjectList.size(); i++) {
@@ -27,7 +27,6 @@ void ComponentCollider::FullCollisionCheck() {
 			if (currentObject != gameObjectPointer) {
 
 				ComponentCollider* currentCollider = currentObject->getComponent<ComponentCollider>();
-				ComponentScript* currentScript = currentObject->getComponent<ComponentScript>();
 
 				//if there is any collision between this object and another
 				if (ListCollisionCheck(hitBoxes, currentCollider->hitBoxes)
@@ -39,10 +38,33 @@ void ComponentCollider::FullCollisionCheck() {
 					|| ListCollisionCheck(hitFrustums, currentCollider->hitBoxes)
 					|| ListCollisionCheck(hitFrustums, currentCollider->hitSpheres)
 					|| ListCollisionCheck(hitFrustums, currentCollider->hitFrustums)) {
-					//retrieve the other object's name and add it to the script queue for processing
-					objectScript->AddToQueue(currentScript->scriptName);
+					//retrieve the other object's name and add it to the name list
+					thisLoopHitNames.push_back(currentCollider->nameTag);
 				}
 			}
+		}
+	}
+
+	//then we remove the names we haven't kept between currentHitNames and thisLoopHitNames
+	int vecSize = currentHitNames.size();
+	int index = 0;
+
+	while (index < vecSize) {
+		//if a name in currentHitNames isnt in thisLoopHitNames as well
+		if (std::count(thisLoopHitNames.begin(), thisLoopHitNames.end(), currentHitNames[index]) == 0) {
+			currentHitNames.erase((std::remove(currentHitNames.begin(), currentHitNames.end(), thisLoopHitNames[index]), currentHitNames.end()));
+			vecSize--;
+		}
+		else {
+			index++;
+		}
+	}
+
+	//and add the new ones in
+	for (int i = 0; i < thisLoopHitNames.size(); i++) {
+		//if it's not in already
+		if (std::count(currentHitNames.begin(), currentHitNames.end(), thisLoopHitNames[i]) == 0) {
+			currentHitNames.push_back(thisLoopHitNames[i]);
 		}
 	}
 }

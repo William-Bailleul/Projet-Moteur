@@ -1,15 +1,77 @@
 #include "ScriptHandler.h"
 
-//#include "ComponentScript.h"
+//#include "Engine.lib/EngineTimer.h"
+//#include "Engine.lib/EngineObject.h"
+//#include "Engine.lib/Transform.h"
 
-
-ScriptHandler::ScriptHandler(ComponentScript* linkedScript){
-	Init(linkedScript);
+ScriptHandler::ScriptHandler(EngineObject* objectLink, std::string name, std::string initState, GameTimer* timer){
+	Init(objectLink, name, initState, timer);
 }
 
-void ScriptHandler::Init(ComponentScript* linkedScript) {
-	linkedObjectScript = linkedScript;
+void ScriptHandler::Init(EngineObject* objectLink, std::string name, std::string initState, GameTimer* timer) {
+	linkedObject = objectLink;	
+	scriptName = name;
+	scriptState = initState;
+	gameTimer = timer;
+	currentStatePriority = false;
 }
+
+
+//////////////////////////////////
+//		OBJECT MANAGEMENT		//
+//////////////////////////////////
+
+//VISIBILITY FUNCTIONS
+//make the object visible
+void ScriptHandler::ObjectShow() {
+}
+
+//for ^^^ those vvv two, play around with the display list once it works
+
+//make the object invisible
+void ScriptHandler::ObjectHide() {
+}
+
+//completely end the object's existence
+void ScriptHandler::ObjectDestroy() {
+	// /kill @p :)
+}
+
+// TIMER FUNCTIONS
+//get the saved timeStamp
+float ScriptHandler::GetTimeStamp() {
+	return timeStamp;
+}
+
+//set the saved timeStamp to current time
+void ScriptHandler::SetTimeStamp() {
+	timeStamp = gameTimer->TotalTime();
+}
+
+//get how long it have been since you saved the timeStamp
+float ScriptHandler::HowLongSinceTimeStamp() {
+	float diff = (gameTimer->TotalTime() - timeStamp);
+	return diff;
+}
+
+//////////////////////////////////
+//		SCRIPT MANAGEMENT		//
+//////////////////////////////////
+
+//QUEUE FUNCTIONS
+
+
+void ScriptHandler::EmptyQueue(std::vector<std::string> Queue) {
+	for (int i = 0; i < Queue.size(); i++) {
+		Queue.erase(Queue.begin());
+	}
+}
+
+void ScriptHandler::UpdateQueues() {
+
+}
+
+//BEHAVIOR FUNCTIONS
 
 void ScriptHandler::Act() {
 	//follow this object's script
@@ -26,6 +88,8 @@ void ScriptHandler::Act() {
 void ScriptHandler::QueueCheck() {
 	//check the awaiting responses in the queue, deal with them
 	/*
+	
+	//make sure the current state doesnt have priority
 	if (linkedObjectScript.currentStatePriority == false) {
 
 	} 

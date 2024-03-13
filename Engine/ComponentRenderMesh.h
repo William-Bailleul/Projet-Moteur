@@ -28,9 +28,6 @@ public:
 	int mCurrFrameResourceIndex = 0;
 	UINT mCbvSrvUavDescriptorSize = 0;
 
-	XMFLOAT4X4 mView = MathHelper::Identity4x4();
-	XMFLOAT4X4 mProj = MathHelper::Identity4x4();
-
 	std::vector<std::unique_ptr<D3DApp::RenderItem>> mAllRitems;
 	std::unordered_map<std::string, std::unique_ptr<MeshGeometry>> mGeometries;
 

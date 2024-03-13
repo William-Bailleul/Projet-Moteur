@@ -7,11 +7,7 @@
 #include "ComponentCamera.h"
 #include <DirectXColors.h>
 
-
-
 using namespace DirectX;
-
-
 
 struct PassConstants
 {
@@ -30,6 +26,7 @@ struct PassConstants
 	float TotalTime = 0.0f;
 	float DeltaTime = 0.0f;
 };
+
 class InitDirect3DApp : public D3DApp
 {
 public:
@@ -82,7 +79,7 @@ private:
 	XMFLOAT3 mVectStart = { 0.0f,0.0f,3.0f };
 	XMFLOAT3 mEyePos = { 0.0f, 0.0f, 0.0f };
 	XMFLOAT4X4 mView = MathHelper::Identity4x4();
-	XMFLOAT4X4 mProj = MathHelper::Identity4x4();
+	//XMFLOAT4X4 mProj = MathHelper::Identity4x4();
 
 	float mTheta = 1.5f * XM_PI;
 	float mPhi = 0.2f * XM_PI;
@@ -181,9 +178,9 @@ bool InitDirect3DApp::Initialize()
 		IID_PPV_ARGS(mRootSignature.GetAddressOf())));
 
 
+
 	//Camera
 	camera.SetPosition(mVectStart);
-
 	//INIT
 
 	const char* entrypoint = "VS";
@@ -582,7 +579,7 @@ void InitDirect3DApp::Update(const GameTimer& gt)
 	XMMATRIX camStartPos = XMMatrixTranslation(mVectStart.x,mVectStart.y,mVectStart.z);
 	XMFLOAT4X4 ref = MathHelper::Identity4x4();
 	XMStoreFloat4x4(&ref, XMMatrixTranspose(camStartPos));
-	mMainPassCB.Proj = mProj;
+	mMainPassCB.Proj = camera.mProj;
 	mMainPassCB.View = ref;
 	currPassCB->CopyData(0, mMainPassCB);
 }

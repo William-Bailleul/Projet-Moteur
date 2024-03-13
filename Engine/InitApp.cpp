@@ -79,7 +79,7 @@ private:
 
 	bool mIsWireframe = false;
 
-	XMFLOAT3 mVectStart = { 3.f,3.f,3.f };
+	XMFLOAT3 mVectStart = { 0.0f,0.0f,3.0f };
 	XMFLOAT3 mEyePos = { 0.0f, 0.0f, 0.0f };
 	XMFLOAT4X4 mView = MathHelper::Identity4x4();
 	XMFLOAT4X4 mProj = MathHelper::Identity4x4();
@@ -579,10 +579,17 @@ void InitDirect3DApp::Update(const GameTimer& gt)
 	}
 
 	auto currPassCB = mCurrFrameResource->PassCB.get();
-	XMMATRIX camStartPos = XMMatrixTranslation(mVectStart.x,mVectStart.y,mVectStart.z);
-	XMFLOAT4X4 ref = MathHelper::Identity4x4();
-	XMStoreFloat4x4(&ref, camStartPos);
-	mMainPassCB.Proj = ref;
+
+	XMMATRIX camStartProj = XMMatrixTranslation(mVectStart.x,mVectStart.y,mVectStart.z);
+	XMFLOAT4X4 refP = MathHelper::Identity4x4();
+	XMStoreFloat4x4(&refP, XMMatrixTranspose(camStartProj));
+
+	XMMATRIX camStartView = XMMatrixTranslation(mVectStart.x, mVectStart.y, mVectStart.z);
+	XMFLOAT4X4 refV = MathHelper::Identity4x4();
+	XMStoreFloat4x4(&refV, XMMatrixTranspose(camStartView));
+
+	mMainPassCB.Proj = refP;
+	mMainPassCB.View = refV;
 	currPassCB->CopyData(0, mMainPassCB);
 }
 

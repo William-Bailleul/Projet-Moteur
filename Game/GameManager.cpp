@@ -30,3 +30,6 @@ void GameManager::Play() {
 	}
 
 }
+GameManager::GameManager() {}
+
+//GameManager::~GameManager() {}

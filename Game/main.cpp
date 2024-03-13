@@ -12,7 +12,7 @@ int WinMain() {
 	SplashScreen splash = SplashScreen(5.0f);
 	
 
-	ComPtr<ID3D12DescriptorHeap> srvHeap; // descriptor heap containing SRVs 
+	ComPtr<ID3D12DescriptorHeap> srvHeap; 
 	D3D12_CPU_DESCRIPTOR_HANDLE srvHandle = srvHeap->GetCPUDescriptorHandleForHeapStart(); 
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {}; 

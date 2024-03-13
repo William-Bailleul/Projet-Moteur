@@ -21,7 +21,7 @@ class ComponentScript: public Component
 {
 public:
 
-	ComponentScript(GameObject* gameObjectPointer, ScriptNames name, ScriptStates initState, GameTimer* timer);
+	ComponentScript(EngineObject* gameObjectPointer, ScriptNames name, ScriptStates initState, GameTimer* timer);
 
 	// Main Behavior Function
 	void ScriptSelector();

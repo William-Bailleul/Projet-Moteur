@@ -3,8 +3,18 @@
 #include "Shader.h"
 #include "Utile.h"
 
+Shader::Shader()
+{
+
+}
+
 
 Shader::Shader(Microsoft::WRL::ComPtr<ID3D12Device> Device, DXGI_FORMAT BBufferFormat, DXGI_FORMAT DStencilFormat, bool MSAAState, UINT MSAAQuality)
+{
+	Init(Device, BBufferFormat, DStencilFormat, MSAAState, MSAAQuality);
+}
+
+void Shader::Init(Microsoft::WRL::ComPtr<ID3D12Device> Device, DXGI_FORMAT BBufferFormat, DXGI_FORMAT DStencilFormat, bool MSAAState, UINT MSAAQuality)
 {
 	mBackBufferFormat = BBufferFormat;
 	mDepthStencilFormat = DStencilFormat;
@@ -16,7 +26,6 @@ Shader::Shader(Microsoft::WRL::ComPtr<ID3D12Device> Device, DXGI_FORMAT BBufferF
 	target = "vs_5_1";
 	entrypoint2 = "PS";
 	target2 = "ps_5_1";
-
 }
 
 void Shader::BuildRootSignature()
@@ -54,7 +63,7 @@ void Shader::BuildRootSignature()
 
 }
 
-void Shader::CompileShaders(const std::wstring filename)
+void Shader::CompileShaders(LPCWSTR fileName)
 {
 	UINT compileFlags = 0;
 #if defined(DEBUG) || defined(_DEBUG)  
@@ -69,13 +78,13 @@ void Shader::CompileShaders(const std::wstring filename)
 
 	ComPtr<ID3DBlob> errors;
 
-	hr = D3DCompileFromFile(filename.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
+	hr = D3DCompileFromFile(fileName, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
 		entrypoint, target, compileFlags, 0, &byteCode, &errors);
 
 	if (errors != nullptr)
 		OutputDebugStringA((char*)errors->GetBufferPointer());
 
-	hr2 = D3DCompileFromFile(filename.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
+	hr2 = D3DCompileFromFile(fileName, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
 		entrypoint, target, compileFlags, 0, &byteCode2, &errors);
 
 	if (errors != nullptr)

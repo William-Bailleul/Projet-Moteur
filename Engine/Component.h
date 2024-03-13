@@ -1,16 +1,16 @@
 #pragma once
 
-class GameObject;
+class EngineObject;
 
 class Component
 {
 public:
-	GameObject* gameObjectPointer;
+	EngineObject* gameObjectPointer;
 
-	Component(GameObject* gameObjectPointer);
+	Component(EngineObject* gameObjectPointer);
 	~Component();
 
 private:
-	void Init(GameObject* gameObjectPointer);
+	void Init(EngineObject* gameObjectPointer);
 };
 

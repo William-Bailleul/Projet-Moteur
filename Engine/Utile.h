@@ -5,7 +5,6 @@
 #include <dxgi1_4.h>
 #include <d3d12.h>
 #include <D3Dcompiler.h>
-#include <DirectXMath.h>
 #include <DirectXPackedVector.h>
 #include <DirectXColors.h>
 #include <DirectXCollision.h>
@@ -19,13 +18,16 @@
 #include <fstream>
 #include <sstream>
 #include <cassert>
+
 #include "d3dx12.h"
 #include "DDSTextureLoader.h"
 #include "MathHelper.h"
 #include "UploadBuffer.h"
 
-extern const int gNumFrameResources;
+//const int gNumFrameResources;
 using Microsoft::WRL::ComPtr;
+
+const int gNumFrameResources = 3;
 
 inline void d3dSetDebugName(IDXGIObject* obj, const char* name)
 {
@@ -86,26 +88,13 @@ inline std::wstring AnsiToWString(const std::string& str)
 class Utile
 {
 public:
+    void CreateConstantBufferViews();
 
     static bool IsKeyDown(int vkeyCode);
 
     static std::string ToString(HRESULT hr);
 
-    static UINT CalcConstantBufferByteSize(UINT byteSize)
-    {
-        // Constant buffers must be a multiple of the minimum hardware
-        // allocation size (usually 256 bytes).  So round up to nearest
-        // multiple of 256.  We do this by adding 255 and then masking off
-        // the lower 2 bytes which store all bits < 256.
-        // Example: Suppose byteSize = 300.
-        // (300 + 255) & ~255
-        // 555 & ~255
-        // 0x022B & ~0x00ff
-        // 0x022B & 0xff00
-        // 0x0200
-        // 512
-        return (byteSize + 255) & ~255;
-    }
+    static UINT CalcConstantBufferByteSize(UINT byteSize);
 
     static Microsoft::WRL::ComPtr<ID3DBlob> LoadBinary(const std::wstring& filename);
 
@@ -137,7 +126,12 @@ public:
     int LineNumber = -1;
 };
 
-// Defines a subrange of geometry in a MeshGeometry.  This is for when multiple
+// Defines a subrange of 
+// 
+// 
+// 
+// 
+// metry in a MeshGeometry.  This is for when multiple
 // geometries are stored in one vertex and index buffer.  It provides the offsets
 // and data needed to draw a subset of geometry stores in the vertex and index 
 // buffers so that we can implement the technique described by Figure 6.3.

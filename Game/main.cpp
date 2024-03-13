@@ -23,20 +23,9 @@ int WinMain() {
 
 	device->CreateShaderResourceView(texture.Get(), &srvDesc, srvHandle); 
 
+	ComPtr<ID3D12GraphicsCommandList> commandList;
 
-	/*
-		Texture2D gTexture : register(t0); // Texture register slot can vary based on your shader configuration
-		SamplerState gSampler : register(s0); // Sampler register slot can vary based on your shader configuration
-
-		// Use the texture in your shader
-		float4 main(float2 texCoord : TEXCOORD) : SV_TARGET
-		{
-			return gTexture.Sample(gSampler, texCoord);
-		}
-
-			// Assuming you have a command list 'commandList' and a descriptor heap containing the SRVs 'srvHeap'
-		commandList->SetDescriptorHeaps(1, srvHeap.GetAddressOf());
-		commandList->SetGraphicsRootDescriptorTable(0, srvHeap->GetGPUDescriptorHandleForHeapStart()); // Assuming 0 is the root parameter index for the SRV
-		*/
+	commandList->SetDescriptorHeaps(1, srvHeap.GetAddressOf());
+	commandList->SetGraphicsRootDescriptorTable(0, srvHeap->GetGPUDescriptorHandleForHeapStart()); 
 	return 0;
 }

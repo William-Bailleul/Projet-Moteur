@@ -90,4 +90,7 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="test.hlsl" />
+  </ItemGroup>
 </Project>

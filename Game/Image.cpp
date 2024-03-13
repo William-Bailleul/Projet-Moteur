@@ -38,11 +38,11 @@ ComPtr<ID3D12Resource> Image::CreateTextureResource(ID3D12Device* device) {
     textureData.RowPitch = width * 4; 
     textureData.SlicePitch = textureData.RowPitch * height; 
 
-    UpdateSubresources(device, texture.Get(), uploadHeap.Get(), 0, 0, 1, &textureData);
+    ComPtr<ID3D12GraphicsCommandList> commandList; 
+    
+    UpdateSubresources(commandList.Get(), texture.Get(), uploadHeap.Get(), 0, 0, 1, &textureData);
 
     // Transition texture to shader resource state
-    {
-        ComPtr<ID3D12GraphicsCommandList> commandList; 
         device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, nullptr, nullptr, IID_PPV_ARGS(&commandList)); 
 
         CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(texture.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
@@ -52,7 +52,6 @@ ComPtr<ID3D12Resource> Image::CreateTextureResource(ID3D12Device* device) {
         ID3D12CommandList* ppCommandLists[] = { commandList.Get() }; 
         device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence)); 
         //commandQueue->ExecuteCommandLists(1, ppCommandLists); 
-    }
 
     return texture;
 }

@@ -85,14 +85,14 @@ void ScriptHandler::UpdateCollisionLists() {
 
 void ScriptHandler::Act() {
 	//follow this object's script
-	/*
-	if (linkedObjectScript->scriptState == "un truc") {
+	
+	if (scriptState == "un truc") {
 
 	}
-	else if (linkedObjectScript->scriptState == "un autre") {
+	else if (scriptState == "un autre") {
 
 	}
-	*/
+	
 }
 
 void ScriptHandler::QueueCheck() {

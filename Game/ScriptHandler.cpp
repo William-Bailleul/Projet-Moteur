@@ -86,8 +86,11 @@ void ScriptHandler::UpdateCollisionLists() {
 void ScriptHandler::Act() {
 	//follow this object's script
 	
-	if (scriptState == "un truc") {
 
+	
+	if (scriptState == "BulletMove") {
+		//script that makes bullets go forward, using their direction values
+		linkedObject->transform->translate(linkedObject.directionX, linkedObject.directionY, linkedObject.directionZ);
 	}
 	else if (scriptState == "un autre") {
 

@@ -15,19 +15,7 @@ using namespace DirectX;
 struct PassConstants
 {
 	XMFLOAT4X4 View = MathHelper::Identity4x4();
-	XMFLOAT4X4 InvView = MathHelper::Identity4x4();
 	XMFLOAT4X4 Proj = MathHelper::Identity4x4();
-	XMFLOAT4X4 InvProj = MathHelper::Identity4x4();
-	XMFLOAT4X4 ViewProj = MathHelper::Identity4x4();
-	XMFLOAT4X4 InvViewProj = MathHelper::Identity4x4();
-	XMFLOAT3 EyePosW = { 0.0f, 0.0f, 0.0f };
-	float cbPerObjectPad1 = 0.0f;
-	XMFLOAT2 RenderTargetSize = { 0.0f, 0.0f };
-	XMFLOAT2 InvRenderTargetSize = { 0.0f, 0.0f };
-	float NearZ = 0.0f;
-	float FarZ = 0.0f;
-	float TotalTime = 0.0f;
-	float DeltaTime = 0.0f;
 };
 
 class InitDirect3DApp : public D3DApp
@@ -531,9 +519,13 @@ void InitDirect3DApp::Update( GameTimer& gt)
 
 	// Build the view matrix.
 	XMVECTOR target = camera.GetPosition() + camera.GetLook();
+	//target = XMVectorSet(0, 0, 0, 0);
 
-	XMMATRIX view = XMMatrixLookAtLH(camera.GetPosition(), target, camera.GetUp());
+	XMVECTOR cam = camera.GetPosition();
+	//cam = XMVectorSet(0, 0, -10, 0);
+	XMMATRIX view = XMMatrixLookAtLH(cam, target, camera.GetUp());
 	XMStoreFloat4x4(&camera.mView, view);
+	XMMATRIX proj = XMLoadFloat4x4(&camera.mProj);
 
 	//OBJECT CBs
 
@@ -556,18 +548,16 @@ void InitDirect3DApp::Update( GameTimer& gt)
 		}
 	}
 
-	auto currPassCB = mCurrFrameResource->PassCB.get();
-	//XMMATRIX world = XMLoadFloat4x4(&camera.mView);
-	//XMMATRIX proj = XMLoadFloat4x4(&camera.mProj);
 	//XMMATRIX worldViewProj = world * view * proj;
-	//ObjectConstants objectConstants;
-	//XMStoreFloat4x4(&objectConstants.World, XMMatrixTranspose(worldViewProj));
-	//mObjectCB->CopyData(0, objectConstants);
+
+	auto currPassCB = mCurrFrameResource->PassCB.get();
 	
-	XMFLOAT4X4 ref = MathHelper::Identity4x4();
-	XMStoreFloat4x4(&ref, view);
+	XMFLOAT4X4 refView = MathHelper::Identity4x4();
+	XMStoreFloat4x4(&refView, view);
+	XMStoreFloat4x4(&camera.mProj, XMMatrixTranspose(proj));
+	XMStoreFloat4x4(&camera.mView, XMMatrixTranspose(view));
 	mMainPassCB.Proj = camera.mProj;
-	mMainPassCB.View = ref;
+	mMainPassCB.View = camera.mView;
 	currPassCB->CopyData(0, mMainPassCB);
 
 }
@@ -575,7 +565,7 @@ void InitDirect3DApp::Update( GameTimer& gt)
 void InitDirect3DApp::UpdateCamera(GameTimer& gt)
 {
 
-	float dt = gt.DeltaTime()*1000;
+	float dt = gt.DeltaTime()*10;
 	float speed = 2.0f;
 
 	if (input.getKey(shoot)) {
@@ -591,24 +581,33 @@ void InitDirect3DApp::UpdateCamera(GameTimer& gt)
 		OutputDebugStringA(std::to_string(dt).c_str());
 		OutputDebugStringA("\n");
 	}
+	if (input.getKey(backwards)) {
+		camera.Walk(-speed * dt);
+
+	}
 	if (input.getKey(escape)) {
+
 	}
 	if (input.getKey(pitchDown)) {
-		OutputDebugStringA("Apagnan");
-	}
-	if (input.getKey(yawLeft)) {
-
+		OutputDebugStringA("working\n");
+		camera.Pitch(-dt*speed);
 	}
 	if (input.getKey(pitchUp)) {
-
+		camera.Pitch(dt * speed);
+	}
+	if (input.getKey(yawLeft)) {
+		camera.Strafe(-dt * speed);
 	}
 	if (input.getKey(yawRight)) {
+		camera.Strafe(dt * speed);
 
 	}
 	if (input.getKey(rollLeft)) {
+		camera.RotateY(-dt * speed);
 
 	}	
 	if (input.getKey(rollRight)) {
+		camera.RotateY(dt * speed);
 
 	}
 }

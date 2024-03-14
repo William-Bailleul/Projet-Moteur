@@ -12,6 +12,7 @@ InputManager::InputManager()
     m_input["LeftClick"] = 0;
     m_input["RightClick"] = 0;
     m_input["Space"] = 0;
+    m_input["BACKARROW"] = 0;
 
 }
 
@@ -52,6 +53,7 @@ void InputManager::keyList() {
     setKeyState(VK_LBUTTON, shoot);
     setKeyState(VK_RBUTTON, boost);
     setKeyState(VK_SPACE, accelerate);
+    setKeyState(VK_DOWN, backwards);
 }
 
 bool InputManager::getKeyUp(const string& key) {

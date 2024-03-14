@@ -10,6 +10,7 @@
 #define shoot "LeftClick"
 #define boost "RightClick"
 #define accelerate "Space"
+#define backwards "BACKARROW"
 
 #define KEY_UP 3
 #define KEY_HOLD 2

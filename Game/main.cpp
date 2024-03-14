@@ -30,9 +30,6 @@ int WinMain() {
 
 	ComPtr<ID3D12GraphicsCommandList> commandList;
 
-	commandList->SetDescriptorHeaps(1, srvHeap.GetAddressOf());
-	commandList->SetGraphicsRootDescriptorTable(0, srvHeap->GetGPUDescriptorHandleForHeapStart()); 
-
 
 	//----------------------------- 
 	//A tester et modifier
@@ -45,5 +42,10 @@ int WinMain() {
 	GeometryHandler::Mesh mesh = geoHan.BuildBox(1,1,1,1);
 	ComponentRenderMesh splashRender = ComponentRenderMesh(&oEngineOject, mesh, shader, &newTexture);
 	*/
+
+	commandList->SetDescriptorHeaps(1, srvHeap.GetAddressOf());
+	commandList->SetGraphicsRootDescriptorTable(0, srvHeap->GetGPUDescriptorHandleForHeapStart()); 
+
+
 	return 0;
 }

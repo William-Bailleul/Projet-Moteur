@@ -194,11 +194,12 @@ bool InitDirect3DApp::Initialize()
 	//CREATION DE BOITE + GEOSPHERE
 
 	GeometryHandler meshObject;
-	GeometryHandler::Mesh box = meshObject.BuildBox(1.f, 1.f, 1.f , 1);
+	GeometryHandler::Mesh box = meshObject.BuildBox(1.0f, 1.0f, 1.0f , 1);
 	GeometryHandler::Mesh sphere = meshObject.BuildSphere(3.0f, 20, 20);
 	GeometryHandler::Mesh cylinder = meshObject.BuildCylinder(3.0f, 3.0f, 5.0f, 20,20);
 	GeometryHandler::Mesh geosphere = meshObject.BuildGeosphere(2.5f, 5);
 	GeometryHandler::Mesh enemy = meshObject.BuildPyramid(5.0f, 3);
+	GeometryHandler::Mesh particle = meshObject.BuildBox(0.5f, 0.5f, 0.5f, 1);
 
 
 	//VERTEX OFFSET
@@ -207,6 +208,7 @@ bool InitDirect3DApp::Initialize()
 	UINT cylinderVertexOffset = sphereVertexOffset + (UINT)sphere.Vertices.size();
 	UINT geosphereVertexOffset = cylinderVertexOffset + (UINT)cylinder.Vertices.size();
 	UINT enemyVertexOffset = geosphereVertexOffset + (UINT)geosphere.Vertices.size();
+	UINT particleVertexOffset = enemyVertexOffset + (UINT)enemy.Vertices.size();
 
 	//INDEX OFFSET
 
@@ -216,6 +218,7 @@ bool InitDirect3DApp::Initialize()
 	UINT cylinderIndexOffset = sphereIndexOffset + (UINT)sphere.Indices32.size();
 	UINT geosphereIndexOffset = cylinderIndexOffset + (UINT)cylinder.Indices32.size();
 	UINT enemyIndexOffset = geosphereIndexOffset + (UINT)geosphere.Indices32.size();
+	UINT particleIndexOffset = enemyIndexOffset + (UINT)particle.Indices32.size();
 
 
 	//SUBMESH GEOMETRY
@@ -245,6 +248,11 @@ bool InitDirect3DApp::Initialize()
 	enemySubmesh.StartIndexLocation = enemyIndexOffset;
 	enemySubmesh.BaseVertexLocation = enemyVertexOffset;
 
+	SubmeshGeometry particleSubmesh;
+	particleSubmesh.IndexCount = (UINT)particle.Indices32.size();
+	particleSubmesh.StartIndexLocation = particleIndexOffset;
+	particleSubmesh.BaseVertexLocation = particleVertexOffset;
+
 	//VERTEX COUNT
 
 	auto totalVertexCount =
@@ -252,7 +260,8 @@ bool InitDirect3DApp::Initialize()
 		sphere.Vertices.size() +
 		cylinder.Vertices.size() +
 		geosphere.Vertices.size() +
-		enemy.Vertices.size();
+		enemy.Vertices.size() +
+		particle.Vertices.size();
 
 
 	//SET POS + COLOR
@@ -290,6 +299,12 @@ bool InitDirect3DApp::Initialize()
 		vertices[k].Color = XMFLOAT4(DirectX::Colors::MintCream);
 	}
 
+	for (size_t i = 0; i < particle.Vertices.size(); ++i, ++k)
+	{
+		vertices[k].Pos = particle.Vertices[i].Position;
+		vertices[k].Color = XMFLOAT4(DirectX::Colors::PaleVioletRed);
+	}
+
 
 	//INSERT INDICES
 
@@ -299,6 +314,7 @@ bool InitDirect3DApp::Initialize()
 	indices.insert(indices.end(), std::begin(cylinder.GetIndices16()), std::end(cylinder.GetIndices16()));
 	indices.insert(indices.end(), std::begin(geosphere.GetIndices16()), std::end(geosphere.GetIndices16()));
 	indices.insert(indices.end(), std::begin(enemy.GetIndices16()), std::end(enemy.GetIndices16()));
+	indices.insert(indices.end(), std::begin(particle.GetIndices16()), std::end(particle.GetIndices16()));
 
 	const UINT vbByteSize = (UINT)vertices.size() * sizeof(ComponentRenderMesh::Vertex);
 	const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
@@ -332,12 +348,13 @@ bool InitDirect3DApp::Initialize()
 	geo->DrawArgs["cylinder"] = cylinderSubmesh;
 	geo->DrawArgs["geosphere"] = geosphereSubmesh;
 	geo->DrawArgs["enemy"] = enemySubmesh;
+	geo->DrawArgs["particle"] = particleSubmesh;
 
 	std::unordered_map<std::string, MeshGeometry*> mGeometries;
 	mGeometries[geo->Name] = geo;
 
 	//BUILDRENDERITEMS
-
+	
 	RenderItem* boxRitem = new RenderItem;
 	XMStoreFloat4x4(&boxRitem->World, XMMatrixScaling(1.0f, 1.0f, 1.0f));
 	boxRitem->ObjCBIndex = 0;
@@ -350,7 +367,6 @@ bool InitDirect3DApp::Initialize()
 
 	RenderItem* testGeo = new RenderItem;
 
-	XMMATRIX testGeoWorld = XMMatrixTranslation(-3.0f, 2.0f, 0.0f);
 	XMMATRIX testPyGeoWorld = XMMatrixTranslation(3.0f, 2.0f, 0.0f);
 
 	XMStoreFloat4x4(&testGeo->World, testPyGeoWorld);
@@ -361,6 +377,19 @@ bool InitDirect3DApp::Initialize()
 	testGeo->StartIndexLocation = testGeo->Geo->DrawArgs["enemy"].StartIndexLocation;
 	testGeo->BaseVertexLocation = testGeo->Geo->DrawArgs["enemy"].BaseVertexLocation;
 	mAllRitems.push_back(testGeo);
+
+	RenderItem* testPart = new RenderItem;
+
+	XMMATRIX testPyPartWorld = XMMatrixTranslation(3.0f, 2.0f, 0.0f);
+
+	XMStoreFloat4x4(&testPart->World, testPyPartWorld);
+	testPart->ObjCBIndex = 1;
+	testPart->Geo = mGeometries["shapeGeo"];
+	testPart->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	testPart->IndexCount = testPart->Geo->DrawArgs["particle"].IndexCount;
+	testPart->StartIndexLocation = testPart->Geo->DrawArgs["particle"].StartIndexLocation;
+	testPart->BaseVertexLocation = testPart->Geo->DrawArgs["particle"].BaseVertexLocation;
+	mAllRitems.push_back(testPart);
 
 
 

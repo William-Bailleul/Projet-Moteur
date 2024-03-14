@@ -1,9 +1,11 @@
 #include "ScriptHandler.h"
 
-//#include "Engine.lib/EngineTimer.h"
-//#include "Engine.lib/EngineObject.h"
-//#include "Engine.lib/ComponentCollider.h"
-//#include "Engine.lib/Transform.h"
+/*
+#include "Engine.lib/EngineTimer.h"
+#include "Engine.lib/EngineObject.h"
+#include "Engine.lib/ComponentCollider.h"
+#include "Engine.lib/Transform.h"
+*/
 
 ScriptHandler::ScriptHandler(EngineObject* objectLink, std::string name, std::string initState, GameTimer* timer){
 	Init(objectLink, name, initState, timer);

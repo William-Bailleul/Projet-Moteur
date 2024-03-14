@@ -93,6 +93,52 @@ GeometryHandler::Mesh GeometryHandler::BuildBox(float width, float height, float
 	return mesh;
 }
 
+GeometryHandler::Mesh GeometryHandler::BuildPyramid(float width, float height, float depth, uint32 subs)
+{
+	Mesh mesh;
+
+	Vertex vertex[4];
+
+	float w = 0.5f * width;
+	float h = 0.5f * height;
+	float d = 0.5f * depth;
+
+	//Creation des Vertices (Points)
+
+	vertex[0] = Vertex(-w, -h, -d, -1.0f, 0.0f, +1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+	vertex[1] = Vertex(0.0f, +h, 0.0f, 0.0f, +1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+	vertex[2] = Vertex(+w, -h, -d, +1.0f, 0.0f, +1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+	vertex[3] = Vertex(0.0f, -h, +d, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
+
+	mesh.Vertices.assign(&vertex[0], &vertex[4]);
+
+	//Creation des indices (Triangles)
+
+	uint32 indices[12];
+
+	//Face avant.
+	indices[0] = 0; indices[1] = 1; indices[2] = 2;
+
+	//Face droite.
+	indices[3] = 2; indices[4] = 1; indices[5] = 3;
+
+	//Face gauche.
+	indices[6] = 3; indices[7] = 1; indices[8] = 0;
+
+	//Base.
+	indices[9] = 0; indices[10] = 2; indices[11] = 3;
+
+	mesh.Indices32.assign(&indices[0], &indices[12]);
+
+	//limite le nombre de subdivisions. (Si subs > 4u alors subs = 4u)
+	subs = std::min<uint32>(subs, 4u);
+
+	for (uint32 i = 0; i < subs; ++i)
+		Subdivide(mesh);
+
+	return mesh;
+}
+
 GeometryHandler::Mesh GeometryHandler::BuildSphere(float radius, uint32 sliceCount, uint32 stackCount)
 {
 	Mesh mesh;
@@ -245,7 +291,7 @@ GeometryHandler::Mesh GeometryHandler::BuildGeosphere(float radius, uint32 subs)
 	return mesh;
 }
 
-GeometryHandler::Mesh GeometryHandler::BuildCylinder(float bottomRadius, float topRadius, float height, uint32 sliceCount, uint32 stackCount)
+GeometryHandler::Mesh GeometryHandler::BuildCylinder(float bottomRadius, float topRadius, float height, uint32 sliceCount, uint32 stackCount) 
 {
 	Mesh mesh;
 

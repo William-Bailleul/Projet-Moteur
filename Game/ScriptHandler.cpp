@@ -46,13 +46,13 @@ float ScriptHandler::GetTimeStamp() {
 
 //set the saved timeStamp to current time
 void ScriptHandler::SetTimeStamp() {
-	timeStamp = gameTimer->TotalTime();
+//	timeStamp = gameTimer->TotalTime();
 }
 
 //get how long it have been since you saved the timeStamp
 float ScriptHandler::HowLongSinceTimeStamp() {
-	float diff = (gameTimer->TotalTime() - timeStamp);
-	return diff;
+//	float diff = (gameTimer->TotalTime() - timeStamp);
+//	return diff;
 }
 
 //////////////////////////////////
@@ -68,6 +68,7 @@ void ScriptHandler::EmptyQueue(std::vector<std::string> Queue) {
 }
 
 void ScriptHandler::UpdateCollisionLists() {
+	/*
 	ComponentCollider* objectCollider = linkedObject->GetComponent<ComponentCollider>();
 
 	//acquire new data from object's collider
@@ -77,6 +78,7 @@ void ScriptHandler::UpdateCollisionLists() {
 			scriptNamesList.push_back(objectCollider->currentHitNames[i]);
 		}
 	}
+	*/
 }
 
 //BEHAVIOR FUNCTIONS
@@ -95,13 +97,12 @@ void ScriptHandler::Act() {
 
 void ScriptHandler::QueueCheck() {
 	//check the awaiting responses in the queue, deal with them
-	/*
 	
 	//make sure the current state doesnt have priority
-	if (linkedObjectScript.currentStatePriority == false) {
+	if (currentStatePriority == false) {
 
 	} 
-	*/
+	
 }
 
 ScriptHandler::~ScriptHandler() {

@@ -30,7 +30,6 @@ public:
 	void OnMouseDown(WPARAM btnState, int x, int y);
 	void OnMouseUp(WPARAM btnState, int x, int y);
 	void OnMouseMove(WPARAM btnState, int x, int y);
-	void OnKeyboardInput(const GameTimer& gt);
 
 	Camera camera;
 	InputManager input;
@@ -172,8 +171,9 @@ bool InitDirect3DApp::Initialize()
 
 
 
-	//Camera
+	//Camera Start Position
 	camera.SetPosition(mVectStart);
+
 	//INIT
 
 	const char* entrypoint = "VS";
@@ -348,21 +348,7 @@ bool InitDirect3DApp::Initialize()
 	boxRitem->StartIndexLocation = boxRitem->Geo->DrawArgs["box"].StartIndexLocation;
 	boxRitem->BaseVertexLocation = boxRitem->Geo->DrawArgs["box"].BaseVertexLocation;
 	mAllRitems.push_back(boxRitem);
-	/*
-	RenderItem* testGeo = new RenderItem;
 
-	XMMATRIX testGeoWorld = XMMatrixTranslation(-3.0f, 2.0f, 0.0f);
-	XMMATRIX testPyGeoWorld = XMMatrixTranslation(3.0f, 2.0f, 0.0f);
-
-	XMStoreFloat4x4(&testGeo->World, testPyGeoWorld);
-	testGeo->ObjCBIndex = 1;
-	testGeo->Geo = mGeometries["shapeGeo"];
-	testGeo->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	testGeo->IndexCount = testGeo->Geo->DrawArgs["enemy"].IndexCount;
-	testGeo->StartIndexLocation = testGeo->Geo->DrawArgs["enemy"].StartIndexLocation;
-	testGeo->BaseVertexLocation = testGeo->Geo->DrawArgs["enemy"].BaseVertexLocation;
-	mAllRitems.push_back(testGeo);
-	*/
 
 
 	// All the render items are opaque.
@@ -512,7 +498,6 @@ void InitDirect3DApp::Update( GameTimer& gt)
 {
 
 	input.keyList();
-	OnKeyboardInput(gt);
 	UpdateCamera(gt);
 
 	// Cycle through the circular frame resource array.
@@ -534,35 +519,12 @@ void InitDirect3DApp::Update( GameTimer& gt)
 	// Build the view matrix.
 	XMVECTOR target = camera.GetPosition() + camera.GetLook();
 	//target = XMVectorSet(0, 0, 0, 0);
-
 	XMVECTOR cam = camera.GetPosition();
 	//cam = XMVectorSet(0, 0, -10, 0);
 	XMMATRIX view = XMMatrixLookAtLH(cam, target, camera.GetUp());
 	XMStoreFloat4x4(&camera.mView, view);
 	XMMATRIX proj = XMLoadFloat4x4(&camera.mProj);
 
-	//OBJECT CBs
-
-	auto currObjectCB = mCurrFrameResource->ObjectCB.get();
-	for (auto& e : mAllRitems)
-	{
-		// Only update the cbuffer data if the constants have changed.  
-		// This needs to be tracked per frame resource.
-		if (e->NumFramesDirty > 0)
-		{
-			XMMATRIX world = XMLoadFloat4x4(&e->World);
-
-			ObjectConstants objConstants;
-			XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(world));
-
-			currObjectCB->CopyData(e->ObjCBIndex, objConstants);
-
-			// Next FrameResource need to be updated too.
-			e->NumFramesDirty--;
-		}
-	}
-
-	//XMMATRIX worldViewProj = world * view * proj;
 
 	auto currPassCB = mCurrFrameResource->PassCB.get();
 	
@@ -592,13 +554,13 @@ void InitDirect3DApp::UpdateCamera(GameTimer& gt)
 		if (input.getKey(boost)) {
 			camera.Walk(2 * (walkSpeed * dt));
 		}
-		camera.Walk(walkSpeed *dt);
+		camera.Walk(walkSpeed * dt);
 	}
 	if (input.getKey(backwards)) {
 		camera.Walk(-walkSpeed * dt);
 	}
 	if (input.getKey(pitchDown)) {
-		camera.Pitch(-dt*speed);
+		camera.Pitch(-dt * speed);
 	}
 	if (input.getKey(pitchUp)) {
 		camera.Pitch(dt * speed);
@@ -838,12 +800,4 @@ void InitDirect3DApp::OnMouseMove(WPARAM btnState, int x, int y)
 
 	mLastMousePos.x = x;
 	mLastMousePos.y = y;
-}
-
-void InitDirect3DApp::OnKeyboardInput(const GameTimer& gt)
-{
-	if (GetAsyncKeyState('1') & 0x8000)
-		mIsWireframe = true;
-	else
-		mIsWireframe = false;
 }

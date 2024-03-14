@@ -348,30 +348,30 @@ bool InitDirect3DApp::Initialize()
 	boxRitem->BaseVertexLocation = boxRitem->Geo->DrawArgs["box"].BaseVertexLocation;
 	mAllRitems.push_back(boxRitem);
 
-	RenderItem* testGeo = new RenderItem;
+	//RenderItem* testGeo = new RenderItem;
 
-	XMMATRIX testGeoWorld = XMMatrixTranslation(-3.0f, 2.0f, 0.0f);
-	XMMATRIX testPyGeoWorld = XMMatrixTranslation(3.0f, 2.0f, 0.0f);
+	//XMMATRIX testGeoWorld = XMMatrixTranslation(-3.0f, 2.0f, 0.0f);
+	//XMMATRIX testPyGeoWorld = XMMatrixTranslation(3.0f, 2.0f, 0.0f);
 
-	XMStoreFloat4x4(&testGeo->World, testPyGeoWorld);
-	testGeo->ObjCBIndex = 1;
-	testGeo->Geo = mGeometries["shapeGeo"];
-	testGeo->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	testGeo->IndexCount = testGeo->Geo->DrawArgs["enemy"].IndexCount;
-	testGeo->StartIndexLocation = testGeo->Geo->DrawArgs["enemy"].StartIndexLocation;
-	testGeo->BaseVertexLocation = testGeo->Geo->DrawArgs["enemy"].BaseVertexLocation;
-	mAllRitems.push_back(testGeo);
+	//XMStoreFloat4x4(&testGeo->World, testPyGeoWorld);
+	//testGeo->ObjCBIndex = 1;
+	//testGeo->Geo = mGeometries["shapeGeo"];
+	//testGeo->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	//testGeo->IndexCount = testGeo->Geo->DrawArgs["enemy"].IndexCount;
+	//testGeo->StartIndexLocation = testGeo->Geo->DrawArgs["enemy"].StartIndexLocation;
+	//testGeo->BaseVertexLocation = testGeo->Geo->DrawArgs["enemy"].BaseVertexLocation;
+	//mAllRitems.push_back(testGeo);
 
-	RenderItem* leftSphereRitem = new RenderItem;
-	UINT objCBIndex = 2;
-	XMStoreFloat4x4(&leftSphereRitem->World, XMMatrixScaling(2.0f, 2.0f, 2.0f) * XMMatrixTranslation(5.0f, 4.5f, 2.0f));
-	leftSphereRitem->ObjCBIndex = objCBIndex++;
-	leftSphereRitem->Geo = mGeometries["shapeGeo"];
-	leftSphereRitem->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	leftSphereRitem->IndexCount = leftSphereRitem->Geo->DrawArgs["geosphere"].IndexCount;
-	leftSphereRitem->StartIndexLocation = leftSphereRitem->Geo->DrawArgs["geosphere"].StartIndexLocation;
-	leftSphereRitem->BaseVertexLocation = leftSphereRitem->Geo->DrawArgs["geosphere"].BaseVertexLocation;
-	mAllRitems.push_back(std::move(leftSphereRitem));
+	//RenderItem* leftSphereRitem = new RenderItem;
+	//UINT objCBIndex = 2;
+	//XMStoreFloat4x4(&leftSphereRitem->World, XMMatrixScaling(2.0f, 2.0f, 2.0f) * XMMatrixTranslation(5.0f, 4.5f, 2.0f));
+	//leftSphereRitem->ObjCBIndex = objCBIndex++;
+	//leftSphereRitem->Geo = mGeometries["shapeGeo"];
+	//leftSphereRitem->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	//leftSphereRitem->IndexCount = leftSphereRitem->Geo->DrawArgs["geosphere"].IndexCount;
+	//leftSphereRitem->StartIndexLocation = leftSphereRitem->Geo->DrawArgs["geosphere"].StartIndexLocation;
+	//leftSphereRitem->BaseVertexLocation = leftSphereRitem->Geo->DrawArgs["geosphere"].BaseVertexLocation;
+	//mAllRitems.push_back(std::move(leftSphereRitem));
 
 	// All the render items are opaque.
 	for (auto& e : mAllRitems)

@@ -7,11 +7,12 @@ InputManager::InputManager()
     m_input["Q"] = 0;
     m_input["S"] = 0;
     m_input["D"] = 0;
-    m_input["A"] = 0;
-    m_input["E"] = 0;
-    m_input["LeftClick"] = 0;
-    m_input["RightClick"] = 0;
+    m_input["Shift"] = 0;
     m_input["Space"] = 0;
+    m_input["ARROWRIGHT"] = 0;
+    m_input["ARROWUP"] = 0;
+    m_input["ARROWDOWN"] = 0;
+    m_input["ARROWLEFT"] = 0;
 
 }
 
@@ -43,15 +44,16 @@ void InputManager::setKeyState(const char& key, const string& index) {
 
 void InputManager::keyList() {
     setKeyState(VK_ESCAPE, escape);
-    setKeyState('Z', pitchDown);
+    setKeyState('Z', accelerate);
+    setKeyState('S', backwards);
     setKeyState('Q', yawLeft);
-    setKeyState('S', pitchUp);
     setKeyState('D', yawRight);
-    setKeyState('A', rollLeft);
-    setKeyState('E', rollRight);
-    setKeyState(VK_LBUTTON, shoot);
-    setKeyState(VK_RBUTTON, boost);
-    setKeyState(VK_SPACE, accelerate);
+    setKeyState(VK_LEFT, rollLeft);
+    setKeyState(VK_RIGHT, rollRight);
+    setKeyState(VK_SPACE, shoot);
+    setKeyState(VK_SHIFT, boost);
+    setKeyState(VK_UP, pitchDown);
+    setKeyState(VK_DOWN, pitchUp);
 }
 
 bool InputManager::getKeyUp(const string& key) {

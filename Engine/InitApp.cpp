@@ -15,19 +15,7 @@ using namespace DirectX;
 struct PassConstants
 {
 	XMFLOAT4X4 View = MathHelper::Identity4x4();
-	XMFLOAT4X4 InvView = MathHelper::Identity4x4();
 	XMFLOAT4X4 Proj = MathHelper::Identity4x4();
-	XMFLOAT4X4 InvProj = MathHelper::Identity4x4();
-	XMFLOAT4X4 ViewProj = MathHelper::Identity4x4();
-	XMFLOAT4X4 InvViewProj = MathHelper::Identity4x4();
-	XMFLOAT3 EyePosW = { 0.0f, 0.0f, 0.0f };
-	float cbPerObjectPad1 = 0.0f;
-	XMFLOAT2 RenderTargetSize = { 0.0f, 0.0f };
-	XMFLOAT2 InvRenderTargetSize = { 0.0f, 0.0f };
-	float NearZ = 0.0f;
-	float FarZ = 0.0f;
-	float TotalTime = 0.0f;
-	float DeltaTime = 0.0f;
 };
 
 class InitDirect3DApp : public D3DApp
@@ -206,8 +194,7 @@ bool InitDirect3DApp::Initialize()
 	//CREATION DE BOITE + GEOSPHERE
 
 	GeometryHandler meshObject;
-	float x = 1.8f;
-	GeometryHandler::Mesh box = meshObject.BuildBox(x, x,x , 1);
+	GeometryHandler::Mesh box = meshObject.BuildBox(1.f, 1.f, 1.f , 1);
 	GeometryHandler::Mesh sphere = meshObject.BuildSphere(3.0f, 20, 20);
 	GeometryHandler::Mesh cylinder = meshObject.BuildCylinder(3.0f, 3.0f, 5.0f, 20,20);
 	GeometryHandler::Mesh geosphere = meshObject.BuildGeosphere(2.5f, 5);
@@ -360,6 +347,20 @@ bool InitDirect3DApp::Initialize()
 	boxRitem->StartIndexLocation = boxRitem->Geo->DrawArgs["box"].StartIndexLocation;
 	boxRitem->BaseVertexLocation = boxRitem->Geo->DrawArgs["box"].BaseVertexLocation;
 	mAllRitems.push_back(boxRitem);
+
+	RenderItem* testGeo = new RenderItem;
+
+	XMMATRIX testGeoWorld = XMMatrixTranslation(-3.0f, 2.0f, 0.0f);
+	XMMATRIX testPyGeoWorld = XMMatrixTranslation(3.0f, 2.0f, 0.0f);
+
+	XMStoreFloat4x4(&testGeo->World, testPyGeoWorld);
+	testGeo->ObjCBIndex = 1;
+	testGeo->Geo = mGeometries["shapeGeo"];
+	testGeo->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	testGeo->IndexCount = testGeo->Geo->DrawArgs["enemy"].IndexCount;
+	testGeo->StartIndexLocation = testGeo->Geo->DrawArgs["enemy"].StartIndexLocation;
+	testGeo->BaseVertexLocation = testGeo->Geo->DrawArgs["enemy"].BaseVertexLocation;
+	mAllRitems.push_back(testGeo);
 
 
 	UINT objCBIndex = 2;
@@ -541,9 +542,13 @@ void InitDirect3DApp::Update( GameTimer& gt)
 
 	// Build the view matrix.
 	XMVECTOR target = camera.GetPosition() + camera.GetLook();
+	//target = XMVectorSet(0, 0, 0, 0);
 
-	XMMATRIX view = XMMatrixLookAtLH(camera.GetPosition(), target, camera.GetUp());
+	XMVECTOR cam = camera.GetPosition();
+	//cam = XMVectorSet(0, 0, -10, 0);
+	XMMATRIX view = XMMatrixLookAtLH(cam, target, camera.GetUp());
 	XMStoreFloat4x4(&camera.mView, view);
+	XMMATRIX proj = XMLoadFloat4x4(&camera.mProj);
 
 	//OBJECT CBs
 
@@ -566,18 +571,18 @@ void InitDirect3DApp::Update( GameTimer& gt)
 		}
 	}
 
-	auto currPassCB = mCurrFrameResource->PassCB.get();
-	//XMMATRIX world = XMLoadFloat4x4(&camera.mView);
-	//XMMATRIX proj = XMLoadFloat4x4(&camera.mProj);
 	//XMMATRIX worldViewProj = world * view * proj;
-	//ObjectConstants objectConstants;
-	//XMStoreFloat4x4(&objectConstants.World, XMMatrixTranspose(worldViewProj));
-	//mObjectCB->CopyData(0, objectConstants);
 
-	XMFLOAT4X4 ref = MathHelper::Identity4x4();
-	XMStoreFloat4x4(&ref, view);
+
+	auto currPassCB = mCurrFrameResource->PassCB.get();
+	
+	XMFLOAT4X4 refView = MathHelper::Identity4x4();
+	XMStoreFloat4x4(&refView, view);
+	XMStoreFloat4x4(&camera.mProj, XMMatrixTranspose(proj));
+	XMStoreFloat4x4(&camera.mView, XMMatrixTranspose(view));
+
 	mMainPassCB.Proj = camera.mProj;
-	mMainPassCB.View = ref;
+	mMainPassCB.View = camera.mView;
 	currPassCB->CopyData(0, mMainPassCB);
 
 }
@@ -585,41 +590,41 @@ void InitDirect3DApp::Update( GameTimer& gt)
 void InitDirect3DApp::UpdateCamera(GameTimer& gt)
 {
 
-	float dt = gt.DeltaTime()*1000;
-	float speed = 2.0f;
+	float dt = gt.DeltaTime()*10;
+	float walkSpeed = 2.0f;
+	float speed = 0.2f;
 
-	if (input.getKey(shoot)) {
-	}
-	if (input.getKey(accelerate)) {
-		camera.Walk(speed*dt);
-		OutputDebugStringA(std::to_string(camera.GetPosition3f().x).c_str());
-		OutputDebugStringA("\n");
-		OutputDebugStringA(std::to_string(camera.GetPosition3f().y).c_str());
-		OutputDebugStringA("\n");
-		OutputDebugStringA(std::to_string(camera.GetPosition3f().z).c_str());
-		OutputDebugStringA("\n");
-		OutputDebugStringA(std::to_string(dt).c_str());
-		OutputDebugStringA("\n");
-	}
 	if (input.getKey(escape)) {
 	}
-	if (input.getKey(pitchDown)) {
-		OutputDebugStringA("Apagnan");
+	if (input.getKey(shoot)) {
 	}
-	if (input.getKey(yawLeft)) {
-
+	
+	if (input.getKey(accelerate)) {
+		if (input.getKey(boost)) {
+			camera.Walk(2 * (walkSpeed * dt));
+		}
+		camera.Walk(walkSpeed *dt);
+	}
+	if (input.getKey(backwards)) {
+		camera.Walk(-walkSpeed * dt);
+	}
+	if (input.getKey(pitchDown)) {
+		camera.Pitch(-dt*speed);
 	}
 	if (input.getKey(pitchUp)) {
-
+		camera.Pitch(dt * speed);
+	}
+	if (input.getKey(yawLeft)) {
+		camera.Strafe(-dt * speed);
 	}
 	if (input.getKey(yawRight)) {
-
+		camera.Strafe(dt * speed);
 	}
 	if (input.getKey(rollLeft)) {
-
+		camera.RotateY(-dt * speed);
 	}	
 	if (input.getKey(rollRight)) {
-
+		camera.RotateY(dt * speed);
 	}
 }
 

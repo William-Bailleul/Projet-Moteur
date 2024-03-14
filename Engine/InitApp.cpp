@@ -194,8 +194,7 @@ bool InitDirect3DApp::Initialize()
 	//CREATION DE BOITE + GEOSPHERE
 
 	GeometryHandler meshObject;
-	float x = 1.8f;
-	GeometryHandler::Mesh box = meshObject.BuildBox(x, x,x , 1);
+	GeometryHandler::Mesh box = meshObject.BuildBox(1.f, 1.f, 1.f , 1);
 	GeometryHandler::Mesh sphere = meshObject.BuildSphere(3.0f, 20, 20);
 	GeometryHandler::Mesh cylinder = meshObject.BuildCylinder(3.0f, 3.0f, 5.0f, 20,20);
 	GeometryHandler::Mesh geosphere = meshObject.BuildGeosphere(2.5f, 5);
@@ -348,6 +347,20 @@ bool InitDirect3DApp::Initialize()
 	boxRitem->StartIndexLocation = boxRitem->Geo->DrawArgs["box"].StartIndexLocation;
 	boxRitem->BaseVertexLocation = boxRitem->Geo->DrawArgs["box"].BaseVertexLocation;
 	mAllRitems.push_back(boxRitem);
+
+	RenderItem* testGeo = new RenderItem;
+
+	XMMATRIX testGeoWorld = XMMatrixTranslation(-3.0f, 2.0f, 0.0f);
+	XMMATRIX testPyGeoWorld = XMMatrixTranslation(3.0f, 2.0f, 0.0f);
+
+	XMStoreFloat4x4(&testGeo->World, testPyGeoWorld);
+	testGeo->ObjCBIndex = 1;
+	testGeo->Geo = mGeometries["shapeGeo"];
+	testGeo->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	testGeo->IndexCount = testGeo->Geo->DrawArgs["enemy"].IndexCount;
+	testGeo->StartIndexLocation = testGeo->Geo->DrawArgs["enemy"].StartIndexLocation;
+	testGeo->BaseVertexLocation = testGeo->Geo->DrawArgs["enemy"].BaseVertexLocation;
+	mAllRitems.push_back(testGeo);
 
 
 
@@ -566,12 +579,13 @@ void InitDirect3DApp::UpdateCamera(GameTimer& gt)
 {
 
 	float dt = gt.DeltaTime()*10;
-	float speed = 2.0f;
+	float walkSpeed = 2.0f;
+	float speed = 0.2f;
 
 	if (input.getKey(shoot)) {
 	}
 	if (input.getKey(accelerate)) {
-		camera.Walk(speed*dt);
+		camera.Walk(walkSpeed *dt);
 		OutputDebugStringA(std::to_string(camera.GetPosition3f().x).c_str());
 		OutputDebugStringA("\n");
 		OutputDebugStringA(std::to_string(camera.GetPosition3f().y).c_str());
@@ -582,7 +596,7 @@ void InitDirect3DApp::UpdateCamera(GameTimer& gt)
 		OutputDebugStringA("\n");
 	}
 	if (input.getKey(backwards)) {
-		camera.Walk(-speed * dt);
+		camera.Walk(-walkSpeed * dt);
 
 	}
 	if (input.getKey(escape)) {

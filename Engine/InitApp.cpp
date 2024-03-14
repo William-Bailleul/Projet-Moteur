@@ -198,8 +198,7 @@ bool InitDirect3DApp::Initialize()
 	GeometryHandler::Mesh sphere = meshObject.BuildSphere(3.0f, 20, 20);
 	GeometryHandler::Mesh cylinder = meshObject.BuildCylinder(3.0f, 3.0f, 5.0f, 20,20);
 	GeometryHandler::Mesh geosphere = meshObject.BuildGeosphere(2.5f, 5);
-	GeometryHandler::Mesh enemy = meshObject.BuildPyramid(5.0f, 3);
-	GeometryHandler::Mesh particle = meshObject.BuildBox(0.5f, 0.5f, 0.5f, 1);
+	GeometryHandler::Mesh particle = meshObject.BuildBox(1.0f, 1.0f, 1.0f, 1);
 
 
 	//VERTEX OFFSET
@@ -207,8 +206,7 @@ bool InitDirect3DApp::Initialize()
 	UINT sphereVertexOffset = boxVertexOffset + (UINT)box.Vertices.size();
 	UINT cylinderVertexOffset = sphereVertexOffset + (UINT)sphere.Vertices.size();
 	UINT geosphereVertexOffset = cylinderVertexOffset + (UINT)cylinder.Vertices.size();
-	UINT enemyVertexOffset = geosphereVertexOffset + (UINT)geosphere.Vertices.size();
-	UINT particleVertexOffset = enemyVertexOffset + (UINT)enemy.Vertices.size();
+	UINT particleVertexOffset = geosphereVertexOffset + (UINT)geosphere.Vertices.size();
 
 	//INDEX OFFSET
 
@@ -217,8 +215,7 @@ bool InitDirect3DApp::Initialize()
 	UINT sphereIndexOffset = boxIndexOffset + (UINT)box.Indices32.size();
 	UINT cylinderIndexOffset = sphereIndexOffset + (UINT)sphere.Indices32.size();
 	UINT geosphereIndexOffset = cylinderIndexOffset + (UINT)cylinder.Indices32.size();
-	UINT enemyIndexOffset = geosphereIndexOffset + (UINT)geosphere.Indices32.size();
-	UINT particleIndexOffset = enemyIndexOffset + (UINT)particle.Indices32.size();
+	UINT particleIndexOffset = geosphereIndexOffset + (UINT)geosphere.Indices32.size();
 
 
 	//SUBMESH GEOMETRY
@@ -243,11 +240,6 @@ bool InitDirect3DApp::Initialize()
 	geosphereSubmesh.StartIndexLocation = geosphereIndexOffset;
 	geosphereSubmesh.BaseVertexLocation = geosphereVertexOffset;
 
-	SubmeshGeometry enemySubmesh;
-	enemySubmesh.IndexCount = (UINT)enemy.Indices32.size();
-	enemySubmesh.StartIndexLocation = enemyIndexOffset;
-	enemySubmesh.BaseVertexLocation = enemyVertexOffset;
-
 	SubmeshGeometry particleSubmesh;
 	particleSubmesh.IndexCount = (UINT)particle.Indices32.size();
 	particleSubmesh.StartIndexLocation = particleIndexOffset;
@@ -260,7 +252,6 @@ bool InitDirect3DApp::Initialize()
 		sphere.Vertices.size() +
 		cylinder.Vertices.size() +
 		geosphere.Vertices.size() +
-		enemy.Vertices.size() +
 		particle.Vertices.size();
 
 
@@ -293,12 +284,6 @@ bool InitDirect3DApp::Initialize()
 		vertices[k].Color = XMFLOAT4(DirectX::Colors::Cyan);
 	}
 
-	for (size_t i = 0; i < enemy.Vertices.size(); ++i, ++k)
-	{
-		vertices[k].Pos = enemy.Vertices[i].Position;
-		vertices[k].Color = XMFLOAT4(DirectX::Colors::MintCream);
-	}
-
 	for (size_t i = 0; i < particle.Vertices.size(); ++i, ++k)
 	{
 		vertices[k].Pos = particle.Vertices[i].Position;
@@ -313,7 +298,6 @@ bool InitDirect3DApp::Initialize()
 	indices.insert(indices.end(), std::begin(sphere.GetIndices16()), std::end(sphere.GetIndices16()));
 	indices.insert(indices.end(), std::begin(cylinder.GetIndices16()), std::end(cylinder.GetIndices16()));
 	indices.insert(indices.end(), std::begin(geosphere.GetIndices16()), std::end(geosphere.GetIndices16()));
-	indices.insert(indices.end(), std::begin(enemy.GetIndices16()), std::end(enemy.GetIndices16()));
 	indices.insert(indices.end(), std::begin(particle.GetIndices16()), std::end(particle.GetIndices16()));
 
 	const UINT vbByteSize = (UINT)vertices.size() * sizeof(ComponentRenderMesh::Vertex);
@@ -347,7 +331,6 @@ bool InitDirect3DApp::Initialize()
 	geo->DrawArgs["sphere"] = sphereSubmesh;
 	geo->DrawArgs["cylinder"] = cylinderSubmesh;
 	geo->DrawArgs["geosphere"] = geosphereSubmesh;
-	geo->DrawArgs["enemy"] = enemySubmesh;
 	geo->DrawArgs["particle"] = particleSubmesh;
 
 	std::unordered_map<std::string, MeshGeometry*> mGeometries;
@@ -365,24 +348,8 @@ bool InitDirect3DApp::Initialize()
 	boxRitem->BaseVertexLocation = boxRitem->Geo->DrawArgs["box"].BaseVertexLocation;
 	mAllRitems.push_back(boxRitem);
 
-	RenderItem* testGeo = new RenderItem;
-
-	XMMATRIX testPyGeoWorld = XMMatrixTranslation(3.0f, 2.0f, 0.0f);
-
-	XMStoreFloat4x4(&testGeo->World, testPyGeoWorld);
-	testGeo->ObjCBIndex = 1;
-	testGeo->Geo = mGeometries["shapeGeo"];
-	testGeo->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	testGeo->IndexCount = testGeo->Geo->DrawArgs["enemy"].IndexCount;
-	testGeo->StartIndexLocation = testGeo->Geo->DrawArgs["enemy"].StartIndexLocation;
-	testGeo->BaseVertexLocation = testGeo->Geo->DrawArgs["enemy"].BaseVertexLocation;
-	mAllRitems.push_back(testGeo);
-
 	RenderItem* testPart = new RenderItem;
-
-	XMMATRIX testPyPartWorld = XMMatrixTranslation(3.0f, 2.0f, 0.0f);
-
-	XMStoreFloat4x4(&testPart->World, testPyPartWorld);
+	XMStoreFloat4x4(&testPart->World, XMMatrixTranslation(1.0f, 1.0f, 1.0f)); //transform.Rotate(1.0f, 0.0f, 0.0f));
 	testPart->ObjCBIndex = 1;
 	testPart->Geo = mGeometries["shapeGeo"];
 	testPart->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
@@ -569,27 +536,6 @@ void InitDirect3DApp::Update( GameTimer& gt)
 	XMStoreFloat4x4(&camera.mView, view);
 	XMMATRIX proj = XMLoadFloat4x4(&camera.mProj);
 
-	//OBJECT CBs
-
-	auto currObjectCB = mCurrFrameResource->ObjectCB.get();
-	for (auto& e : mAllRitems)
-	{
-		// Only update the cbuffer data if the constants have changed.  
-		// This needs to be tracked per frame resource.
-		if (e->NumFramesDirty > 0)
-		{
-			XMMATRIX world = XMLoadFloat4x4(&e->World);
-
-			ObjectConstants objConstants;
-			XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(world));
-
-			currObjectCB->CopyData(e->ObjCBIndex, objConstants);
-
-			// Next FrameResource need to be updated too.
-			e->NumFramesDirty--;
-		}
-	}
-
 	//XMMATRIX worldViewProj = world * view * proj;
 
 	auto currPassCB = mCurrFrameResource->PassCB.get();
@@ -615,24 +561,15 @@ void InitDirect3DApp::UpdateCamera(GameTimer& gt)
 	}
 	if (input.getKey(accelerate)) {
 		camera.Walk(walkSpeed *dt);
-		OutputDebugStringA(std::to_string(camera.GetPosition3f().x).c_str());
-		OutputDebugStringA("\n");
-		OutputDebugStringA(std::to_string(camera.GetPosition3f().y).c_str());
-		OutputDebugStringA("\n");
-		OutputDebugStringA(std::to_string(camera.GetPosition3f().z).c_str());
-		OutputDebugStringA("\n");
-		OutputDebugStringA(std::to_string(dt).c_str());
-		OutputDebugStringA("\n");
 	}
 	if (input.getKey(backwards)) {
 		camera.Walk(-walkSpeed * dt);
 
 	}
-	if (input.getKey(escape)) {
+	/*if (input.getKey(escape)) {
 
-	}
+	}*/
 	if (input.getKey(pitchDown)) {
-		OutputDebugStringA("working\n");
 		camera.Pitch(-dt*speed);
 	}
 	if (input.getKey(pitchUp)) {
@@ -660,7 +597,7 @@ void InitDirect3DApp::UpdateObjectCBs(const GameTimer& gt)
 {
 	auto currObjectCB = mCurrFrameResource->ObjectCB.get();
 	for (auto& e : mAllRitems)
-	{
+	{	
 		// Only update the cbuffer data if the constants have changed.  
 		// This needs to be tracked per frame resource.
 		if (e->NumFramesDirty > 0)

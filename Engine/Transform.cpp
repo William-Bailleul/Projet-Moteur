@@ -6,7 +6,6 @@ Transform::Transform()
 }
 
 void Transform::Identity() {
-	// ca c'est faux
 	// initialise scale
 	vSca.x = 1.0f;
 	vSca.y = 1.0f;
@@ -35,7 +34,6 @@ void Transform::Identity() {
 	vPos.z = 0.0f;
 	mPos = mSca;
 
-	// ca c'est bon
 	mMatrix = mSca;
 }
 

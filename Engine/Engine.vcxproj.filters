@@ -140,6 +140,12 @@
     <Image Include="small.ico">
       <Filter>Fichiers de ressources</Filter>
     </Image>
+    <Image Include="Bruno.dds">
+      <Filter>Fichiers de ressources</Filter>
+    </Image>
+    <Image Include="Metal.dds">
+      <Filter>Fichiers de ressources</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Fichiers d%27en-tête">

@@ -31,7 +31,5 @@ struct Transform
 	void Identity();
 	void UpdateMatrix();
 	void Rotate(float yaw, float pitch, float roll);
-	void Translate(float X, float Y, float Z);
-	void Scale(float X, float Y, float Z);
 };
 

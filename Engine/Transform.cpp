@@ -6,7 +6,6 @@ Transform::Transform()
 }
 
 void Transform::Identity() {
-	
 	// initialise scale
 	vSca.x = 1.0f;
 	vSca.y = 1.0f;

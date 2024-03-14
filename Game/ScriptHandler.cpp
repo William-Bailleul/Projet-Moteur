@@ -17,7 +17,6 @@ void ScriptHandler::Init(EngineObject* objectLink, std::string name, std::string
 	currentStatePriority = false;
 }
 
-
 //////////////////////////////////
 //		OBJECT MANAGEMENT		//
 //////////////////////////////////

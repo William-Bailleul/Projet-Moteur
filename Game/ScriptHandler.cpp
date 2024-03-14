@@ -35,7 +35,7 @@ void ScriptHandler::ObjectHide() {
 
 //completely end the object's existence
 void ScriptHandler::ObjectDestroy() {
-	// /kill @p :)
+	
 }
 
 // TIMER FUNCTIONS

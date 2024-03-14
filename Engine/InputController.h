@@ -12,8 +12,12 @@ public:
     ~InputManager();
 
     void setKeyState(const char& key, const string& index);
-    int getKeyState(const string& c);
     void keyList();
+
+    bool getKey(const string& key);
+    bool getKeyUp(const string& key);
+    bool getKeyDown(const string& key);
+
 
 private:
 

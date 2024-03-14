@@ -172,15 +172,19 @@ XMFLOAT4X4 Camera::GetProj4x4f()const
 	return mProj;
 }
 
+
 void Camera::Strafe(float d)
 {
-	// mPosition += d * mRight
+	// mPosition += d*mRight
 	XMVECTOR s = XMVectorReplicate(d);
 	XMVECTOR r = XMLoadFloat3(&mRight);
 	XMVECTOR p = XMLoadFloat3(&mPosition);
 	XMStoreFloat3(&mPosition, XMVectorMultiplyAdd(s, r, p));
 
 	mViewDirty = true;
+
+	UpdateViewMatrix();
+
 }
 
 void Camera::Walk(float d)
@@ -192,11 +196,13 @@ void Camera::Walk(float d)
 	XMStoreFloat3(&mPosition, XMVectorMultiplyAdd(s, l, p));
 
 	mViewDirty = true;
+
+	UpdateViewMatrix();
 }
 
 void Camera::Pitch(float angle)
 {
-	// Rotate up and look vector about the right vector
+	// Rotate up and look vector about the right vector.
 
 	XMMATRIX R = XMMatrixRotationAxis(XMLoadFloat3(&mRight), angle);
 
@@ -204,11 +210,14 @@ void Camera::Pitch(float angle)
 	XMStoreFloat3(&mLook, XMVector3TransformNormal(XMLoadFloat3(&mLook), R));
 
 	mViewDirty = true;
+
+	UpdateViewMatrix();
+
 }
 
 void Camera::RotateY(float angle)
 {
-	// Rotate the basis vectors about the world y-axis
+	// Rotate the basis vectors about the world y-axis.
 
 	XMMATRIX R = XMMatrixRotationY(angle);
 
@@ -217,6 +226,9 @@ void Camera::RotateY(float angle)
 	XMStoreFloat3(&mLook, XMVector3TransformNormal(XMLoadFloat3(&mLook), R));
 
 	mViewDirty = true;
+
+	UpdateViewMatrix();
+
 }
 
 void Camera::UpdateViewMatrix()

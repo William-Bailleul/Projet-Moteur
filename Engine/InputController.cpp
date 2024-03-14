@@ -9,6 +9,9 @@ InputManager::InputManager()
     m_input["D"] = 0;
     m_input["A"] = 0;
     m_input["E"] = 0;
+    m_input["LeftClick"] = 0;
+    m_input["RightClick"] = 0;
+    m_input["Space"] = 0;
 
 }
 
@@ -39,19 +42,35 @@ void InputManager::setKeyState(const char& key, const string& index) {
 }
 
 void InputManager::keyList() {
+    setKeyState(VK_ESCAPE, escape);
     setKeyState('Z', pitchDown);
     setKeyState('Q', yawLeft);
     setKeyState('S', pitchUp);
     setKeyState('D', yawRight);
     setKeyState('A', rollLeft);
     setKeyState('E', rollRight);
-    setKeyState(VK_UP, ARROW_UP);
-    setKeyState(VK_DOWN, ARROW_DOWN);
-    setKeyState(VK_LEFT, ARROW_LEFT);
-    setKeyState(VK_RIGHT, ARROW_RIGHT);
+    setKeyState(VK_LBUTTON, shoot);
+    setKeyState(VK_RBUTTON, boost);
+    setKeyState(VK_SPACE, accelerate);
 }
 
-int InputManager::getKeyState(const string& key) {
-    int state = m_input[key];
-    return state;
+bool InputManager::getKeyUp(const string& key) {
+    auto iterator = m_input.find(key);
+    int value = iterator->second;
+
+    return (value == KEY_UP) ? true : false;
+}
+
+bool InputManager::getKeyDown(const string& key){
+    auto iterator = m_input.find(key);
+    int value = iterator->second;
+
+    return (value == KEY_DOWN) ? true : false;
+}
+
+bool InputManager::getKey(const string& key) {
+    auto iterator = m_input.find(key);
+    int value = iterator->second;
+
+    return (value == KEY_DOWN || value == KEY_HOLD) ? true : false;
 }

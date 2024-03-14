@@ -54,11 +54,8 @@ public:
 	DirectX::XMFLOAT4X4 GetView4x4f()const;
 	DirectX::XMFLOAT4X4 GetProj4x4f()const;
 
-	// strafe/walk the camera a distance d
 	void Strafe(float d);
 	void Walk(float d);
-
-	// rotate the camera
 	void Pitch(float angle);
 	void RotateY(float angle);
 

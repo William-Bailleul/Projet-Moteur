@@ -6,7 +6,9 @@
 #include "ComponentRenderMesh.h"
 #include "InputController.h"
 #include "ComponentCamera.h"
+#include "Transform.h"
 #include <DirectXColors.h>
+#include "EngineTimer.h"
 
 using namespace DirectX;
 
@@ -43,13 +45,15 @@ public:
 	void OnKeyboardInput(const GameTimer& gt);
 
 	Camera camera;
+	InputManager input;
+	Transform transform;
 
 
 private:
 	virtual void OnResize()override;
-	virtual void Update(const GameTimer& gt)override;
+	virtual void Update(GameTimer& gt)override;
 	virtual void Draw(const GameTimer& gt)override;
-	void UpdateCamera(const GameTimer& gt);
+	void UpdateCamera(GameTimer& gt);
 	void UpdateObjectCBs(const GameTimer& gt);
 	void UpdateMainPassCB(const GameTimer& gt);
 	void DrawRenderItems(ID3D12GraphicsCommandList* cmdList, const std::vector<RenderItem*>& ritems);
@@ -66,6 +70,8 @@ private:
 	std::unordered_map<std::string, ComPtr<ID3DBlob>> mShaders;
 	std::vector<D3D12_INPUT_ELEMENT_DESC> mInputLayout;
 
+	std::unique_ptr<UploadBuffer<ObjectConstants>> mObjectCB = nullptr;
+
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC opaquePsoDesc;
 	std::unordered_map<std::string, ComPtr<ID3D12PipelineState>> mPSOs;
 	ComPtr<ID3D12RootSignature> mRootSignature = nullptr;
@@ -79,8 +85,6 @@ private:
 
 	XMFLOAT3 mVectStart = { 0.0f,0.0f,8.0f };
 	XMFLOAT3 mEyePos = { 0.0f, 0.0f, 0.0f };
-	XMFLOAT4X4 mView = MathHelper::Identity4x4();
-	//XMFLOAT4X4 mProj = MathHelper::Identity4x4();
 
 	float mTheta = 1.5f * XM_PI;
 	float mPhi = 0.2f * XM_PI;
@@ -497,46 +501,15 @@ bool InitDirect3DApp::Initialize()
 	return true;
 }
 
-	
-/* ANCIEN CODE
-
-	testManager.objectList.push_back(new EngineObject(0, 0, 0));
-
-	oMesh = oMeshH.BuildBox(2.0f, 2.0f, 2.0f, 2);
-
-	oRMesh.Init(testManager.objectList[0], oMesh, &oShader, &oTexture);
-
-	new UploadBuffer<D3DApp::ObjectConstants>(md3dDevice.Get(), 1, false);
-
-	testManager.objectList[0]->addComponent(&oRMesh);
-	
-	for (int i = 0; i < gNumFrameResources; ++i)
-	{
-		mFrameResources.push_back(std::make_unique<FrameResource>(md3dDevice.Get(),
-			1, (UINT)oRMesh.mAllRitems.size()));
-	}
-
-	D3DApp::CreateDescriptorHeaps();
-	D3DApp::CreateConstantBufferViews();
-	oShader.BuildPSO();
-
-	ThrowIfFailed(mCommandList->Close());
-	ID3D12CommandList* cmdsLists[] = { mCommandList.Get() };
-	mCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
-
-	// Wait until initialization is complete.
-	FlushCommandQueue();
-
-	return true;
-}*/
-
 void InitDirect3DApp::OnResize()
 {
 	D3DApp::OnResize();
 }
 
-void InitDirect3DApp::Update(const GameTimer& gt)
+void InitDirect3DApp::Update( GameTimer& gt)
 {
+
+	input.keyList();
 	OnKeyboardInput(gt);
 	UpdateCamera(gt);
 
@@ -555,6 +528,12 @@ void InitDirect3DApp::Update(const GameTimer& gt)
 	}
 
 	UpdateObjectCBs(gt);
+
+	// Build the view matrix.
+	XMVECTOR target = camera.GetPosition() + camera.GetLook();
+
+	XMMATRIX view = XMMatrixLookAtLH(camera.GetPosition(), target, camera.GetUp());
+	XMStoreFloat4x4(&camera.mView, view);
 
 	//OBJECT CBs
 
@@ -578,32 +557,60 @@ void InitDirect3DApp::Update(const GameTimer& gt)
 	}
 
 	auto currPassCB = mCurrFrameResource->PassCB.get();
-	XMMATRIX camStartPos = XMMatrixTranslation(mVectStart.x,mVectStart.y,mVectStart.z);
+	//XMMATRIX world = XMLoadFloat4x4(&camera.mView);
+	//XMMATRIX proj = XMLoadFloat4x4(&camera.mProj);
+	//XMMATRIX worldViewProj = world * view * proj;
+	//ObjectConstants objectConstants;
+	//XMStoreFloat4x4(&objectConstants.World, XMMatrixTranspose(worldViewProj));
+	//mObjectCB->CopyData(0, objectConstants);
+	
 	XMFLOAT4X4 ref = MathHelper::Identity4x4();
-	XMStoreFloat4x4(&ref, XMMatrixTranspose(camStartPos));
+	XMStoreFloat4x4(&ref, view);
 	mMainPassCB.Proj = camera.mProj;
 	mMainPassCB.View = ref;
 	currPassCB->CopyData(0, mMainPassCB);
+
 }
 
-void InitDirect3DApp::UpdateCamera(const GameTimer& gt)
+void InitDirect3DApp::UpdateCamera(GameTimer& gt)
 {
-	// Convert Spherical to Cartesian coordinates.
-	mEyePos.x = mRadius * sinf(mPhi) * cosf(mTheta);
-	mEyePos.z = mRadius * sinf(mPhi) * sinf(mTheta);
-	mEyePos.y = mRadius * cosf(mPhi);
 
-	// Build the view matrix.
-	XMVECTOR pos = XMVectorSet(mEyePos.x, mEyePos.y, mEyePos.z, 1.0f);
-	XMVECTOR target = camera.GetPosition() + camera.GetLook();
-	XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+	float dt = gt.DeltaTime()*1000;
+	float speed = 2.0f;
 
-	XMMATRIX view = XMMatrixLookAtLH(camera.GetPosition(), target, camera.GetUp());
-	XMStoreFloat4x4(&mView, view);
+	if (input.getKey(shoot)) {
+	}
+	if (input.getKey(accelerate)) {
+		camera.Walk(speed*dt);
+		OutputDebugStringA(std::to_string(camera.GetPosition3f().x).c_str());
+		OutputDebugStringA("\n");
+		OutputDebugStringA(std::to_string(camera.GetPosition3f().y).c_str());
+		OutputDebugStringA("\n");
+		OutputDebugStringA(std::to_string(camera.GetPosition3f().z).c_str());
+		OutputDebugStringA("\n");
+		OutputDebugStringA(std::to_string(dt).c_str());
+		OutputDebugStringA("\n");
+	}
+	if (input.getKey(escape)) {
+	}
+	if (input.getKey(pitchDown)) {
+		OutputDebugStringA("Apagnan");
+	}
+	if (input.getKey(yawLeft)) {
 
-	//InputManager::getKeyState()
+	}
+	if (input.getKey(pitchUp)) {
 
+	}
+	if (input.getKey(yawRight)) {
 
+	}
+	if (input.getKey(rollLeft)) {
+
+	}	
+	if (input.getKey(rollRight)) {
+
+	}
 }
 
 

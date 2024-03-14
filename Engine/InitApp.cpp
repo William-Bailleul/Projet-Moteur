@@ -338,16 +338,17 @@ bool InitDirect3DApp::Initialize()
 
 	//BUILDRENDERITEMS
 
+	UINT objCBIndex = 0;
 	RenderItem* boxRitem = new RenderItem;
 	XMStoreFloat4x4(&boxRitem->World, XMMatrixScaling(1.0f, 1.0f, 1.0f));
-	boxRitem->ObjCBIndex = 0;
+	boxRitem->ObjCBIndex++;
 	boxRitem->Geo = mGeometries["shapeGeo"];
 	boxRitem->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	boxRitem->IndexCount = boxRitem->Geo->DrawArgs["box"].IndexCount;
 	boxRitem->StartIndexLocation = boxRitem->Geo->DrawArgs["box"].StartIndexLocation;
 	boxRitem->BaseVertexLocation = boxRitem->Geo->DrawArgs["box"].BaseVertexLocation;
 	mAllRitems.push_back(boxRitem);
-
+	/*
 	RenderItem* testGeo = new RenderItem;
 
 	XMMATRIX testGeoWorld = XMMatrixTranslation(-3.0f, 2.0f, 0.0f);
@@ -361,7 +362,7 @@ bool InitDirect3DApp::Initialize()
 	testGeo->StartIndexLocation = testGeo->Geo->DrawArgs["enemy"].StartIndexLocation;
 	testGeo->BaseVertexLocation = testGeo->Geo->DrawArgs["enemy"].BaseVertexLocation;
 	mAllRitems.push_back(testGeo);
-
+	*/
 
 
 	// All the render items are opaque.

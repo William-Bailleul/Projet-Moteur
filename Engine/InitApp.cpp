@@ -362,12 +362,11 @@ bool InitDirect3DApp::Initialize()
 	testGeo->BaseVertexLocation = testGeo->Geo->DrawArgs["enemy"].BaseVertexLocation;
 	mAllRitems.push_back(testGeo);
 
-
+	RenderItem* leftSphereRitem = new RenderItem;
 	UINT objCBIndex = 2;
-	auto leftSphereRitem = std::make_unique<RenderItem>();
 	XMStoreFloat4x4(&leftSphereRitem->World, XMMatrixScaling(2.0f, 2.0f, 2.0f) * XMMatrixTranslation(5.0f, 4.5f, 2.0f));
 	leftSphereRitem->ObjCBIndex = objCBIndex++;
-	leftSphereRitem->Geo = mGeometries["shapeGeo"].get();
+	leftSphereRitem->Geo = mGeometries["shapeGeo"];
 	leftSphereRitem->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	leftSphereRitem->IndexCount = leftSphereRitem->Geo->DrawArgs["geosphere"].IndexCount;
 	leftSphereRitem->StartIndexLocation = leftSphereRitem->Geo->DrawArgs["geosphere"].StartIndexLocation;

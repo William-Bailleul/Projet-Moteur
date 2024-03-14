@@ -363,6 +363,16 @@ bool InitDirect3DApp::Initialize()
 	mAllRitems.push_back(testGeo);
 
 
+	UINT objCBIndex = 2;
+	auto leftSphereRitem = std::make_unique<RenderItem>();
+	XMStoreFloat4x4(&leftSphereRitem->World, XMMatrixScaling(2.0f, 2.0f, 2.0f) * XMMatrixTranslation(5.0f, 4.5f, 2.0f));
+	leftSphereRitem->ObjCBIndex = objCBIndex++;
+	leftSphereRitem->Geo = mGeometries["shapeGeo"].get();
+	leftSphereRitem->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	leftSphereRitem->IndexCount = leftSphereRitem->Geo->DrawArgs["geosphere"].IndexCount;
+	leftSphereRitem->StartIndexLocation = leftSphereRitem->Geo->DrawArgs["geosphere"].StartIndexLocation;
+	leftSphereRitem->BaseVertexLocation = leftSphereRitem->Geo->DrawArgs["geosphere"].BaseVertexLocation;
+	mAllRitems.push_back(std::move(leftSphereRitem));
 
 	// All the render items are opaque.
 	for (auto& e : mAllRitems)
@@ -509,7 +519,7 @@ void InitDirect3DApp::OnResize()
 
 void InitDirect3DApp::Update( GameTimer& gt)
 {
-
+	
 	input.keyList();
 	OnKeyboardInput(gt);
 	UpdateCamera(gt);
@@ -563,12 +573,14 @@ void InitDirect3DApp::Update( GameTimer& gt)
 
 	//XMMATRIX worldViewProj = world * view * proj;
 
+
 	auto currPassCB = mCurrFrameResource->PassCB.get();
 	
 	XMFLOAT4X4 refView = MathHelper::Identity4x4();
 	XMStoreFloat4x4(&refView, view);
 	XMStoreFloat4x4(&camera.mProj, XMMatrixTranspose(proj));
 	XMStoreFloat4x4(&camera.mView, XMMatrixTranspose(view));
+
 	mMainPassCB.Proj = camera.mProj;
 	mMainPassCB.View = camera.mView;
 	currPassCB->CopyData(0, mMainPassCB);
@@ -641,6 +653,7 @@ void InitDirect3DApp::UpdateObjectCBs(const GameTimer& gt)
 
 void InitDirect3DApp::Draw(const GameTimer& gt)
 {
+
 	auto cmdListAlloc = mCurrFrameResource->CmdListAlloc;
 
 	// Reuse the memory associated with command recording.
@@ -656,7 +669,7 @@ void InitDirect3DApp::Draw(const GameTimer& gt)
 	}
 	else
 	{
-		ThrowIfFailed(mCommandList->Reset(cmdListAlloc.Get(), mPSOs["opaque"].Get()));
+	ThrowIfFailed(mCommandList->Reset(cmdListAlloc.Get(), mPSOs["opaque"].Get()));
 	}
 	mCommandList->RSSetViewports(1, &mScreenViewport);
 	mCommandList->RSSetScissorRects(1, &mScissorRect);

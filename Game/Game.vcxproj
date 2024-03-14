@@ -19,25 +19,32 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="GameObjectEnemy.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
+
     <ClCompile Include="GameScripts.cpp" />
+    <ClCompile Include="Image.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="LevelManager.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Shoot.cpp" />
+    <ClCompile Include="GameObjectShot.cpp" />
+    <ClCompile Include="ScriptHandler.cpp" />
+    <ClCompile Include="SplashScreen.cpp" />
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="GameObjectEnemy.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameObject.h" />
-    <ClInclude Include="GameScripts.h" />
+    <ClInclude Include="ScriptHandler.h" />
+    <ClInclude Include="Image.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="LevelManager.h" />
-    <ClInclude Include="Shoot.h" />
+    <ClInclude Include="GameObjectShot.h" />
+    <ClInclude Include="SplashScreen.h" />
+    <ClInclude Include="stb_image.h" />
     <ClInclude Include="TimeManager.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>

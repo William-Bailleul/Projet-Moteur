@@ -88,7 +88,7 @@ void ScriptHandler::Act() {
 	
 	if (scriptState == "BulletMove") {
 		//script that makes bullets go forward, using their direction values
-		linkedObject->transform->translate(linkedObject.directionX, linkedObject.directionY, linkedObject.directionZ);
+		//linkedObject->transform->translate(linkedObject.directionX, linkedObject.directionY, linkedObject.directionZ);
 	}
 	else if (scriptState == "un autre") {
 

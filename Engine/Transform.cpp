@@ -6,7 +6,6 @@ Transform::Transform()
 }
 
 void Transform::Identity() {
-	// ca c'est faux
 	// initialise scale
 	vSca.x = 1.0f;
 	vSca.y = 1.0f;
@@ -81,4 +80,20 @@ void Transform::Rotate(float yaw, float pitch, float roll) {
 	vDir.x = mRot._31;
 	vDir.y = mRot._32;
 	vDir.z = mRot._33;
+}
+
+void Transform::Translate(float X, float Y, float Z) {
+	vPos.x += X;
+	vPos.y += Y;
+	vPos.z += Z;
+	XMMATRIX m = XMMatrixTranslation(vPos.x, vPos.y, vPos.z);
+	XMStoreFloat4x4(&mPos, m) ;
+}
+
+void Transform::Scale(float X, float Y, float Z) {
+	vSca.x += X;
+	vSca.y += Y;
+	vSca.z += Z;
+	XMMATRIX m = XMMatrixScaling(vSca.x, vSca.y, vSca.z);
+	XMStoreFloat4x4(&mSca, m);
 }

@@ -586,7 +586,11 @@ void InitDirect3DApp::UpdateCamera(GameTimer& gt)
 	}
 	if (input.getKey(shoot)) {
 	}
+	
 	if (input.getKey(accelerate)) {
+		if (input.getKey(boost)) {
+			camera.Walk(2 * (walkSpeed * dt));
+		}
 		camera.Walk(walkSpeed *dt);
 	}
 	if (input.getKey(backwards)) {

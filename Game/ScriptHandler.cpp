@@ -87,10 +87,12 @@ void ScriptHandler::Act() {
 	//follow this object's script
 	
 	
-
-	if (scriptState == "BulletMove") {
+	if (scriptState == "Destroy") {
+		ObjectDestroy();
+	}
+	else if (scriptState == "BulletMove") {
 		//script that makes bullets go forward, using their direction values
-		//linkedObject->transform->translate(linkedObject.directionX, linkedObject.directionY, linkedObject.directionZ);
+		//linkedObject->transform->translate(linkedObject.dirX, linkedObject.dirY, linkedObject.dirZ);
 	}
 	else if (scriptState == "un autre") {
 

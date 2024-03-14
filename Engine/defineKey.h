@@ -1,16 +1,16 @@
 #pragma once
 
 #define escape "Escape"
-#define pitchDown "Z"
+#define accelerate "Z"
+#define backwards "S"
 #define yawLeft "Q"
-#define pitchUp "S"
 #define yawRight "D"
-#define rollLeft "A"
-#define rollRight "E"
-#define shoot "LeftClick"
-#define boost "RightClick"
-#define accelerate "Space"
-#define backwards "BACKARROW"
+#define pitchDown "ARROWUP"
+#define pitchUp "ARROWDOWN"
+#define rollLeft "ARROWRIGHT"
+#define rollRight "ARROWLEFT"
+#define shoot "Space"
+#define boost "Shift"
 
 #define KEY_UP 3
 #define KEY_HOLD 2

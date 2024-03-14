@@ -582,28 +582,17 @@ void InitDirect3DApp::UpdateCamera(GameTimer& gt)
 	float walkSpeed = 2.0f;
 	float speed = 0.2f;
 
+	if (input.getKey(escape)) {
+	}
 	if (input.getKey(shoot)) {
 	}
 	if (input.getKey(accelerate)) {
 		camera.Walk(walkSpeed *dt);
-		OutputDebugStringA(std::to_string(camera.GetPosition3f().x).c_str());
-		OutputDebugStringA("\n");
-		OutputDebugStringA(std::to_string(camera.GetPosition3f().y).c_str());
-		OutputDebugStringA("\n");
-		OutputDebugStringA(std::to_string(camera.GetPosition3f().z).c_str());
-		OutputDebugStringA("\n");
-		OutputDebugStringA(std::to_string(dt).c_str());
-		OutputDebugStringA("\n");
 	}
 	if (input.getKey(backwards)) {
 		camera.Walk(-walkSpeed * dt);
-
-	}
-	if (input.getKey(escape)) {
-
 	}
 	if (input.getKey(pitchDown)) {
-		OutputDebugStringA("working\n");
 		camera.Pitch(-dt*speed);
 	}
 	if (input.getKey(pitchUp)) {
@@ -614,15 +603,12 @@ void InitDirect3DApp::UpdateCamera(GameTimer& gt)
 	}
 	if (input.getKey(yawRight)) {
 		camera.Strafe(dt * speed);
-
 	}
 	if (input.getKey(rollLeft)) {
 		camera.RotateY(-dt * speed);
-
 	}	
 	if (input.getKey(rollRight)) {
 		camera.RotateY(dt * speed);
-
 	}
 }
 

@@ -176,7 +176,9 @@
     <ResourceCompile Include="Engine.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Bruno.dds" />
     <Image Include="Engine.ico" />
+    <Image Include="Metal.dds" />
     <Image Include="small.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -2,6 +2,7 @@
 #include "InputController.h"
 #include "ComponentCamera.h"
 #include <WindowsX.h>
+#include <sstream>
 
 using Microsoft::WRL::ComPtr;
 using namespace std;

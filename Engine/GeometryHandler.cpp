@@ -4,58 +4,33 @@
 
 using namespace DirectX;
 
-GeometryHandler::Mesh GeometryHandler::BuildBox(float width, float height, float depth, uint32 subs)
+void GeometryHandler::Init() {
+
+	m_mMesh["box"] = BuildBox(1);
+	m_mMesh["sphere"] = BuildSphere(3.0f, 20, 20);
+	m_mMesh["cylinder"] = BuildCylinder(3.0f, 3.0f, 5.0f, 20, 20);
+	m_mMesh["geosphere"] = BuildGeosphere(2.5f, 5);
+	m_mMesh["enemy"] = BuildPyramid(1.0f, 1);
+
+}
+
+GeometryHandler::Mesh GeometryHandler::BuildBox(uint32 subs)
 {
-	Mesh mesh;
+	Mesh mesh = nullptr;
 
-	Vertex vertex[24];
-
-	float w = 0.5f * width;
-	float h = 0.5f * height;
-	float d = 0.5f * depth;
-
-	//Creation des Vertices (Points)
-
-	//Face avant.
-	vertex[0] = Vertex(-w, -h, -d, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-	vertex[1] = Vertex(-w, +h, -d, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
-	vertex[2] = Vertex(+w, +h, -d, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
-	vertex[3] = Vertex(+w, -h, -d, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
-
-	//Face arriere.
-	vertex[4] = Vertex(-w, -h, +d, 0.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
-	vertex[5] = Vertex(+w, -h, +d, 0.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-	vertex[6] = Vertex(+w, +h, +d, 0.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
-	vertex[7] = Vertex(-w, +h, +d, 0.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
-
-	//Face haut.
-	vertex[8] = Vertex(-w, +h, -d, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-	vertex[9] = Vertex(-w, +h, +d, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
-	vertex[10] = Vertex(+w, +h, +d, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
-	vertex[11] = Vertex(+w, +h, -d, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
-
-	//Face bas.
-	vertex[12] = Vertex(-w, -h, -d, 0.0f, -1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
-	vertex[13] = Vertex(+w, -h, -d, 0.0f, -1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-	vertex[14] = Vertex(+w, -h, +d, 0.0f, -1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
-	vertex[15] = Vertex(-w, -h, +d, 0.0f, -1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
-
-	//Face gauche.
-	vertex[16] = Vertex(-w, -h, +d, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f);
-	vertex[17] = Vertex(-w, +h, +d, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
-	vertex[18] = Vertex(-w, +h, -d, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f);
-	vertex[19] = Vertex(-w, -h, -d, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f);
-
-	//Face droite.
-	vertex[20] = Vertex(+w, -h, -d, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f);
-	vertex[21] = Vertex(+w, +h, -d, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
-	vertex[22] = Vertex(+w, +h, +d, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
-	vertex[23] = Vertex(+w, -h, +d, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
-
-	mesh.Vertices.assign(&vertex[0], &vertex[24]);
+	std::array<Vertex, 8> vertices =
+	{
+		Vertex({ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::Gray) }),
+		Vertex({ XMFLOAT3(-1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Gray) }),
+		Vertex({ XMFLOAT3(+1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Gray) }),
+		Vertex({ XMFLOAT3(+1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::Gray) }),
+		Vertex({ XMFLOAT3(-1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Gray) }),
+		Vertex({ XMFLOAT3(-1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Gray) }),
+		Vertex({ XMFLOAT3(+1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Gray) }),
+		Vertex({ XMFLOAT3(+1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Gray) })
+	};
 
 	//Creation des indices (Triangles)
-
 	uint32 indices[36];
 
 	//Face avant.
@@ -90,12 +65,42 @@ GeometryHandler::Mesh GeometryHandler::BuildBox(float width, float height, float
 	for (uint32 i = 0; i < subs; ++i)
 		Subdivide(mesh);
 
-	return mesh;
+	const UINT vbByteSize = (UINT)vertices.size() * sizeof(vertex);
+	const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
+
+	mesh = new Mesh();
+	mesh->Name = "shapeGeo";
+
+	ThrowIfFailed(D3DCreateBlob(vbByteSize, &mesh->VertexBufferCPU));
+	CopyMemory(mesh->VertexBufferCPU->GetBufferPointer(), vertices.data(), vbByteSize);
+
+	ThrowIfFailed(D3DCreateBlob(ibByteSize, &mesh->IndexBufferCPU));
+	CopyMemory(mesh->IndexBufferCPU->GetBufferPointer(), indices.data(), ibByteSize);
+
+	mesh->VertexBufferGPU = Utile::CreateDefaultBuffer(md3dDevice.Get(),
+		mCommandList.Get(), vertices.data(), vbByteSize, mesh->VertexBufferUploader);
+
+	mesh->IndexBufferGPU = Utile::CreateDefaultBuffer(md3dDevice.Get(),
+		mCommandList.Get(), indices.data(), ibByteSize, mesh->IndexBufferUploader);
+
+	mesh->VertexByteStride = sizeof(ComponentRenderMesh::Vertex);
+	mesh->VertexBufferByteSize = vbByteSize;
+	mesh->IndexFormat = DXGI_FORMAT_R16_UINT;
+	mesh->IndexBufferByteSize = ibByteSize;
+
+	SubmeshGeometry boxSubmesh;
+	boxSubmesh.IndexCount = (UINT)box.Indices32.size();
+	boxSubmesh.StartIndexLocation = boxIndexOffset;
+	boxSubmesh.BaseVertexLocation = boxVertexOffset;
+
+	mesh->DrawArgs["box"] = boxSubmesh;
+
+	return mesh
 }
 
 GeometryHandler::Mesh GeometryHandler::BuildSphere(float radius, uint32 sliceCount, uint32 stackCount)
 {
-	Mesh mesh;
+	Mesh mesh = nullptr;
 
 	Vertex topVertex(0.0f, +radius, 0.0f, 0.0f, +1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
 	Vertex bottomVertex(0.0f, -radius, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
@@ -172,13 +177,43 @@ GeometryHandler::Mesh GeometryHandler::BuildSphere(float radius, uint32 sliceCou
 		mesh.Indices32.push_back(baseIndex + i + 1);
 	}
 
-	return mesh;
+	const UINT vbByteSize = (UINT)mesh.Vertices.size() * sizeof(vertex);
+	const UINT ibByteSize = (UINT)mesh.Indices32.size() * sizeof(std::uint16_t);
+
+	mesh = new Mesh();
+	mesh->Name = "shapeGeo";
+
+	ThrowIfFailed(D3DCreateBlob(vbByteSize, &mesh->VertexBufferCPU));
+	CopyMemory(mesh->VertexBufferCPU->GetBufferPointer(), mesh.Vertices.data(), vbByteSize);
+
+	ThrowIfFailed(D3DCreateBlob(ibByteSize, &mesh->IndexBufferCPU));
+	CopyMemory(mesh->IndexBufferCPU->GetBufferPointer(), mesh.Indices32.data(), ibByteSize);
+
+	mesh->VertexBufferGPU = Utile::CreateDefaultBuffer(md3dDevice.Get(),
+		mCommandList.Get(), mesh.Vertices.data(), vbByteSize, mesh->VertexBufferUploader);
+
+	mesh->IndexBufferGPU = Utile::CreateDefaultBuffer(md3dDevice.Get(),
+		mCommandList.Get(), mesh.Indices32.data(), ibByteSize, mesh->IndexBufferUploader);
+
+	mesh->VertexByteStride = sizeof(ComponentRenderMesh::Vertex);
+	mesh->VertexBufferByteSize = vbByteSize;
+	mesh->IndexFormat = DXGI_FORMAT_R16_UINT;
+	mesh->IndexBufferByteSize = ibByteSize;
+
+	SubmeshGeometry boxSubmesh;
+	boxSubmesh.IndexCount = (UINT)box.Indices32.size();
+	boxSubmesh.StartIndexLocation = boxIndexOffset;
+	boxSubmesh.BaseVertexLocation = boxVertexOffset;
+
+	mesh->DrawArgs["sphere"] = boxSubmesh;
+
+	return mesh
 
 }
 
 GeometryHandler::Mesh GeometryHandler::BuildGeosphere(float radius, uint32 subs)
 {
-	Mesh mesh;
+	Mesh mesh = nullptr;
 
 	//limite le nombre de subdivisions. (Si subs > 6u alors subs = 6u)
 	subs = std::min<uint32>(subs, 6u);
@@ -242,12 +277,42 @@ GeometryHandler::Mesh GeometryHandler::BuildGeosphere(float radius, uint32 subs)
 		XMStoreFloat3(&mesh.Vertices[i].TanU, XMVector3Normalize(T));
 	}
 
-	return mesh;
+	const UINT vbByteSize = (UINT)Vertices.size() * sizeof(vertex);
+	const UINT ibByteSize = (UINT)Indices32.size() * sizeof(std::uint16_t);
+
+	mesh = new Mesh();
+	mesh->Name = "shapeGeo";
+
+	ThrowIfFailed(D3DCreateBlob(vbByteSize, &mesh->VertexBufferCPU));
+	CopyMemory(mesh->VertexBufferCPU->GetBufferPointer(), Vertices.data(), vbByteSize);
+
+	ThrowIfFailed(D3DCreateBlob(ibByteSize, &mesh->IndexBufferCPU));
+	CopyMemory(mesh->IndexBufferCPU->GetBufferPointer(), Indices32.data(), ibByteSize);
+
+	mesh->VertexBufferGPU = Utile::CreateDefaultBuffer(md3dDevice.Get(),
+		mCommandList.Get(), Vertices.data(), vbByteSize, mesh->VertexBufferUploader);
+
+	mesh->IndexBufferGPU = Utile::CreateDefaultBuffer(md3dDevice.Get(),
+		mCommandList.Get(), Indices32.data(), ibByteSize, mesh->IndexBufferUploader);
+
+	mesh->VertexByteStride = sizeof(ComponentRenderMesh::Vertex);
+	mesh->VertexBufferByteSize = vbByteSize;
+	mesh->IndexFormat = DXGI_FORMAT_R16_UINT;
+	mesh->IndexBufferByteSize = ibByteSize;
+
+	SubmeshGeometry boxSubmesh;
+	boxSubmesh.IndexCount = (UINT)box.Indices32.size();
+	boxSubmesh.StartIndexLocation = boxIndexOffset;
+	boxSubmesh.BaseVertexLocation = boxVertexOffset;
+
+	mesh->DrawArgs["geosphere"] = boxSubmesh;
+
+	return mesh
 }
 
 GeometryHandler::Mesh GeometryHandler::BuildCylinder(float bottomRadius, float topRadius, float height, uint32 sliceCount, uint32 stackCount)
 {
-	Mesh mesh;
+	Mesh mesh = nullptr;
 
 	//Construit les couches.
 
@@ -311,7 +376,37 @@ GeometryHandler::Mesh GeometryHandler::BuildCylinder(float bottomRadius, float t
 	BuildCylinderTopCap(bottomRadius, topRadius, height, sliceCount, stackCount, mesh);
 	BuildCylinderBottomCap(bottomRadius, topRadius, height, sliceCount, stackCount, mesh);
 
-	return mesh;
+	const UINT vbByteSize = (UINT)Vertices.size() * sizeof(vertex);
+	const UINT ibByteSize = (UINT)Indices32.size() * sizeof(std::uint16_t);
+
+	mesh = new Mesh();
+	mesh->Name = "shapeGeo";
+
+	ThrowIfFailed(D3DCreateBlob(vbByteSize, &mesh->VertexBufferCPU));
+	CopyMemory(mesh->VertexBufferCPU->GetBufferPointer(), Vertices.data(), vbByteSize);
+
+	ThrowIfFailed(D3DCreateBlob(ibByteSize, &mesh->IndexBufferCPU));
+	CopyMemory(mesh->IndexBufferCPU->GetBufferPointer(), Indices32.data(), ibByteSize);
+
+	mesh->VertexBufferGPU = Utile::CreateDefaultBuffer(md3dDevice.Get(),
+		mCommandList.Get(), Vertices.data(), vbByteSize, mesh->VertexBufferUploader);
+
+	mesh->IndexBufferGPU = Utile::CreateDefaultBuffer(md3dDevice.Get(),
+		mCommandList.Get(), Indices32.data(), ibByteSize, mesh->IndexBufferUploader);
+
+	mesh->VertexByteStride = sizeof(ComponentRenderMesh::Vertex);
+	mesh->VertexBufferByteSize = vbByteSize;
+	mesh->IndexFormat = DXGI_FORMAT_R16_UINT;
+	mesh->IndexBufferByteSize = ibByteSize;
+
+	SubmeshGeometry boxSubmesh;
+	boxSubmesh.IndexCount = (UINT)box.Indices32.size();
+	boxSubmesh.StartIndexLocation = boxIndexOffset;
+	boxSubmesh.BaseVertexLocation = boxVertexOffset;
+
+	mesh->DrawArgs["cylinder"] = boxSubmesh;
+
+	return mesh
 }
 
 void GeometryHandler::Subdivide(Mesh& mesh)
@@ -464,7 +559,7 @@ void GeometryHandler::BuildCylinderBottomCap(float bottomRadius, float topRadius
 
 GeometryHandler::Mesh GeometryHandler::BuildPyramid(float size, uint32 state)
 {
-	Mesh meshData;
+	Mesh mesh = nullptr;
 
 	float w = size;
 	float h = size;
@@ -577,5 +672,35 @@ GeometryHandler::Mesh GeometryHandler::BuildPyramid(float size, uint32 state)
 		break;
 	}
 
-	return meshData;
+	const UINT vbByteSize = (UINT)Vertices.size() * sizeof(vertex);
+	const UINT ibByteSize = (UINT)Indices32.size() * sizeof(std::uint16_t);
+
+	mesh = new Mesh();
+	mesh->Name = "shapeGeo";
+
+	ThrowIfFailed(D3DCreateBlob(vbByteSize, &mesh->VertexBufferCPU));
+	CopyMemory(mesh->VertexBufferCPU->GetBufferPointer(), Vertices.data(), vbByteSize);
+
+	ThrowIfFailed(D3DCreateBlob(ibByteSize, &mesh->IndexBufferCPU));
+	CopyMemory(mesh->IndexBufferCPU->GetBufferPointer(), Indices32.data(), ibByteSize);
+
+	mesh->VertexBufferGPU = Utile::CreateDefaultBuffer(md3dDevice.Get(),
+		mCommandList.Get(), Vertices.data(), vbByteSize, mesh->VertexBufferUploader);
+
+	mesh->IndexBufferGPU = Utile::CreateDefaultBuffer(md3dDevice.Get(),
+		mCommandList.Get(), Indices32.data(), ibByteSize, mesh->IndexBufferUploader);
+
+	mesh->VertexByteStride = sizeof(ComponentRenderMesh::Vertex);
+	mesh->VertexBufferByteSize = vbByteSize;
+	mesh->IndexFormat = DXGI_FORMAT_R16_UINT;
+	mesh->IndexBufferByteSize = ibByteSize;
+
+	SubmeshGeometry boxSubmesh;
+	boxSubmesh.IndexCount = (UINT)box.Indices32.size();
+	boxSubmesh.StartIndexLocation = boxIndexOffset;
+	boxSubmesh.BaseVertexLocation = boxVertexOffset;
+
+	mesh->DrawArgs["pyramdi"] = boxSubmesh;
+
+	return mesh
 }

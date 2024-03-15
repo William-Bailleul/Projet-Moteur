@@ -8,10 +8,15 @@ public:
 
 	using uint16 = std::uint16_t;
 	using uint32 = std::uint32_t;
+	map<std::string, Mesh*> m_mMesh;
+
+	void Init();
 
 	struct Vertex
 	{
-		Vertex(){}
+		DirectX::XMFLOAT3 Position;
+		DirectX::XMFLOAT4 Normal;
+
 		Vertex(
 			const DirectX::XMFLOAT3& p,
 			const DirectX::XMFLOAT3& n,
@@ -21,6 +26,7 @@ public:
 			Normal(n),
 			TanU(t),
 			TexC(uv) {}
+
 		Vertex(
 			float px, float py, float pz,
 			float nx, float ny, float nz,
@@ -31,10 +37,6 @@ public:
 			TanU(tx, ty, tz),
 			TexC(u, v) {}
 
-		DirectX::XMFLOAT3 Position;
-		DirectX::XMFLOAT3 Normal;
-		DirectX::XMFLOAT3 TanU;
-		DirectX::XMFLOAT2 TexC;
 	};
 
 	struct Mesh
@@ -82,7 +84,7 @@ public:
 
 	//BuildCylinder - Creee un cylindre en prennant un rayon de bases bottomRadius et topRadius, une hauteur height, 
 	//un nombre de tranches sliceCount et couches stackCount (ces deux parametres controllent la tesselation)
-	GeometryHandler::Mesh BuildPyramid(float size, uint32 state);
+	Mesh BuildPyramid(float size, uint32 state);
 
 private:
 	//Decoupe une face en 4 parties egales en utilisant les centres des vertices

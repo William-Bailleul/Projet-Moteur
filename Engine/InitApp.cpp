@@ -42,7 +42,7 @@ private:
 	virtual void Update(GameTimer& gt)override;
 	virtual void Draw(const GameTimer& gt)override;
 	void UpdateCamera(GameTimer& gt);
-	void UpdateObjectCBs(const GameTimer& gt);
+	void UpdateObjectCBs(GameTimer& gt);
 	void UpdateMainPassCB(const GameTimer& gt);
 	void DrawRenderItems(ID3D12GraphicsCommandList* cmdList, const std::vector<RenderItem*>& ritems);
 
@@ -191,14 +191,12 @@ bool InitDirect3DApp::Initialize()
 	};
 
 
-	//CREATION DE BOITE + GEOSPHERE
 
-	GeometryHandler meshObject;
-	GeometryHandler::Mesh box = meshObject.BuildBox(1.0f, 1.0f, 1.0f , 1);
-	GeometryHandler::Mesh sphere = meshObject.BuildSphere(3.0f, 20, 20);
-	GeometryHandler::Mesh cylinder = meshObject.BuildCylinder(3.0f, 3.0f, 5.0f, 20,20);
-	GeometryHandler::Mesh geosphere = meshObject.BuildGeosphere(2.5f, 5);
-	GeometryHandler::Mesh particle = meshObject.BuildBox(1.0f, 1.0f, 1.0f, 1);
+
+
+
+
+
 
 
 	//VERTEX OFFSET
@@ -218,33 +216,6 @@ bool InitDirect3DApp::Initialize()
 	UINT particleIndexOffset = geosphereIndexOffset + (UINT)geosphere.Indices32.size();
 
 
-	//SUBMESH GEOMETRY
-
-	SubmeshGeometry boxSubmesh;
-	boxSubmesh.IndexCount = (UINT)box.Indices32.size();
-	boxSubmesh.StartIndexLocation = boxIndexOffset;
-	boxSubmesh.BaseVertexLocation = boxVertexOffset;
-
-	SubmeshGeometry sphereSubmesh;
-	sphereSubmesh.IndexCount = (UINT)sphere.Indices32.size();
-	sphereSubmesh.StartIndexLocation = sphereIndexOffset;
-	sphereSubmesh.BaseVertexLocation = sphereVertexOffset;
-	
-	SubmeshGeometry cylinderSubmesh;
-	cylinderSubmesh.IndexCount = (UINT)cylinder.Indices32.size();
-	cylinderSubmesh.StartIndexLocation = cylinderIndexOffset;
-	cylinderSubmesh.BaseVertexLocation = cylinderVertexOffset;
-	
-	SubmeshGeometry geosphereSubmesh;
-	geosphereSubmesh.IndexCount = (UINT)geosphere.Indices32.size();
-	geosphereSubmesh.StartIndexLocation = geosphereIndexOffset;
-	geosphereSubmesh.BaseVertexLocation = geosphereVertexOffset;
-
-	SubmeshGeometry particleSubmesh;
-	particleSubmesh.IndexCount = (UINT)particle.Indices32.size();
-	particleSubmesh.StartIndexLocation = particleIndexOffset;
-	particleSubmesh.BaseVertexLocation = particleVertexOffset;
-
 	//VERTEX COUNT
 
 	auto totalVertexCount =
@@ -260,11 +231,6 @@ bool InitDirect3DApp::Initialize()
 	std::vector<ComponentRenderMesh::Vertex> vertices(totalVertexCount);
 
 	UINT k = 0;
-	for (size_t i = 0; i < box.Vertices.size(); ++i, ++k)
-	{
-		vertices[k].Pos = box.Vertices[i].Position;
-		vertices[k].Color = XMFLOAT4(DirectX::Colors::DarkGreen);
-	}
 
 	for (size_t i = 0; i < sphere.Vertices.size(); ++i, ++k)
 	{
@@ -303,39 +269,6 @@ bool InitDirect3DApp::Initialize()
 	const UINT vbByteSize = (UINT)vertices.size() * sizeof(ComponentRenderMesh::Vertex);
 	const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
 
-
-
-	//GEO
-
-	auto geo = new MeshGeometry;
-	geo->Name = "shapeGeo";
-
-	ThrowIfFailed(D3DCreateBlob(vbByteSize, &geo->VertexBufferCPU));
-	CopyMemory(geo->VertexBufferCPU->GetBufferPointer(), vertices.data(), vbByteSize);
-
-	ThrowIfFailed(D3DCreateBlob(ibByteSize, &geo->IndexBufferCPU));
-	CopyMemory(geo->IndexBufferCPU->GetBufferPointer(), indices.data(), ibByteSize);
-
-	geo->VertexBufferGPU = Utile::CreateDefaultBuffer(md3dDevice.Get(),
-		mCommandList.Get(), vertices.data(), vbByteSize, geo->VertexBufferUploader);
-
-	geo->IndexBufferGPU = Utile::CreateDefaultBuffer(md3dDevice.Get(),
-		mCommandList.Get(), indices.data(), ibByteSize, geo->IndexBufferUploader);
-
-	geo->VertexByteStride = sizeof(ComponentRenderMesh::Vertex);
-	geo->VertexBufferByteSize = vbByteSize;
-	geo->IndexFormat = DXGI_FORMAT_R16_UINT;
-	geo->IndexBufferByteSize = ibByteSize;
-
-	geo->DrawArgs["box"] = boxSubmesh;
-	geo->DrawArgs["sphere"] = sphereSubmesh;
-	geo->DrawArgs["cylinder"] = cylinderSubmesh;
-	geo->DrawArgs["geosphere"] = geosphereSubmesh;
-	geo->DrawArgs["particle"] = particleSubmesh;
-
-	std::unordered_map<std::string, MeshGeometry*> mGeometries;
-	mGeometries[geo->Name] = geo;
-
 	//BUILDRENDERITEMS
 	
 	RenderItem* boxRitem = new RenderItem;
@@ -347,18 +280,6 @@ bool InitDirect3DApp::Initialize()
 	boxRitem->StartIndexLocation = boxRitem->Geo->DrawArgs["box"].StartIndexLocation;
 	boxRitem->BaseVertexLocation = boxRitem->Geo->DrawArgs["box"].BaseVertexLocation;
 	mAllRitems.push_back(boxRitem);
-
-	RenderItem* testPart = new RenderItem;
-	XMStoreFloat4x4(&testPart->World, XMMatrixTranslation(1.0f, 1.0f, 1.0f)); //transform.Rotate(1.0f, 0.0f, 0.0f));
-	testPart->ObjCBIndex = 1;
-	testPart->Geo = mGeometries["shapeGeo"];
-	testPart->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	testPart->IndexCount = testPart->Geo->DrawArgs["particle"].IndexCount;
-	testPart->StartIndexLocation = testPart->Geo->DrawArgs["particle"].StartIndexLocation;
-	testPart->BaseVertexLocation = testPart->Geo->DrawArgs["particle"].BaseVertexLocation;
-	mAllRitems.push_back(testPart);
-
-
 
 	// All the render items are opaque.
 	for (auto& e : mAllRitems)
@@ -593,15 +514,29 @@ void InitDirect3DApp::UpdateCamera(GameTimer& gt)
 }
 
 
-void InitDirect3DApp::UpdateObjectCBs(const GameTimer& gt)
+void InitDirect3DApp::UpdateObjectCBs(GameTimer& gt)
 {
+	float dt = gt.DeltaTime();
+
+	/*wstringstream wss(L"");
+	wss << gt.TotalTime();
+	MessageBox(NULL, wss.str().c_str(), NULL, 0);*/
+
+	transform.Rotate(1.5f + dt, 0.0f, 0.0f);
+	transform.UpdateMatrix();
+
 	auto currObjectCB = mCurrFrameResource->ObjectCB.get();
 	for (auto& e : mAllRitems)
 	{	
+		//XMStoreFloat4x4(&e->World, XMMatrixTranslation(2.0f + dt, 1.0f, 1.0f));
+
 		// Only update the cbuffer data if the constants have changed.  
 		// This needs to be tracked per frame resource.
 		if (e->NumFramesDirty > 0)
 		{
+
+			XMStoreFloat4x4(&e->World, XMLoadFloat4x4(&transform.mMatrix));
+
 			DirectX::XMMATRIX world = XMLoadFloat4x4(&e->World);
 
 			D3DApp::ObjectConstants objConstants;

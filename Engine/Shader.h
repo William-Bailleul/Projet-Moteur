@@ -26,7 +26,7 @@ public:
 public:
 	void Init(Microsoft::WRL::ComPtr<ID3D12Device> Device, DXGI_FORMAT BBufferFormat, DXGI_FORMAT DStencilFormat, bool MSAAState, UINT MSAAQuality);
 	void BuildRootSignature();
-	ComPtr<ID3DBlob> CompileShader(const std::wstring& filename, const D3D_SHADER_MACRO* defines, const std::string& entrypoint, const std::string& target);
+	void CompileShaders(LPCWSTR fileName);
 	void BuildPSO();
 
 

@@ -10,6 +10,7 @@
 #include <DirectXColors.h>
 #include "EngineTimer.h"
 
+using namespace DirectX;
 
 struct PassConstants
 {
@@ -26,10 +27,13 @@ public:
 	virtual bool Initialize()override;
 	void DrawEdit(const GameTimer& gt, ComponentRenderMesh& oRMesh);
 
+	void OnMouseDown(WPARAM btnState, int x, int y);
+	void OnMouseUp(WPARAM btnState, int x, int y);
+	void OnMouseMove(WPARAM btnState, int x, int y);
+
 	Camera camera;
 	InputManager input;
 	Transform transform;
-	Shader shader;
 
 
 private:
@@ -66,7 +70,7 @@ private:
 
 	bool mIsWireframe = false;
 
-	XMFLOAT3 mVectStart = { 0.0f,0.0f,-8.0f };
+	XMFLOAT3 mVectStart = { 0.0f,0.0f,8.0f };
 	XMFLOAT3 mEyePos = { 0.0f, 0.0f, 0.0f };
 
 	float mTheta = 1.5f * XM_PI;
@@ -177,8 +181,8 @@ bool InitDirect3DApp::Initialize()
 	const char* entrypoint2 = "PS";
 	const char* target2 = "ps_5_1";
 
-	mShaders["VS"] = shader.CompileShader(L"color.hlsl", nullptr, "VS", "vs_5_1");
-	mShaders["PS"] = shader.CompileShader(L"color.hlsl", nullptr, "PS", "ps_5_1");
+	mShaders["VS"] = Utile::CompileShader(L"color.hlsl", nullptr, "VS", "vs_5_1");
+	mShaders["PS"] = Utile::CompileShader(L"color.hlsl", nullptr, "PS", "ps_5_1");
 
 	mInputLayout =
 	{
@@ -432,7 +436,44 @@ bool InitDirect3DApp::Initialize()
 
 	//PSOs
 
-	shader.BuildPSO();
+
+	//
+	// PSO for opaque objects.
+	//
+	ZeroMemory(&opaquePsoDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
+	opaquePsoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
+	opaquePsoDesc.pRootSignature = mRootSignature.Get();
+	opaquePsoDesc.VS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["VS"]->GetBufferPointer()),
+		mShaders["VS"]->GetBufferSize()
+	};
+	opaquePsoDesc.PS =
+	{
+		reinterpret_cast<BYTE*>(mShaders["PS"]->GetBufferPointer()),
+		mShaders["PS"]->GetBufferSize()
+	};
+	opaquePsoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+	opaquePsoDesc.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
+	opaquePsoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+	opaquePsoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+	opaquePsoDesc.SampleMask = UINT_MAX;
+	opaquePsoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	opaquePsoDesc.NumRenderTargets = 1;
+	opaquePsoDesc.RTVFormats[0] = mBackBufferFormat;
+	opaquePsoDesc.SampleDesc.Count = m4xMsaaState ? 4 : 1;
+	opaquePsoDesc.SampleDesc.Quality = m4xMsaaState ? (m4xMsaaQuality - 1) : 0;
+	opaquePsoDesc.DSVFormat = mDepthStencilFormat;
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&opaquePsoDesc, IID_PPV_ARGS(&mPSOs["opaque"])));
+
+
+	//
+	// PSO for opaque wireframe objects.
+	//
+
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC opaqueWireframePsoDesc = opaquePsoDesc;
+	opaqueWireframePsoDesc.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
+	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&opaqueWireframePsoDesc, IID_PPV_ARGS(&mPSOs["opaque_wireframe"])));
 
 
 	//END
@@ -715,3 +756,48 @@ void InitDirect3DApp::DrawEdit(const GameTimer& gt, ComponentRenderMesh& oRMesh)
 	FlushCommandQueue();
 }
 
+
+void InitDirect3DApp::OnMouseDown(WPARAM btnState, int x, int y)
+{
+	mLastMousePos.x = x;
+	mLastMousePos.y = y;
+
+	SetCapture(mhMainWnd);
+}
+
+void InitDirect3DApp::OnMouseUp(WPARAM btnState, int x, int y)
+{
+	ReleaseCapture();
+}
+
+void InitDirect3DApp::OnMouseMove(WPARAM btnState, int x, int y)
+{
+	if ((btnState & MK_LBUTTON) != 0)
+	{
+		// Make each pixel correspond to a quarter of a degree.
+		float dx = XMConvertToRadians(0.25f * static_cast<float>(x - mLastMousePos.x));
+		float dy = XMConvertToRadians(0.25f * static_cast<float>(y - mLastMousePos.y));
+
+		// Update angles based on input to orbit camera around box.
+		mTheta += dx;
+		mPhi += dy;
+
+		// Restrict the angle mPhi.
+		mPhi = MathHelper::Clamp(mPhi, 0.1f, XM_PI - 0.1f);
+	}
+	else if ((btnState & MK_RBUTTON) != 0)
+	{
+		// Make each pixel correspond to 0.2 unit in the scene.
+		float dx = 0.05f * static_cast<float>(x - mLastMousePos.x);
+		float dy = 0.05f * static_cast<float>(y - mLastMousePos.y);
+
+		// Update the camera radius based on input.
+		mRadius += dx - dy;
+
+		// Restrict the radius.
+		mRadius = MathHelper::Clamp(mRadius, 5.0f, 150.0f);
+	}
+
+	mLastMousePos.x = x;
+	mLastMousePos.y = y;
+}

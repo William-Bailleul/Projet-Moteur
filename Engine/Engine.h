@@ -107,6 +107,7 @@ public:
 
 protected:
     virtual void CreateDescriptorHeaps();
+    virtual void CreateRootSignature();
     virtual void OnResize();
     virtual void Update(GameTimer& gt) = 0;
     virtual void Draw(const GameTimer& gt) = 0;

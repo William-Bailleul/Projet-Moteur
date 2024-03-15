@@ -63,11 +63,7 @@ void Shader::BuildRootSignature()
 
 }
 
-ComPtr<ID3DBlob> Shader::CompileShader(
-	const std::wstring& filename,
-	const D3D_SHADER_MACRO* defines,
-	const std::string& entrypoint,
-	const std::string& target)
+void Shader::CompileShaders(LPCWSTR fileName)
 {
 	UINT compileFlags = 0;
 #if defined(DEBUG) || defined(_DEBUG)  
@@ -75,20 +71,38 @@ ComPtr<ID3DBlob> Shader::CompileShader(
 #endif
 
 	HRESULT hr = S_OK;
+	HRESULT hr2 = S_OK;
 
 	ComPtr<ID3DBlob> byteCode = nullptr;
+	ComPtr<ID3DBlob> byteCode2 = nullptr;
+
 	ComPtr<ID3DBlob> errors;
-	hr = D3DCompileFromFile(filename.c_str(), defines, D3D_COMPILE_STANDARD_FILE_INCLUDE,
-		entrypoint.c_str(), target.c_str(), compileFlags, 0, &byteCode, &errors);
+
+	hr = D3DCompileFromFile(fileName, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
+		entrypoint, target, compileFlags, 0, &byteCode, &errors);
+
+	if (errors != nullptr)
+		OutputDebugStringA((char*)errors->GetBufferPointer());
+
+	hr2 = D3DCompileFromFile(fileName, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
+		entrypoint, target, compileFlags, 0, &byteCode2, &errors);
 
 	if (errors != nullptr)
 		OutputDebugStringA((char*)errors->GetBufferPointer());
 
 	ThrowIfFailed(hr);
+	ThrowIfFailed(hr2);
 
-	return byteCode;
+	mvsByteCode = byteCode;
+	mpsByteCode = byteCode2;
+
+	mInputLayout =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+	};
+
 }
-
 
 void Shader::BuildPSO()
 {

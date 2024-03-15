@@ -354,7 +354,6 @@ bool InitDirect3DApp::Initialize()
 	mGeometries[geo->Name] = geo;
 
 	//BUILDRENDERITEMS
-
 	UINT objCBIndex = -1;
 	RenderItem* boxWorld = new RenderItem;
 	XMMATRIX boxWorldWorld = XMMatrixTranslation(0.0f, 0.0f, 0.0f) * XMMatrixScaling(1000.f, 1000.f, 1000.f);
@@ -366,6 +365,7 @@ bool InitDirect3DApp::Initialize()
 	boxWorld->StartIndexLocation = boxWorld->Geo->DrawArgs["worldBox"].StartIndexLocation;
 	boxWorld->BaseVertexLocation = boxWorld->Geo->DrawArgs["worldBox"].BaseVertexLocation;
 	mAllRitems.push_back(boxWorld);
+
 
 	// All the render items are opaque.
 	for (auto& e : mAllRitems)
@@ -512,7 +512,7 @@ void InitDirect3DApp::OnResize()
 
 void InitDirect3DApp::Update( GameTimer& gt)
 {
-
+	
 	input.keyList();
 	UpdateCamera(gt);
 
@@ -542,12 +542,14 @@ void InitDirect3DApp::Update( GameTimer& gt)
 	XMMATRIX proj = XMLoadFloat4x4(&camera.mProj);
 
 
+
 	auto currPassCB = mCurrFrameResource->PassCB.get();
 	
 	XMFLOAT4X4 refView = MathHelper::Identity4x4();
 	XMStoreFloat4x4(&refView, view);
 	XMStoreFloat4x4(&camera.mProj, XMMatrixTranspose(proj));
 	XMStoreFloat4x4(&camera.mView, XMMatrixTranspose(view));
+
 	mMainPassCB.Proj = camera.mProj;
 	mMainPassCB.View = camera.mView;
 	currPassCB->CopyData(0, mMainPassCB);
@@ -620,6 +622,7 @@ void InitDirect3DApp::UpdateObjectCBs(const GameTimer& gt)
 
 void InitDirect3DApp::Draw(const GameTimer& gt)
 {
+
 	auto cmdListAlloc = mCurrFrameResource->CmdListAlloc;
 
 	// Reuse the memory associated with command recording.
@@ -635,7 +638,7 @@ void InitDirect3DApp::Draw(const GameTimer& gt)
 	}
 	else
 	{
-		ThrowIfFailed(mCommandList->Reset(cmdListAlloc.Get(), mPSOs["opaque"].Get()));
+	ThrowIfFailed(mCommandList->Reset(cmdListAlloc.Get(), mPSOs["opaque"].Get()));
 	}
 	mCommandList->RSSetViewports(1, &mScreenViewport);
 	mCommandList->RSSetScissorRects(1, &mScissorRect);

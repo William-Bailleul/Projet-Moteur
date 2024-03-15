@@ -334,7 +334,7 @@ GeometryHandler::Mesh GeometryHandler::BuildGeosphere(float radius, uint32 subs)
 	return mesh;
 }
 
-GeometryHandler::Mesh GeometryHandler::BuildCylinder(float bottomRadius, float topRadius, float height, uint32 sliceCount, uint32 stackCount)
+GeometryHandler::Mesh GeometryHandler::BuildCylinder(float bottomRadius, float topRadius, float height, uint32 sliceCount, uint32 stackCount) 
 {
 	Mesh mesh;
 

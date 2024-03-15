@@ -3,6 +3,7 @@
 #include "Component.h"
 
 #include <vector>
+#include <string>
 #include <DirectXCollision.h>
 
 using namespace DirectX;
@@ -16,9 +17,13 @@ public:
 
 	//linking to the object's script, necessary if we want to implement reactions to 
 	ComponentScript* objectScript;
+	std::string nameTag;
 
 	//saving the GameManager's address to check its objectList
 	EngineManager* gameManager;
+
+	std::vector<std::string> currentHitNames;
+	std::vector<std::string> previousHitNames;
 
 	// vectors can remain empty without issue
 	std::vector<BoundingBox*> hitBoxes;
@@ -30,6 +35,7 @@ public:
 
 	//check functions
 	void FullCollisionCheck(); 
+	void SaveToPrevious();
 	template  <typename U, typename V> bool ListCollisionCheck(std::vector<U*> listOne, std::vector<V*> listTwo);
 	template <typename U, typename V> int OneCollisionCheck(U* boundingOne, V* boundingTwo);
 
@@ -41,7 +47,6 @@ public:
 private:
 	void Init(EngineManager* manager, ComponentScript* script);
 };
-
 
 template <typename U, typename V> bool ComponentCollider::ListCollisionCheck(std::vector<U*> listOne, std::vector<V*> listTwo) {
 	for (int i = 0; i < listOne.size(); i++) {

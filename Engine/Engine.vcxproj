@@ -131,7 +131,6 @@
     <ClInclude Include="ComponentCamera.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentCollider.h" />
-    <ClInclude Include="ComponentScript.h" />
     <ClInclude Include="d3dx12.h" />
     <ClInclude Include="DDSTextureLoader.h" />
     <ClInclude Include="defineKey.h" />
@@ -157,7 +156,6 @@
     <ClCompile Include="ComponentCamera.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ComponentCollider.cpp" />
-    <ClCompile Include="ComponentScript.cpp" />
     <ClCompile Include="DDSTextureLoader.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Engine.cpp" />

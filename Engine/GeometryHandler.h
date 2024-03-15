@@ -65,6 +65,7 @@ public:
 	//BuildBox - Creee une boite en prennant une largeur width, une hauteur height, une profondeur depth 
 	//et a sub coupures verticales et horizontales sur chaques faces
 	Mesh BuildBox(float width, float height, float depth, uint32 subs);
+	Mesh BuildBox(float width, float height, float depth, uint32 subs, bool inv);
 
 
 	//BuildSphere - Creee une sphere en prennant une rayon radius, un nombre de tranches verticales sliceCount 

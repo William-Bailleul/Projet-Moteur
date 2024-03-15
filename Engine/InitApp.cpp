@@ -70,7 +70,7 @@ private:
 
 	bool mIsWireframe = false;
 
-	XMFLOAT3 mVectStart = { 0.0f,0.0f,8.0f };
+	XMFLOAT3 mVectStart = { 0.0f,0.0f,-8.0f };
 	XMFLOAT3 mEyePos = { 0.0f, 0.0f, 0.0f };
 
 	float mTheta = 1.5f * XM_PI;
@@ -199,6 +199,7 @@ bool InitDirect3DApp::Initialize()
 	GeometryHandler::Mesh cylinder = meshObject.BuildCylinder(3.0f, 3.0f, 5.0f, 20,20);
 	GeometryHandler::Mesh geosphere = meshObject.BuildGeosphere(2.5f, 5);
 	GeometryHandler::Mesh enemy = meshObject.BuildPyramid(5.0f, 3);
+	GeometryHandler::Mesh worldBox = meshObject.BuildBox(1.f, 1.f, 1.f , 10, 1);
 
 
 	//VERTEX OFFSET
@@ -207,6 +208,7 @@ bool InitDirect3DApp::Initialize()
 	UINT cylinderVertexOffset = sphereVertexOffset + (UINT)sphere.Vertices.size();
 	UINT geosphereVertexOffset = cylinderVertexOffset + (UINT)cylinder.Vertices.size();
 	UINT enemyVertexOffset = geosphereVertexOffset + (UINT)geosphere.Vertices.size();
+	UINT worldBoxVertexOffset = enemyVertexOffset + (UINT)enemy.Vertices.size();
 
 	//INDEX OFFSET
 
@@ -216,6 +218,7 @@ bool InitDirect3DApp::Initialize()
 	UINT cylinderIndexOffset = sphereIndexOffset + (UINT)sphere.Indices32.size();
 	UINT geosphereIndexOffset = cylinderIndexOffset + (UINT)cylinder.Indices32.size();
 	UINT enemyIndexOffset = geosphereIndexOffset + (UINT)geosphere.Indices32.size();
+	UINT worldBoxIndexOffset =enemyIndexOffset + (UINT)enemy.Indices32.size();
 
 
 	//SUBMESH GEOMETRY
@@ -245,6 +248,11 @@ bool InitDirect3DApp::Initialize()
 	enemySubmesh.StartIndexLocation = enemyIndexOffset;
 	enemySubmesh.BaseVertexLocation = enemyVertexOffset;
 
+	SubmeshGeometry worldBoxSubmesh;
+	worldBoxSubmesh.IndexCount = (UINT)worldBox.Indices32.size();
+	worldBoxSubmesh.StartIndexLocation = worldBoxIndexOffset;
+	worldBoxSubmesh.BaseVertexLocation = worldBoxVertexOffset;
+
 	//VERTEX COUNT
 
 	auto totalVertexCount =
@@ -252,7 +260,8 @@ bool InitDirect3DApp::Initialize()
 		sphere.Vertices.size() +
 		cylinder.Vertices.size() +
 		geosphere.Vertices.size() +
-		enemy.Vertices.size();
+		enemy.Vertices.size() +
+		worldBox.Vertices.size();
 
 
 	//SET POS + COLOR
@@ -263,7 +272,7 @@ bool InitDirect3DApp::Initialize()
 	for (size_t i = 0; i < box.Vertices.size(); ++i, ++k)
 	{
 		vertices[k].Pos = box.Vertices[i].Position;
-		vertices[k].Color = XMFLOAT4(DirectX::Colors::DarkGreen);
+		vertices[k].Color = XMFLOAT4(DirectX::Colors::Cyan);
 	}
 
 	for (size_t i = 0; i < sphere.Vertices.size(); ++i, ++k)
@@ -290,6 +299,12 @@ bool InitDirect3DApp::Initialize()
 		vertices[k].Color = XMFLOAT4(DirectX::Colors::MintCream);
 	}
 
+	for (size_t i = 0; i < worldBox.Vertices.size(); ++i, ++k)
+	{
+		vertices[k].Pos = worldBox.Vertices[i].Position;
+		vertices[k].Color = XMFLOAT4(DirectX::Colors::PaleVioletRed);
+	}
+
 
 	//INSERT INDICES
 
@@ -299,6 +314,7 @@ bool InitDirect3DApp::Initialize()
 	indices.insert(indices.end(), std::begin(cylinder.GetIndices16()), std::end(cylinder.GetIndices16()));
 	indices.insert(indices.end(), std::begin(geosphere.GetIndices16()), std::end(geosphere.GetIndices16()));
 	indices.insert(indices.end(), std::begin(enemy.GetIndices16()), std::end(enemy.GetIndices16()));
+	indices.insert(indices.end(), std::begin(worldBox.GetIndices16()), std::end(worldBox.GetIndices16()));
 
 	const UINT vbByteSize = (UINT)vertices.size() * sizeof(ComponentRenderMesh::Vertex);
 	const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
@@ -332,24 +348,24 @@ bool InitDirect3DApp::Initialize()
 	geo->DrawArgs["cylinder"] = cylinderSubmesh;
 	geo->DrawArgs["geosphere"] = geosphereSubmesh;
 	geo->DrawArgs["enemy"] = enemySubmesh;
+	geo->DrawArgs["worldBox"] = worldBoxSubmesh;
 
 	std::unordered_map<std::string, MeshGeometry*> mGeometries;
 	mGeometries[geo->Name] = geo;
 
 	//BUILDRENDERITEMS
 
-	UINT objCBIndex = 0;
-	RenderItem* boxRitem = new RenderItem;
-	XMStoreFloat4x4(&boxRitem->World, XMMatrixScaling(1.0f, 1.0f, 1.0f));
-	boxRitem->ObjCBIndex++;
-	boxRitem->Geo = mGeometries["shapeGeo"];
-	boxRitem->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	boxRitem->IndexCount = boxRitem->Geo->DrawArgs["box"].IndexCount;
-	boxRitem->StartIndexLocation = boxRitem->Geo->DrawArgs["box"].StartIndexLocation;
-	boxRitem->BaseVertexLocation = boxRitem->Geo->DrawArgs["box"].BaseVertexLocation;
-	mAllRitems.push_back(boxRitem);
-
-
+	UINT objCBIndex = -1;
+	RenderItem* boxWorld = new RenderItem;
+	XMMATRIX boxWorldWorld = XMMatrixTranslation(0.0f, 0.0f, 0.0f) * XMMatrixScaling(1000.f, 1000.f, 1000.f);
+	XMStoreFloat4x4(&boxWorld->World, boxWorldWorld);
+	boxWorld->ObjCBIndex++;
+	boxWorld->Geo = mGeometries["shapeGeo"];
+	boxWorld->PrimitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	boxWorld->IndexCount = boxWorld->Geo->DrawArgs["worldBox"].IndexCount;
+	boxWorld->StartIndexLocation = boxWorld->Geo->DrawArgs["worldBox"].StartIndexLocation;
+	boxWorld->BaseVertexLocation = boxWorld->Geo->DrawArgs["worldBox"].BaseVertexLocation;
+	mAllRitems.push_back(boxWorld);
 
 	// All the render items are opaque.
 	for (auto& e : mAllRitems)
@@ -629,7 +645,7 @@ void InitDirect3DApp::Draw(const GameTimer& gt)
 	mCommandList->ResourceBarrier(1, &titi);
 
 	// Clear the back buffer and depth buffer.
-	mCommandList->ClearRenderTargetView(CurrentBackBufferView(), Colors::LightSteelBlue, 0, nullptr);
+	mCommandList->ClearRenderTargetView(CurrentBackBufferView(), Colors::Black, 0, nullptr);
 	mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
 	// Specify the buffers we are going to render to.

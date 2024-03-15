@@ -93,6 +93,95 @@ GeometryHandler::Mesh GeometryHandler::BuildBox(float width, float height, float
 	return mesh;
 }
 
+GeometryHandler::Mesh GeometryHandler::BuildBox(float width, float height, float depth, uint32 subs, bool inv)
+{
+	Mesh mesh;
+
+	Vertex vertex[24];
+
+	float w = 0.5f * width;
+	float h = 0.5f * height;
+	float d = 0.5f * depth;
+
+	//Creation des Vertices (Points)
+
+	//Face avant.
+	vertex[0] = Vertex(-w, -h, -d, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+	vertex[1] = Vertex(-w, +h, -d, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+	vertex[2] = Vertex(+w, +h, -d, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+	vertex[3] = Vertex(+w, -h, -d, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
+
+	//Face arriere.
+	vertex[4] = Vertex(-w, -h, +d, 0.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
+	vertex[5] = Vertex(+w, -h, +d, 0.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+	vertex[6] = Vertex(+w, +h, +d, 0.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+	vertex[7] = Vertex(-w, +h, +d, 0.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+
+	//Face haut.
+	vertex[8] = Vertex(-w, +h, -d, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+	vertex[9] = Vertex(-w, +h, +d, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+	vertex[10] = Vertex(+w, +h, +d, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+	vertex[11] = Vertex(+w, +h, -d, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
+
+	//Face bas.
+	vertex[12] = Vertex(-w, -h, -d, 0.0f, -1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
+	vertex[13] = Vertex(+w, -h, -d, 0.0f, -1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+	vertex[14] = Vertex(+w, -h, +d, 0.0f, -1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+	vertex[15] = Vertex(-w, -h, +d, 0.0f, -1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+
+	//Face gauche.
+	vertex[16] = Vertex(-w, -h, +d, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f);
+	vertex[17] = Vertex(-w, +h, +d, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
+	vertex[18] = Vertex(-w, +h, -d, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f);
+	vertex[19] = Vertex(-w, -h, -d, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f);
+
+	//Face droite.
+	vertex[20] = Vertex(+w, -h, -d, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f);
+	vertex[21] = Vertex(+w, +h, -d, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
+	vertex[22] = Vertex(+w, +h, +d, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
+	vertex[23] = Vertex(+w, -h, +d, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
+
+	mesh.Vertices.assign(&vertex[0], &vertex[24]);
+
+	//Creation des indices (Triangles)
+
+	uint32 indices[36];
+
+	//Face avant.
+	indices[0] = 2; indices[1] = 1; indices[2] = 0;
+	indices[3] = 3; indices[4] = 2; indices[5] = 0;
+
+	//Face arriere.
+	indices[6] = 6; indices[7] = 5; indices[8] = 4;
+	indices[9] = 7; indices[10] = 6; indices[11] = 4;
+
+	//Face haut.
+	indices[12] = 10; indices[13] = 9; indices[14] = 8;
+	indices[15] = 11; indices[16] = 10; indices[17] = 8;
+
+	//Face bas.
+	indices[18] = 14; indices[19] = 13; indices[20] = 12;
+	indices[21] = 15; indices[22] = 14; indices[23] = 12;
+
+	//Face gauche.
+	indices[24] = 18; indices[25] = 17; indices[26] = 16;
+	indices[27] = 19; indices[28] = 18; indices[29] = 16;
+
+	//Face droite.
+	indices[30] = 22; indices[31] = 21; indices[32] = 20;
+	indices[33] = 23; indices[34] = 22; indices[35] = 20;
+
+	mesh.Indices32.assign(&indices[0], &indices[36]);
+
+	//limite le nombre de subdivisions. (Si sub > 4u alors sub = 4u)
+	subs = std::min<uint32>(subs, 4u);
+
+	for (uint32 i = 0; i < subs; ++i)
+		Subdivide(mesh);
+
+	return mesh;
+}
+
 GeometryHandler::Mesh GeometryHandler::BuildSphere(float radius, uint32 sliceCount, uint32 stackCount)
 {
 	Mesh mesh;

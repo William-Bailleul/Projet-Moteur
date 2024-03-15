@@ -1,3 +1,4 @@
+#define STB_IMAGE_IMPLEMENTATION
 #include "Image.h"
 
 Image::Image(std::string FileName) {
@@ -31,7 +32,9 @@ ComPtr<ID3D12Resource> Image::CreateTextureResource(ID3D12Device* device) {
     const UINT64 uploadBufferSize = GetRequiredIntermediateSize(texture.Get(), 0, 1); 
 
     ComPtr<ID3D12Resource> uploadHeap; 
-    device->CreateCommittedResource(&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD), D3D12_HEAP_FLAG_NONE, &CD3DX12_RESOURCE_DESC::Buffer(uploadBufferSize), D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&uploadHeap)); 
+    CD3DX12_HEAP_PROPERTIES tata = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+    CD3DX12_RESOURCE_DESC toto = CD3DX12_RESOURCE_DESC::Buffer(uploadBufferSize);
+    device->CreateCommittedResource(&tata, D3D12_HEAP_FLAG_NONE, &toto, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&uploadHeap)); 
      
     D3D12_SUBRESOURCE_DATA textureData = {}; 
     textureData.pData = image;  
